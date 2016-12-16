@@ -5,22 +5,22 @@ entity Organization {
 }
 
 entity Folder {
-    name String,
+    name String required,
     createdAt ZonedDateTime
 }
 
 entity ImDocument {
 	language String,
     password String,
-    originalFilename String,
-    originalXml TextBlob,
+    originalFilename String required,
+    originalXml TextBlob required,
     createdAt ZonedDateTime
 }
 
 
 entity ImMap{
 	guid String,
-    label String
+    label String required
 }
 
 entity ImBlock{
@@ -29,7 +29,7 @@ entity ImBlock{
 }
 
 entity Image{
-	filename String,
+	filename String required,
 	createdAt ZonedDateTime
 }
 
