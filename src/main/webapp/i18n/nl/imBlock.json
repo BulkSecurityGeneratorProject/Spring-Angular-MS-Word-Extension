@@ -1,0 +1,25 @@
+{
+    "imicloudApp": {
+        "imBlock" : {
+            "home": {
+                "title": "Im Blocks",
+                "createLabel": "Maak een nieuwe Im Block",
+                "createOrEditLabel": "Maak of wijzig een Im Block",
+                "search": "Search for Im Block"
+            },
+            "created": "A new Im Block is created with identifier {{ param }}",
+            "updated": "A Im Block is updated with identifier {{ param }}",
+            "deleted": "A Im Block is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Im Block {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Im Block"
+            },
+            "label": "Label",
+            "content": "Content",
+            "imMap": "Im Map",
+            "image": "Image"
+        }
+    }
+}

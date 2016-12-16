@@ -12,7 +12,7 @@ entity Folder {
 entity ImDocument {
 	language String,
     password String,
-    originalFilename String required,
+    filename String required,
     originalXml TextBlob required,
     createdAt ZonedDateTime
 }

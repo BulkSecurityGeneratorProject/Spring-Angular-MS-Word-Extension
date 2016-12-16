@@ -1,0 +1,25 @@
+{
+    "imicloudApp": {
+        "folder" : {
+            "home": {
+                "title": "Folders",
+                "createLabel": "Maak een nieuwe Folder",
+                "createOrEditLabel": "Maak of wijzig een Folder",
+                "search": "Search for Folder"
+            },
+            "created": "A new Folder is created with identifier {{ param }}",
+            "updated": "A Folder is updated with identifier {{ param }}",
+            "deleted": "A Folder is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Folder {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Folder"
+            },
+            "name": "Name",
+            "createdAt": "Created At",
+            "organization": "Organization",
+            "document": "Document"
+        }
+    }
+}

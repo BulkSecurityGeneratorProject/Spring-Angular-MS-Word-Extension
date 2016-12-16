@@ -1,0 +1,28 @@
+{
+    "imicloudApp": {
+        "imDocument" : {
+            "home": {
+                "title": "Im Documents",
+                "createLabel": "Maak een nieuwe Im Document",
+                "createOrEditLabel": "Maak of wijzig een Im Document",
+                "search": "Search for Im Document"
+            },
+            "created": "A new Im Document is created with identifier {{ param }}",
+            "updated": "A Im Document is updated with identifier {{ param }}",
+            "deleted": "A Im Document is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Im Document {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Im Document"
+            },
+            "language": "Language",
+            "password": "Password",
+            "originalFilename": "Original Filename",
+            "originalXml": "Original Xml",
+            "createdAt": "Created At",
+            "folder": "Folder",
+            "map": "Map"
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "imicloudApp": {
+        "imMap" : {
+            "home": {
+                "title": "Im Maps",
+                "createLabel": "Create a new Im Map",
+                "createOrEditLabel": "Create or edit a Im Map",
+                "search": "Search for Im Map"
+            },
+            "created": "A new Im Map is created with identifier {{ param }}",
+            "updated": "A Im Map is updated with identifier {{ param }}",
+            "deleted": "A Im Map is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Im Map {{ id }}?"
+            },
+            "detail": {
+                "title": "Im Map"
+            },
+            "guid": "Guid",
+            "label": "Label",
+            "imDocument": "Im Document",
+            "block": "Block"
+        }
+    }
+}

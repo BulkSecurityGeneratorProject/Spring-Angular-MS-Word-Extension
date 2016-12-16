@@ -1,0 +1,25 @@
+{
+    "imicloudApp": {
+        "organization" : {
+            "home": {
+                "title": "Organizations",
+                "createLabel": "Maak een nieuwe Organization",
+                "createOrEditLabel": "Maak of wijzig een Organization",
+                "search": "Search for Organization"
+            },
+            "created": "A new Organization is created with identifier {{ param }}",
+            "updated": "A Organization is updated with identifier {{ param }}",
+            "deleted": "A Organization is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Organization {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Organization"
+            },
+            "name": "Name",
+            "magentoCustomerId": "Magento Customer Id",
+            "createdAt": "Created At",
+            "folder": "Folder"
+        }
+    }
+}

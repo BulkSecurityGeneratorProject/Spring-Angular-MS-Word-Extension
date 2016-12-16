@@ -20,5 +20,27 @@
 
     <cache alias="be.storefront.imicloud.domain.User.persistentTokens" uses-template="simple"/>
 
+    <cache alias="be.storefront.imicloud.domain.Organization" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.Organization.folders" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.Folder" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.Folder.documents" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.ImDocument" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.ImDocument.maps" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.ImMap" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.ImMap.blocks" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.ImBlock" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.ImBlock.images" uses-template="simple"/>
+
+    <cache alias="be.storefront.imicloud.domain.Image" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

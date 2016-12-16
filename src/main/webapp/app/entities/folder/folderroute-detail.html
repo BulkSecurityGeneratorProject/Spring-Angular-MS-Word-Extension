@@ -1,0 +1,31 @@
+
+<div>
+    <h2><span data-translate="imicloudApp.folder.detail.title">Folder</span> {{vm.folder.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="imicloudApp.folder.name">Name</span></dt>
+        <dd>
+            <span>{{vm.folder.name}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.folder.createdAt">Created At</span></dt>
+        <dd>
+            <span>{{vm.folder.createdAt | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.folder.organization">Organization</span></dt>
+        <dd>
+            <a ui-sref="organizationroute-detail({id:vm.folder.organizationId})">{{vm.folder.organizationId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="folderroute-detail.edit({id:vm.folder.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>
