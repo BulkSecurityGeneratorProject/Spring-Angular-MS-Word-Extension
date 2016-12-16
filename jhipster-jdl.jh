@@ -38,8 +38,8 @@ entity Image{
 
 relationship OneToMany {
 	// ImDocument{user} to User,
-    Folder{document} to ImDocument{name},
-    Organization{folder} to Folder{name},
+    Folder{document} to ImDocument,
+    Organization{folder} to Folder,
     
     ImDocument{map} to ImMap,
     ImBlock{map} to ImMap,
