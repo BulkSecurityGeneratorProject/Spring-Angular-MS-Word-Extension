@@ -1,0 +1,63 @@
+entity Organization {
+	name String required,
+    magentoCustomerId Integer,
+    createdAt ZonedDateTime
+}
+
+entity Folder {
+    name String,
+    createdAt ZonedDateTime
+}
+
+entity ImDocument {
+	language String,
+    password String,
+    originalFilename String,
+    originalXml TextBlob,
+    createdAt ZonedDateTime
+}
+
+
+entity ImMap{
+	guid String,
+    label String
+}
+
+entity ImBlock{
+	label String,
+    content TextBlob
+}
+
+entity Image{
+	filename String,
+	createdAt ZonedDateTime
+	
+}
+
+
+
+relationship OneToMany {
+	// ImDocument{user} to User,
+    Folder{document} to ImDocument{name},
+    Organization{folder} to Folder{name},
+    
+    ImDocument{map} to ImMap,
+    ImBlock{map} to ImMap,
+    Image{block} to ImBlock
+}
+
+
+
+// Set pagination options
+paginate Organization, ImDocument with infinite-scroll
+// paginate Job with pagination
+
+dto * with mapstruct
+
+// Set service options to all except few
+//service all with serviceImpl except Employee, Job
+service all with serviceImpl
+
+// Set an angular route suffix
+angularSuffix * with route
+
