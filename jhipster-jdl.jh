@@ -31,7 +31,6 @@ entity ImBlock{
 entity Image{
 	filename String,
 	createdAt ZonedDateTime
-	
 }
 
 
@@ -42,8 +41,10 @@ relationship OneToMany {
     Organization{folder} to Folder,
     
     ImDocument{map} to ImMap,
-    ImBlock{map} to ImMap,
-    Image{block} to ImBlock
+    
+	ImMap{block} to ImBlock,
+	
+    ImBlock{image} to Image
 }
 
 
