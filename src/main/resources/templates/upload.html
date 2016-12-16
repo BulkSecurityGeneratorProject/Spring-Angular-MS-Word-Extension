@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Upload XML test</title>
+</head>
+<body>
+
+<form enctype="multipart/form-data" th:action="@{/upload/xml/}" method="post">
+
+    <h3>Upload XML</h3>
+    <p>
+    <label>
+        XML file
+        <input type="file" name="xml_file"/>
+    </label>
+    </p>
+
+    <p>
+    <label>
+        Password
+        <input type="text" name="password"/>
+    </label>
+    </p>
+    <input type="submit"/>
+
+</form>
+    <hr/>
+
+<form enctype="multipart/form-data" th:action="@{/upload/image/}" method="post">
+    <h3>Upload Image</h3>
+    <p>
+        <label>
+            Image file
+            <input type="file" name="image_file"/>
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Document ID
+            <input type="text" name="document_id"/>
+        </label>
+    </p>
+    <input type="submit"/>
+</form>
+
+
+
+</body>
+</html>

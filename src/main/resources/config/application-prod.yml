@@ -44,9 +44,9 @@ spring:
         jcache:
             config: ehcache.xml
     data:
-        elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9300
+#        elasticsearch:
+#            cluster-name:
+#            cluster-nodes: localhost:9300
     mail:
         host: localhost
         port: 25
@@ -64,6 +64,15 @@ server:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
         min-response-size: 1024
+
+# ===================================================================
+# IM Cloud specific properties
+# ===================================================================
+
+imcloud:
+    # Enter the full path to the dir where images are stored. Must end with a "/"
+    fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads/
+
 
 # ===================================================================
 # JHipster specific properties

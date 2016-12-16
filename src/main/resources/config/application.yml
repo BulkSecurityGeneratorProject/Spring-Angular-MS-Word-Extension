@@ -50,6 +50,15 @@ server:
         cookie:
             http-only: true
 
+
+# ===================================================================
+# IM Cloud specific properties
+# ===================================================================
+
+imcloud:
+    fileStorageDir: false # Enter the full path to the dir where images are stored. Must end with a "/"
+
+
 # ===================================================================
 # JHipster specific properties
 # ===================================================================

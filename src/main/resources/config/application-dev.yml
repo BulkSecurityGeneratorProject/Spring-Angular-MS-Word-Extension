@@ -49,13 +49,13 @@ spring:
         jcache:
             config: ehcache.xml
     data:
-        elasticsearch:
-            cluster-name:
-            cluster-nodes:
-            properties:
-                path:
-                  logs: target/elasticsearch/log
-                  data: target/elasticsearch/data
+#        elasticsearch:
+#            cluster-name:
+#            cluster-nodes:
+#            properties:
+#                path:
+#                  logs: target/elasticsearch/log
+#                  data: target/elasticsearch/data
     mail:
         host: localhost
         port: 25
@@ -71,6 +71,16 @@ liquibase:
 
 server:
     port: 8080
+
+
+# ===================================================================
+# IM Cloud specific properties
+# ===================================================================
+
+imcloud:
+    # Enter the full path to the dir where images are stored. Must end with a "/"
+    fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
+
 
 # ===================================================================
 # JHipster specific properties
