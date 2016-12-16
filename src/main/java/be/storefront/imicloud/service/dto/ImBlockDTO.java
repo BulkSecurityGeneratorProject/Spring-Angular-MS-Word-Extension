@@ -10,7 +10,7 @@ import javax.persistence.Lob;
 /**
  * A DTO for the ImBlock entity.
  */
-public class ImBlockDTO implements Serializable {
+public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

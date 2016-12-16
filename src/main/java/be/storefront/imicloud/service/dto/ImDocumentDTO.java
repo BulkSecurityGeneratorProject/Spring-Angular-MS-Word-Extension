@@ -12,7 +12,7 @@ import javax.persistence.Lob;
 /**
  * A DTO for the ImDocument entity.
  */
-public class ImDocumentDTO implements Serializable {
+public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

@@ -19,7 +19,7 @@ import java.util.Objects;
 @Table(name = "im_map")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "immap")
-public class ImMap implements Serializable {
+public class ImMap extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

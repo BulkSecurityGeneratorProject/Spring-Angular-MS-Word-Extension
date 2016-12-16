@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * A DTO for the ImMap entity.
  */
-public class ImMapDTO implements Serializable {
+public class ImMapDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

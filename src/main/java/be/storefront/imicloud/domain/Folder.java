@@ -20,7 +20,7 @@ import java.util.Objects;
 @Table(name = "folder")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "folder")
-public class Folder implements Serializable {
+public class Folder extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * A DTO for the Folder entity.
  */
-public class FolderDTO implements Serializable {
+public class FolderDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

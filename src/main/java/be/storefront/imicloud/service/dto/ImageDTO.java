@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * A DTO for the Image entity.
  */
-public class ImageDTO implements Serializable {
+public class ImageDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

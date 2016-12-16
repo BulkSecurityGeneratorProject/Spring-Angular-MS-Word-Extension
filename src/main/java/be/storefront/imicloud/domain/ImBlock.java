@@ -18,7 +18,7 @@ import java.util.Objects;
 @Table(name = "im_block")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "imblock")
-public class ImBlock implements Serializable {
+public class ImBlock extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
