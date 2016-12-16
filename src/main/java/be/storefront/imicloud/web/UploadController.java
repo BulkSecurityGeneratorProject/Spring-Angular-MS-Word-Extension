@@ -9,6 +9,7 @@ import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,17 +39,25 @@ public class UploadController {
 
 
     @PostMapping("/xml/")
-    public ResponseEntity<ResponseEntity.BodyBuilder> handleXmlFileUpload(@RequestParam("xml_file") MultipartFile file,
+    public ResponseEntity<ResponseEntity.BodyBuilder> handleXmlFileUpload(@RequestParam("password") String password, @RequestParam("xml_file") MultipartFile file,
                                                                           RedirectAttributes redirectAttributes) {
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
         try {
             ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
             String xmlString = IOUtils.toString(stream, "UTF-8");
 
+            String hashedPassword = passwordEncoder.encode(password);
+
             ImDocumentDTO newDocument = new ImDocumentDTO();
+            newDocument.setOriginalFilename(file.getOriginalFilename());
             newDocument.setOriginalXml(xmlString);
+            newDocument.setPassword(hashedPassword);
             imDocumentService.save(newDocument);
 
-            fileStorageService.saveFile(file);
+            //fileStorageService.saveFile(file);
 
             return ResponseEntity.created(null).body(null);
 //                .body(newUser);
@@ -71,7 +80,7 @@ public class UploadController {
                                                                             RedirectAttributes redirectAttributes) {
 
         try {
-            fileStorageService.saveFile(file);
+            String filename = fileStorageService.saveFile(file);
 
 
             //.body(newUser);

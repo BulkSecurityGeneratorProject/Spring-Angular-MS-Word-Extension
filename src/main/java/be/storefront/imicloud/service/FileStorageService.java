@@ -24,15 +24,15 @@ public class FileStorageService {
 
     public String saveFile(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
 
-        MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-        String checksum = getFileChecksum(md5Digest, multipartFile.getInputStream());
+        String checksum = getFileChecksum(digest, multipartFile.getInputStream());
 
         String extension = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().indexOf("."));
 
         //request.getServletContext().getRealPath()
         String uploadDir = imCloudProperties.getFileStorageDir();
-        String targetFileString = uploadDir + checksum + "."+extension;
+        String targetFileString = uploadDir + checksum +extension;
 
         File targetFile = new File(targetFileString);
         multipartFile.transferTo(targetFile);
