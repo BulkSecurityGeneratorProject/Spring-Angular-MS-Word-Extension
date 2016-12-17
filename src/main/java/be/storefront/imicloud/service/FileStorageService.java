@@ -23,16 +23,18 @@ public class FileStorageService {
 
 
     public String saveFile(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
-
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
         String checksum = getFileChecksum(digest, multipartFile.getInputStream());
 
-        String extension = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().indexOf("."));
+        String extension = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().indexOf(".")).toLowerCase();
 
         //request.getServletContext().getRealPath()
         String uploadDir = imCloudProperties.getFileStorageDir();
-        String targetFileString = uploadDir + checksum +extension;
+        char dir1 = checksum.charAt(0);
+        char dir2 = checksum.charAt(1);
+        char dir3 = checksum.charAt(2);
+        String targetFileString = uploadDir + dir1 + "/" + dir2 + "/" + dir3 + "/" + checksum + extension;
 
         File targetFile = new File(targetFileString);
         multipartFile.transferTo(targetFile);
@@ -44,8 +46,7 @@ public class FileStorageService {
     }
 
 
-    private static String getFileChecksum(MessageDigest digest, InputStream is) throws IOException
-    {
+    private static String getFileChecksum(MessageDigest digest, InputStream is) throws IOException {
 
         //Create byte array to read data in chunks
         byte[] byteArray = new byte[1024];
@@ -54,7 +55,8 @@ public class FileStorageService {
         //Read file data and update in message digest
         while ((bytesCount = is.read(byteArray)) != -1) {
             digest.update(byteArray, 0, bytesCount);
-        };
+        }
+        ;
 
         //close the stream; We don't need it now.
         is.close();
@@ -65,8 +67,7 @@ public class FileStorageService {
         //This bytes[] has bytes in decimal format;
         //Convert it to hexadecimal format
         StringBuilder sb = new StringBuilder();
-        for(int i=0; i< bytes.length ;i++)
-        {
+        for (int i = 0; i < bytes.length; i++) {
             sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
         }
 
