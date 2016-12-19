@@ -80,6 +80,17 @@ server:
 imcloud:
     # Enter the full path to the dir where images are stored. Must end with a "/"
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
+    security:
+        magento:
+            subscriptionCheck:
+                url: http://localinformationmapping.com:10089/magento/subscriptions/subscription/check
+                user: user
+                pass: pass
+        fsProCloud:
+            api:
+                url: http://fsprocloud.test.informationmapping.com:8081/
+                user: MyTestUser
+                pass: MyPwd
 
 
 # ===================================================================

@@ -1,6 +1,7 @@
 package be.storefront.imicloud.web.rest;
 
-import be.storefront.imicloud.security.AuthoritiesConstants;
+import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.FileStorageService;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
@@ -16,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,7 +26,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 
-@RestController
+@Controller
 @RequestMapping("/upload")
 public class UploadController {
 
@@ -40,6 +41,9 @@ public class UploadController {
     @Autowired
     ImDocumentService imDocumentService;
 
+    @Autowired
+    ImCloudSecurity imCloudSecurity;
+
     @GetMapping("/")
     public String index() {
         return "upload";
@@ -50,11 +54,13 @@ public class UploadController {
     @Timed
     public
     @ResponseBody
-    XmlUploadResponse handleXmlFileUpload(@RequestParam("password") String password, @RequestParam("xml_file") MultipartFile file,
-                                          @RequestParam("template_code") String templateCode,
+    XmlUploadResponse handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam("xml_file") MultipartFile file,
+                                          @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
                                           RedirectAttributes redirectAttributes) {
 
         log.debug("XML upload request: {}", file.getOriginalFilename());
+
+        User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
