@@ -1,5 +1,9 @@
 package be.storefront.imicloud.web.rest;
 
+import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.security.AuthoritiesConstants;
+import be.storefront.imicloud.security.SecurityUtils;
 import com.codahale.metrics.annotation.Timed;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
@@ -10,7 +14,9 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +42,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImDocumentResource {
 
     private final Logger log = LoggerFactory.getLogger(ImDocumentResource.class);
-        
+
     @Inject
     private ImDocumentService imDocumentService;
 
@@ -54,6 +60,21 @@ public class ImDocumentResource {
         if (imDocumentDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imDocument", "idexists", "A new imDocument cannot already have an ID")).body(null);
         }
+
+        // Restrict to current user
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)){
+            // full access is okay
+        }else{
+            // limit to current user
+            Long currentUserId = SecurityUtils.getCurrentUser().getId();
+            if(imDocumentDTO.getUserId() != null && !imDocumentDTO.getUserId().equals(currentUserId)){
+                // Cannot create a document for someone else!
+                return ResponseEntity.badRequest().body(null);
+            }else{
+                imDocumentDTO.setUserId(currentUserId);
+            }
+        }
+
         ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
         return ResponseEntity.created(new URI("/api/im-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("imDocument", result.getId().toString()))
@@ -73,6 +94,21 @@ public class ImDocumentResource {
     @Timed
     public ResponseEntity<ImDocumentDTO> updateImDocument(@Valid @RequestBody ImDocumentDTO imDocumentDTO) throws URISyntaxException {
         log.debug("REST request to update ImDocument : {}", imDocumentDTO);
+
+        // Restrict to current user
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)){
+            // full access is okay
+        }else {
+            // limit to current user
+            Long currentUserId = SecurityUtils.getCurrentUser().getId();
+            if(imDocumentDTO.getUserId() != null && !imDocumentDTO.getUserId().equals(currentUserId)){
+                // Cannot create a document for someone else!
+                return ResponseEntity.badRequest().body(null);
+            }else{
+                imDocumentDTO.setUserId(currentUserId);
+            }
+        }
+
         if (imDocumentDTO.getId() == null) {
             return createImDocument(imDocumentDTO);
         }
@@ -94,7 +130,21 @@ public class ImDocumentResource {
     public ResponseEntity<List<ImDocumentDTO>> getAllImDocuments(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of ImDocuments");
-        Page<ImDocumentDTO> page = imDocumentService.findAll(pageable);
+
+        Page<ImDocumentDTO> page;
+
+        // Restrict to current user
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)){
+            // full access is okay
+            page = imDocumentService.findAll(pageable);
+
+        }else {
+            // limit to current user
+            Long currentUserId = SecurityUtils.getCurrentUser().getId();
+
+            page = imDocumentService.findAllByUserId(currentUserId, pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/im-documents");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -110,6 +160,9 @@ public class ImDocumentResource {
     public ResponseEntity<ImDocumentDTO> getImDocument(@PathVariable Long id) {
         log.debug("REST request to get ImDocument : {}", id);
         ImDocumentDTO imDocumentDTO = imDocumentService.findOne(id);
+
+        // TODO restrict access in phase 2 when we have more roles...
+
         return Optional.ofNullable(imDocumentDTO)
             .map(result -> new ResponseEntity<>(
                 result,
@@ -127,28 +180,53 @@ public class ImDocumentResource {
     @Timed
     public ResponseEntity<Void> deleteImDocument(@PathVariable Long id) {
         log.debug("REST request to delete ImDocument : {}", id);
-        imDocumentService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
+
+        ImDocumentDTO document = imDocumentService.findOne(id);
+
+        // Restrict to current user
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)){
+            // full access is okay
+
+        }else {
+            // limit to current user
+            Long currentUserId = SecurityUtils.getCurrentUser().getId();
+
+            if(document.getUserId().equals(currentUserId)){
+                // Delete is allowed
+                imDocumentService.delete(id);
+                return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
+            }else{
+                // Delete someone else's document is forbidden
+                return ResponseEntity.badRequest().body(null);
+            }
+
+        }
+
+
+
     }
 
     /**
      * SEARCH  /_search/im-documents?query=:query : search for the imDocument corresponding
      * to the query.
      *
-     * @param query the query of the imDocument search 
+     * @param query the query of the imDocument search
      * @param pageable the pagination information
      * @return the result of the search
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
-    @GetMapping("/_search/im-documents")
-    @Timed
-    public ResponseEntity<List<ImDocumentDTO>> searchImDocuments(@RequestParam String query, @ApiParam Pageable pageable)
-        throws URISyntaxException {
-        log.debug("REST request to search for a page of ImDocuments for query {}", query);
-        Page<ImDocumentDTO> page = imDocumentService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/im-documents");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+//    @GetMapping("/_search/im-documents")
+//    @Timed
+//    public ResponseEntity<List<ImDocumentDTO>> searchImDocuments(@RequestParam String query, @ApiParam Pageable pageable)
+//        throws URISyntaxException {
+//
+//        log.debug("REST request to search for a page of ImDocuments for query {}", query);
+//        Page<ImDocumentDTO> page = imDocumentService.search(query, pageable);
+//        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/im-documents");
+//
+//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+//    }
+
 
 
 }

@@ -32,6 +32,11 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long folderId;
     
+    private Long userId;
+    
+
+    private String userEmail;
+
     public Long getId() {
         return id;
     }
@@ -81,6 +86,23 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setFolderId(Long folderId) {
         this.folderId = folderId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     @Override

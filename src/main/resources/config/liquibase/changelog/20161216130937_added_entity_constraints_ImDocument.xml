@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="folder"/>
 
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="im_document"
+                                 constraintName="fk_im_document_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
     </changeSet>
 </databaseChangeLog>

@@ -28,6 +28,10 @@
         <dd>
             <a ui-sref="folderroute-detail({id:vm.imDocument.folderId})">{{vm.imDocument.folderId}}</a>
         </dd>
+        <dt><span data-translate="imicloudApp.imDocument.user">User</span></dt>
+        <dd>
+            {{vm.imDocument.userEmail}}
+        </dd>
     </dl>
 
     <button type="submit"

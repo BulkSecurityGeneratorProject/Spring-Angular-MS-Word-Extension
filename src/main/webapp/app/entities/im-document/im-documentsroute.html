@@ -42,6 +42,7 @@
                     <th jh-sort-by="originalXml"><span data-translate="imicloudApp.imDocument.originalXml">Original Xml</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="createdAt"><span data-translate="imicloudApp.imDocument.createdAt">Created At</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="folderId"><span data-translate="imicloudApp.imDocument.folder">Folder</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="userEmail"><span data-translate="imicloudApp.imDocument.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -55,6 +56,9 @@
                     <td>{{imDocument.createdAt | date:'medium'}}</td>
                     <td>
                         <a ui-sref="folderroute-detail({id:imDocument.folderId})">{{imDocument.folderId}}</a>
+                    </td>
+                    <td>
+                        {{imDocument.userEmail}}
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

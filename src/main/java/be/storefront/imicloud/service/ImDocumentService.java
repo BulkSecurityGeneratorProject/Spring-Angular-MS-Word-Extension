@@ -3,6 +3,8 @@ package be.storefront.imicloud.service;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.annotations.Query;
+
 import java.util.List;
 
 /**
@@ -20,11 +22,19 @@ public interface ImDocumentService {
 
     /**
      *  Get all the imDocuments.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     Page<ImDocumentDTO> findAll(Pageable pageable);
+
+    /**
+     * Get all the imDocuments for a given user
+     * @param id
+     * @param pageable
+     * @return
+     */
+    Page<ImDocumentDTO> findAllByUserId(Long id, Pageable pageable);
 
     /**
      *  Get the "id" imDocument.
@@ -45,7 +55,7 @@ public interface ImDocumentService {
      * Search for the imDocument corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */

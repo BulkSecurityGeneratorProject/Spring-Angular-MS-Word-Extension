@@ -3,6 +3,7 @@ package be.storefront.imicloud.web.rest;
 import be.storefront.imicloud.ImicloudApp;
 
 import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.User;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.repository.search.ImDocumentSearchRepository;
@@ -110,6 +111,11 @@ public class ImDocumentResourceIntTest {
                 .originalFilename(DEFAULT_ORIGINAL_FILENAME)
                 .originalXml(DEFAULT_ORIGINAL_XML)
                 .createdAt(DEFAULT_CREATED_AT);
+        // Add required entity
+        User user = UserResourceIntTest.createEntity(em);
+        em.persist(user);
+        em.flush();
+        imDocument.setUser(user);
         return imDocument;
     }
 

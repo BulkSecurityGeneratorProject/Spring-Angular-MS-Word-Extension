@@ -1,9 +1,6 @@
 package be.storefront.imicloud;
 
-import be.storefront.imicloud.config.Constants;
-import be.storefront.imicloud.config.DefaultProfileUtil;
-import be.storefront.imicloud.config.ImCloudProperties;
-import be.storefront.imicloud.config.JHipsterProperties;
+import be.storefront.imicloud.config.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +24,7 @@ import java.util.Collection;
 @ComponentScan
 @EnableAutoConfiguration(exclude = { MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class })
 @EnableConfigurationProperties({ImCloudProperties.class, JHipsterProperties.class, LiquibaseProperties.class })
-@SpringBootApplication(exclude = ElasticsearchAutoConfiguration.class)
+@SpringBootApplication(exclude = ElasticSearchConfiguration.class)
 public class ImicloudApp {
 
     private static final Logger log = LoggerFactory.getLogger(ImicloudApp.class);

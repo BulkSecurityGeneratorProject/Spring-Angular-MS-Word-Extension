@@ -22,7 +22,8 @@
             "originalXml": "Original Xml",
             "createdAt": "Created At",
             "folder": "Folder",
-            "map": "Map"
+            "map": "Map",
+            "user": "User"
         }
     }
 }

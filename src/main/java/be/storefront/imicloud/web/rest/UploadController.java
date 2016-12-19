@@ -79,8 +79,7 @@ public class UploadController {
                 newDocument.setOriginalFilename(file.getOriginalFilename());
                 newDocument.setOriginalXml(xmlString);
                 newDocument.setPassword(hashedPassword);
-
-                // TODO add created by user
+                newDocument.setUserId(uploadingUser.getId());
 
                 newDocument = imDocumentService.save(newDocument);
 
@@ -88,7 +87,6 @@ public class UploadController {
                     .body(newDocument);
 
             } catch (Exception ex) {
-
                 ExceptionResponse response = new ExceptionResponse();
                 response.errorMessage = ex.getMessage();
 
@@ -129,7 +127,6 @@ public class UploadController {
 
                         // TODO check if image belongs to a valid ImDocument
                         // TODO check if image belongs to an ImDocument that I have access to!!
-
                         // TODO check permissions
 
                         String filename = fileStorageService.saveFile(file);
@@ -154,7 +151,7 @@ public class UploadController {
             } catch (Exception ex) {
                 return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "exception", ex.getMessage())).body(null);
             }
-        }else{
+        } else {
             return accessDeniedResponse();
         }
 
@@ -165,7 +162,7 @@ public class UploadController {
 
     }
 
-    private ResponseEntity accessDeniedResponse(){
+    private ResponseEntity accessDeniedResponse() {
         return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("accessdenied", "Access denied")).body(null);
     }
 

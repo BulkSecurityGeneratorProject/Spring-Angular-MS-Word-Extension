@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImDocumentServiceImpl implements ImDocumentService{
 
     private final Logger log = LoggerFactory.getLogger(ImDocumentServiceImpl.class);
-    
+
     @Inject
     private ImDocumentRepository imDocumentRepository;
 
@@ -56,14 +57,27 @@ public class ImDocumentServiceImpl implements ImDocumentService{
 
     /**
      *  Get all the imDocuments.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<ImDocumentDTO> findAll(Pageable pageable) {
         log.debug("Request to get all ImDocuments");
         Page<ImDocument> result = imDocumentRepository.findAll(pageable);
+        return result.map(imDocument -> imDocumentMapper.imDocumentToImDocumentDTO(imDocument));
+    }
+
+    /**
+     *  Get all the imDocuments for 1 given user
+     *
+     *  @param userId
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<ImDocumentDTO> findAllByUserId(Long userId, Pageable pageable) {
+        Page<ImDocument> result = imDocumentRepository.findAllByUserId(userId, pageable);
         return result.map(imDocument -> imDocumentMapper.imDocumentToImDocumentDTO(imDocument));
     }
 
@@ -73,7 +87,7 @@ public class ImDocumentServiceImpl implements ImDocumentService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public ImDocumentDTO findOne(Long id) {
         log.debug("Request to get ImDocument : {}", id);
         ImDocument imDocument = imDocumentRepository.findOne(id);

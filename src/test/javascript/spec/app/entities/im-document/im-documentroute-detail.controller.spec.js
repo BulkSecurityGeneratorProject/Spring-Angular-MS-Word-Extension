@@ -4,7 +4,7 @@ describe('Controller Tests', function() {
 
     describe('ImDocument Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockPreviousState, MockImDocument, MockFolder, MockImMap;
+        var MockEntity, MockPreviousState, MockImDocument, MockFolder, MockImMap, MockUser;
         var createController;
 
         beforeEach(inject(function($injector) {
@@ -15,6 +15,7 @@ describe('Controller Tests', function() {
             MockImDocument = jasmine.createSpy('MockImDocument');
             MockFolder = jasmine.createSpy('MockFolder');
             MockImMap = jasmine.createSpy('MockImMap');
+            MockUser = jasmine.createSpy('MockUser');
             
 
             var locals = {
@@ -24,7 +25,8 @@ describe('Controller Tests', function() {
                 'previousState': MockPreviousState,
                 'ImDocument': MockImDocument,
                 'Folder': MockFolder,
-                'ImMap': MockImMap
+                'ImMap': MockImMap,
+                'User': MockUser
             };
             createController = function() {
                 $injector.get('$controller')("ImDocumentRouteDetailController", locals);
