@@ -15,14 +15,15 @@ import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 
@@ -32,17 +33,17 @@ public class UploadController {
 
     private final Logger log = LoggerFactory.getLogger(UploadController.class);
 
-    @Autowired
-    FileStorageService fileStorageService;
+    @Inject
+    private FileStorageService fileStorageService;
 
-    @Autowired
-    ImageService imageService;
+    @Inject
+    private ImageService imageService;
 
-    @Autowired
-    ImDocumentService imDocumentService;
+    @Inject
+    private ImDocumentService imDocumentService;
 
-    @Autowired
-    ImCloudSecurity imCloudSecurity;
+    @Inject
+    private ImCloudSecurity imCloudSecurity;
 
     @GetMapping("/")
     public String index() {
@@ -54,90 +55,107 @@ public class UploadController {
     @Timed
     public
     @ResponseBody
-    XmlUploadResponse handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam("xml_file") MultipartFile file,
-                                          @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
-                                          RedirectAttributes redirectAttributes) {
+    ResponseEntity<ImDocumentDTO> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam("xml_file") MultipartFile file,
+                                                      @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
+                                                      RedirectAttributes redirectAttributes) {
 
         log.debug("XML upload request: {}", file.getOriginalFilename());
 
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
 
-        // TODO check permissions
+            try {
+                ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
+                String xmlString = IOUtils.toString(stream, "UTF-8");
 
-        try {
-            ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
-            String xmlString = IOUtils.toString(stream, "UTF-8");
+                String hashedPassword = null;
+                if (password != null && password.length() > 0) {
+                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    hashedPassword = passwordEncoder.encode(password);
+                }
 
-            String hashedPassword = passwordEncoder.encode(password);
+                ImDocumentDTO newDocument = new ImDocumentDTO();
+                newDocument.setOriginalFilename(file.getOriginalFilename());
+                newDocument.setOriginalXml(xmlString);
+                newDocument.setPassword(hashedPassword);
 
-            ImDocumentDTO newDocument = new ImDocumentDTO();
-            newDocument.setOriginalFilename(file.getOriginalFilename());
-            newDocument.setOriginalXml(xmlString);
-            newDocument.setPassword(hashedPassword);
-            imDocumentService.save(newDocument);
+                // TODO add created by user
 
-            ImDocumentCreatedResponse response = new ImDocumentCreatedResponse();
-            response.documentId = newDocument.getId();
+                newDocument = imDocumentService.save(newDocument);
 
-            return response;
+                return ResponseEntity.ok()
+                    .body(newDocument);
 
-        } catch (Exception ex) {
+            } catch (Exception ex) {
 
-            ExceptionResponse response = new ExceptionResponse();
-            response.errorMessage = ex.getMessage();
+                ExceptionResponse response = new ExceptionResponse();
+                response.errorMessage = ex.getMessage();
 
-            return response;
+                return ResponseEntity.badRequest()
+                    .body(null);
+            }
+        } else {
+            return accessDeniedResponse();
         }
     }
 
     @PostMapping("/image/")
     @Timed
-    public ResponseEntity<ImageDTO> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<ImageDTO> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, @RequestParam("access_token") String accessToken, RedirectAttributes redirectAttributes) {
 
         log.debug("Image upload request: {}", file.getOriginalFilename());
 
-        if (file == null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "missing_image", "There was no file upload with name \"image_file\" present.")).body(null);
-        }
+        User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
-        try {
+        if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
 
-            String extension = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")).toLowerCase();
 
-            if (".jpg".equals(extension) || ".png".equals(extension)) {
-
-                BufferedImage image = ImageIO.read(file.getInputStream());
-                Integer width = image.getWidth();
-                Integer height = image.getHeight();
-
-                if(width > 0 && height > 0) {
-
-                    // TODO check if image belongs to a valid ImDocument
-                    // TODO check permissions
-
-                    String filename = fileStorageService.saveFile(file);
-
-                    ImageDTO newImage = new ImageDTO();
-                    newImage.setFilename(filename);
-
-                    ImageDTO savedImage = imageService.save(newImage);
-
-                    return ResponseEntity.ok()
-                        .body(savedImage);
-                }else{
-                    // Invalid image dimensions
-                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_image", "The uploaded file is not an image.")).body(null);
-                }
-
-            } else {
-                // Invalid extension
-                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
+            if (file == null) {
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "missing_image", "There was no file upload with name \"image_file\" present.")).body(null);
             }
 
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "exception", ex.getMessage())).body(null);
+            try {
+
+                String extension = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")).toLowerCase();
+
+                if (".jpg".equals(extension) || ".png".equals(extension)) {
+
+                    BufferedImage image = ImageIO.read(file.getInputStream());
+                    Integer width = image.getWidth();
+                    Integer height = image.getHeight();
+
+                    if (width > 0 && height > 0) {
+
+                        // TODO check if image belongs to a valid ImDocument
+                        // TODO check if image belongs to an ImDocument that I have access to!!
+
+                        // TODO check permissions
+
+                        String filename = fileStorageService.saveFile(file);
+
+                        ImageDTO newImage = new ImageDTO();
+                        newImage.setFilename(filename);
+
+                        ImageDTO savedImage = imageService.save(newImage);
+
+                        return ResponseEntity.ok()
+                            .body(savedImage);
+                    } else {
+                        // Invalid image dimensions
+                        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_image", "The uploaded file is not an image.")).body(null);
+                    }
+
+                } else {
+                    // Invalid extension
+                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
+                }
+
+            } catch (Exception ex) {
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "exception", ex.getMessage())).body(null);
+            }
+        }else{
+            return accessDeniedResponse();
         }
 
 
@@ -145,6 +163,10 @@ public class UploadController {
 //            "You successfully uploaded " + file.getOriginalFilename() + "!");
 
 
+    }
+
+    private ResponseEntity accessDeniedResponse(){
+        return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("accessdenied", "Access denied")).body(null);
     }
 
 }

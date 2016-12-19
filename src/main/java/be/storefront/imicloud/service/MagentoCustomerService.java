@@ -25,7 +25,6 @@ public class MagentoCustomerService {
     @Inject
     private ImCloudProperties imCloudProperties;
 
-
     @Inject
     private PasswordEncoder passwordEncoder;
 
@@ -57,6 +56,7 @@ public class MagentoCustomerService {
             existingUser.setLangKey(langKey);
             existingUser.setLastName(lastName);
             existingUser.setActivated(isActive);
+            existingUser.setCreatedBy("magento");
 
             r = userService.saveUser(existingUser);
 
@@ -66,6 +66,7 @@ public class MagentoCustomerService {
 
             r = userService.createUser( email,  tempPassword,  firstName,  lastName,  email, langKey);
             r.setActivated(isActive);
+            r.setCreatedBy("magento");
             r = userService.saveUser(r);
         }
 

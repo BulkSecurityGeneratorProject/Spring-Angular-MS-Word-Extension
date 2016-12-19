@@ -5,14 +5,13 @@ import be.storefront.imicloud.domain.User;
 import be.storefront.imicloud.restclient.SimpleRestClient;
 import be.storefront.imicloud.service.MagentoCustomerService;
 import be.storefront.imicloud.service.UserService;
-import org.elasticsearch.common.inject.Inject;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import javax.inject.Inject;
+
+@Service
 public class ImCloudSecurity {
-
 
     @Inject
     private ImCloudProperties imCloudProperties;
@@ -25,6 +24,12 @@ public class ImCloudSecurity {
 
     // This class handles security features connected to the Word plugin FS Pro.
 
+    /**
+     * Get the User that matches the submitted access_token.
+     *
+     * @param accessToken
+     * @return
+     */
     public User getUserByFsProAccessToken(String accessToken) {
         String targetURL = imCloudProperties.getSecurity().getFsProCloud().getApi().getUrl() + "sapi/Authentication";
         String body = "{\"Key\":\"" + accessToken + "\"}";
@@ -49,24 +54,6 @@ public class ImCloudSecurity {
         return null;
     }
 
-    public boolean canCustomerUseTheCloud(int magentoCustomerId) {
-        return true;
-
-        /*
-        $response = $this->_doRequest('POST', 'sapi/Authentication' , null, array('Key' => $token));
-
-        $status = $response->getStatus();
-        $body = $response->getBody();
-
-        if ($status === 200) {
-            $data = Zend_Json::decode($body);
-            if(isset($data['Id'])){
-                return $data['Id'];
-            }
-        }
-         */
-    }
-
     protected SimpleRestClient getHttpClient(){
         SimpleRestClient client = new SimpleRestClient();
 
@@ -77,5 +64,9 @@ public class ImCloudSecurity {
     }
 
 
-
+    public boolean canUserUploadDocuments(User uploadingUser) {
+        // The user was originally defined by an access token from FS Pro Cloud, meaning he already has FS Pro, and should be allowed.
+        // More security checks can be added in the future.
+        return true;
+    }
 }
