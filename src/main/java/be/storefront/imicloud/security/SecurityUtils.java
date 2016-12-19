@@ -1,6 +1,5 @@
 package be.storefront.imicloud.security;
 
-import be.storefront.imicloud.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,11 +33,11 @@ public final class SecurityUtils {
         return userName;
     }
 
-    public static User getCurrentUser(){
+    public static MyUserDetails getCurrentUser(){
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
-        if(authentication.getPrincipal() instanceof User){
-            User currentUser = (User) authentication.getPrincipal();
+        if(authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User){
+            MyUserDetails currentUser = (MyUserDetails) authentication.getPrincipal();
             return currentUser;
         }
         return null;

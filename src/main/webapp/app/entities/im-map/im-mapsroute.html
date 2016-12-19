@@ -38,6 +38,7 @@
                     <th><span data-translate="global.field.id">ID</span></th>
                     <th><span data-translate="imicloudApp.imMap.guid">Guid</span></th>
                     <th><span data-translate="imicloudApp.imMap.label">Label</span></th>
+                    <th><span data-translate="imicloudApp.imMap.position">Position</span></th>
                     <th><span data-translate="imicloudApp.imMap.imDocument">Im Document</span></th>
                     <th></th>
                 </tr>
@@ -47,6 +48,7 @@
                     <td><a ui-sref="im-maproute-detail({id:imMap.id})">{{imMap.id}}</a></td>
                     <td>{{imMap.guid}}</td>
                     <td>{{imMap.label}}</td>
+                    <td>{{imMap.position}}</td>
                     <td>
                         <a ui-sref="im-documentroute-detail({id:imMap.imDocumentId})">{{imMap.imDocumentId}}</a>
                     </td>

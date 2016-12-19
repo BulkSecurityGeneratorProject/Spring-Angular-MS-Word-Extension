@@ -34,6 +34,10 @@ public class ImMap extends AbstractAuditingEntity implements Serializable {
     @Column(name = "label", nullable = false)
     private String label;
 
+    @NotNull
+    @Column(name = "position", nullable = false)
+    private Float position;
+
     @ManyToOne
     private ImDocument imDocument;
 
@@ -74,6 +78,19 @@ public class ImMap extends AbstractAuditingEntity implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public Float getPosition() {
+        return position;
+    }
+
+    public ImMap position(Float position) {
+        this.position = position;
+        return this;
+    }
+
+    public void setPosition(Float position) {
+        this.position = position;
     }
 
     public ImDocument getImDocument() {
@@ -140,6 +157,7 @@ public class ImMap extends AbstractAuditingEntity implements Serializable {
             "id=" + id +
             ", guid='" + guid + "'" +
             ", label='" + label + "'" +
+            ", position='" + position + "'" +
             '}';
     }
 }

@@ -106,6 +106,7 @@
                             return {
                                 guid: null,
                                 label: null,
+                                position: null,
                                 id: null
                             };
                         }

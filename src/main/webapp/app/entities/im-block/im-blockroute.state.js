@@ -106,6 +106,7 @@
                             return {
                                 label: null,
                                 content: null,
+                                position: null,
                                 id: null
                             };
                         }

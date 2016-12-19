@@ -47,6 +47,9 @@ public class ImMapResourceIntTest {
     private static final String DEFAULT_LABEL = "AAAAAAAAAA";
     private static final String UPDATED_LABEL = "BBBBBBBBBB";
 
+    private static final Float DEFAULT_POSITION = 1F;
+    private static final Float UPDATED_POSITION = 2F;
+
     @Inject
     private ImMapRepository imMapRepository;
 
@@ -91,7 +94,8 @@ public class ImMapResourceIntTest {
     public static ImMap createEntity(EntityManager em) {
         ImMap imMap = new ImMap()
                 .guid(DEFAULT_GUID)
-                .label(DEFAULT_LABEL);
+                .label(DEFAULT_LABEL)
+                .position(DEFAULT_POSITION);
         return imMap;
     }
 
@@ -120,6 +124,7 @@ public class ImMapResourceIntTest {
         ImMap testImMap = imMapList.get(imMapList.size() - 1);
         assertThat(testImMap.getGuid()).isEqualTo(DEFAULT_GUID);
         assertThat(testImMap.getLabel()).isEqualTo(DEFAULT_LABEL);
+        assertThat(testImMap.getPosition()).isEqualTo(DEFAULT_POSITION);
 
         // Validate the ImMap in ElasticSearch
         ImMap imMapEs = imMapSearchRepository.findOne(testImMap.getId());
@@ -168,6 +173,25 @@ public class ImMapResourceIntTest {
 
     @Test
     @Transactional
+    public void checkPositionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = imMapRepository.findAll().size();
+        // set the field null
+        imMap.setPosition(null);
+
+        // Create the ImMap, which fails.
+        ImMapDTO imMapDTO = imMapMapper.imMapToImMapDTO(imMap);
+
+        restImMapMockMvc.perform(post("/api/im-maps")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(imMapDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<ImMap> imMapList = imMapRepository.findAll();
+        assertThat(imMapList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllImMaps() throws Exception {
         // Initialize the database
         imMapRepository.saveAndFlush(imMap);
@@ -178,7 +202,8 @@ public class ImMapResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(imMap.getId().intValue())))
             .andExpect(jsonPath("$.[*].guid").value(hasItem(DEFAULT_GUID.toString())))
-            .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())));
+            .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())))
+            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())));
     }
 
     @Test
@@ -193,7 +218,8 @@ public class ImMapResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(imMap.getId().intValue()))
             .andExpect(jsonPath("$.guid").value(DEFAULT_GUID.toString()))
-            .andExpect(jsonPath("$.label").value(DEFAULT_LABEL.toString()));
+            .andExpect(jsonPath("$.label").value(DEFAULT_LABEL.toString()))
+            .andExpect(jsonPath("$.position").value(DEFAULT_POSITION.doubleValue()));
     }
 
     @Test
@@ -216,7 +242,8 @@ public class ImMapResourceIntTest {
         ImMap updatedImMap = imMapRepository.findOne(imMap.getId());
         updatedImMap
                 .guid(UPDATED_GUID)
-                .label(UPDATED_LABEL);
+                .label(UPDATED_LABEL)
+                .position(UPDATED_POSITION);
         ImMapDTO imMapDTO = imMapMapper.imMapToImMapDTO(updatedImMap);
 
         restImMapMockMvc.perform(put("/api/im-maps")
@@ -230,6 +257,7 @@ public class ImMapResourceIntTest {
         ImMap testImMap = imMapList.get(imMapList.size() - 1);
         assertThat(testImMap.getGuid()).isEqualTo(UPDATED_GUID);
         assertThat(testImMap.getLabel()).isEqualTo(UPDATED_LABEL);
+        assertThat(testImMap.getPosition()).isEqualTo(UPDATED_POSITION);
 
         // Validate the ImMap in ElasticSearch
         ImMap imMapEs = imMapSearchRepository.findOne(testImMap.getId());
@@ -290,6 +318,7 @@ public class ImMapResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(imMap.getId().intValue())))
             .andExpect(jsonPath("$.[*].guid").value(hasItem(DEFAULT_GUID.toString())))
-            .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())));
+            .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())))
+            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())));
     }
 }

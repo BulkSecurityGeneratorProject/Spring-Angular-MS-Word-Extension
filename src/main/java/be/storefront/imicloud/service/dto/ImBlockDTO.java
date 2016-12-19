@@ -1,5 +1,6 @@
 package be.storefront.imicloud.service.dto;
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,9 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
     @Lob
     private String content;
+
+    @NotNull
+    private Float position;
 
 
     private Long imMapId;
@@ -42,6 +46,13 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+    public Float getPosition() {
+        return position;
+    }
+
+    public void setPosition(Float position) {
+        this.position = position;
     }
 
     public Long getImMapId() {
@@ -79,6 +90,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
             "id=" + id +
             ", label='" + label + "'" +
             ", content='" + content + "'" +
+            ", position='" + position + "'" +
             '}';
     }
 }

@@ -18,6 +18,7 @@
             },
             "guid": "Guid",
             "label": "Label",
+            "position": "Position",
             "imDocument": "Im Document",
             "block": "Block"
         }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +33,10 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
     @Lob
     @Column(name = "content")
     private String content;
+
+    @NotNull
+    @Column(name = "position", nullable = false)
+    private Float position;
 
     @ManyToOne
     private ImMap imMap;
@@ -73,6 +78,19 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Float getPosition() {
+        return position;
+    }
+
+    public ImBlock position(Float position) {
+        this.position = position;
+        return this;
+    }
+
+    public void setPosition(Float position) {
+        this.position = position;
     }
 
     public ImMap getImMap() {
@@ -139,6 +157,7 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
             "id=" + id +
             ", label='" + label + "'" +
             ", content='" + content + "'" +
+            ", position='" + position + "'" +
             '}';
     }
 }

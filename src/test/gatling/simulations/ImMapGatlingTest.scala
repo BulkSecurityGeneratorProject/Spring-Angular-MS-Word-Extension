@@ -67,7 +67,7 @@ class ImMapGatlingTest extends Simulation {
             .exec(http("Create new imMap")
             .post("/api/im-maps")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "guid":"SAMPLE_TEXT", "label":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "guid":"SAMPLE_TEXT", "label":"SAMPLE_TEXT", "position":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_imMap_url"))).exitHereIfFailed
             .pause(10)

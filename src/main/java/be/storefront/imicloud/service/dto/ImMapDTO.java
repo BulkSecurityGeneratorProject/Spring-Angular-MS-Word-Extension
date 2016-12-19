@@ -19,6 +19,9 @@ public class ImMapDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private String label;
 
+    @NotNull
+    private Float position;
+
 
     private Long imDocumentId;
     
@@ -42,6 +45,13 @@ public class ImMapDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+    public Float getPosition() {
+        return position;
+    }
+
+    public void setPosition(Float position) {
+        this.position = position;
     }
 
     public Long getImDocumentId() {
@@ -79,6 +89,7 @@ public class ImMapDTO extends AbstractAuditingDTO implements Serializable {
             "id=" + id +
             ", guid='" + guid + "'" +
             ", label='" + label + "'" +
+            ", position='" + position + "'" +
             '}';
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
@@ -44,7 +45,7 @@ public class ImBlockResource {
      */
     @PostMapping("/im-blocks")
     @Timed
-    public ResponseEntity<ImBlockDTO> createImBlock(@RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
+    public ResponseEntity<ImBlockDTO> createImBlock(@Valid @RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
         log.debug("REST request to save ImBlock : {}", imBlockDTO);
         if (imBlockDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imBlock", "idexists", "A new imBlock cannot already have an ID")).body(null);
@@ -66,7 +67,7 @@ public class ImBlockResource {
      */
     @PutMapping("/im-blocks")
     @Timed
-    public ResponseEntity<ImBlockDTO> updateImBlock(@RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
+    public ResponseEntity<ImBlockDTO> updateImBlock(@Valid @RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
         log.debug("REST request to update ImBlock : {}", imBlockDTO);
         if (imBlockDTO.getId() == null) {
             return createImBlock(imBlockDTO);

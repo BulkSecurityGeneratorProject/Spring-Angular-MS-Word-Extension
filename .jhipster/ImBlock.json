@@ -23,12 +23,20 @@
             "fieldName": "content",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "position",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20161216130939",
-    "entityTableName": "im_block",
     "dto": "mapstruct",
-    "pagination": "no",
     "service": "serviceImpl",
-    "angularJSSuffix": "route"
+    "entityTableName": "im_block",
+    "pagination": "no",
+    "angularJSSuffix": "route",
+    "enableEntityAudit": true
 }

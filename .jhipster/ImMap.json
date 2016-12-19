@@ -25,12 +25,20 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "position",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20161216130938",
-    "entityTableName": "im_map",
     "dto": "mapstruct",
-    "pagination": "no",
     "service": "serviceImpl",
-    "angularJSSuffix": "route"
+    "entityTableName": "im_map",
+    "pagination": "no",
+    "angularJSSuffix": "route",
+    "enableEntityAudit": true
 }

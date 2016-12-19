@@ -32,6 +32,10 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="position" type="${floatType}">
+                <constraints nullable="false" />
+            </column>
+            
             <column name="im_map_id" type="bigint">
                 <constraints nullable="true" />
             </column>

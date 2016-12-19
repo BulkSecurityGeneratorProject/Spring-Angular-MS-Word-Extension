@@ -48,6 +48,9 @@ public class ImBlockResourceIntTest {
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
 
+    private static final Float DEFAULT_POSITION = 1F;
+    private static final Float UPDATED_POSITION = 2F;
+
     @Inject
     private ImBlockRepository imBlockRepository;
 
@@ -92,7 +95,8 @@ public class ImBlockResourceIntTest {
     public static ImBlock createEntity(EntityManager em) {
         ImBlock imBlock = new ImBlock()
                 .label(DEFAULT_LABEL)
-                .content(DEFAULT_CONTENT);
+                .content(DEFAULT_CONTENT)
+                .position(DEFAULT_POSITION);
         return imBlock;
     }
 
@@ -121,6 +125,7 @@ public class ImBlockResourceIntTest {
         ImBlock testImBlock = imBlockList.get(imBlockList.size() - 1);
         assertThat(testImBlock.getLabel()).isEqualTo(DEFAULT_LABEL);
         assertThat(testImBlock.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testImBlock.getPosition()).isEqualTo(DEFAULT_POSITION);
 
         // Validate the ImBlock in ElasticSearch
         ImBlock imBlockEs = imBlockSearchRepository.findOne(testImBlock.getId());
@@ -150,6 +155,25 @@ public class ImBlockResourceIntTest {
 
     @Test
     @Transactional
+    public void checkPositionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = imBlockRepository.findAll().size();
+        // set the field null
+        imBlock.setPosition(null);
+
+        // Create the ImBlock, which fails.
+        ImBlockDTO imBlockDTO = imBlockMapper.imBlockToImBlockDTO(imBlock);
+
+        restImBlockMockMvc.perform(post("/api/im-blocks")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(imBlockDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<ImBlock> imBlockList = imBlockRepository.findAll();
+        assertThat(imBlockList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllImBlocks() throws Exception {
         // Initialize the database
         imBlockRepository.saveAndFlush(imBlock);
@@ -160,7 +184,8 @@ public class ImBlockResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(imBlock.getId().intValue())))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())));
     }
 
     @Test
@@ -175,7 +200,8 @@ public class ImBlockResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(imBlock.getId().intValue()))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL.toString()))
-            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()));
+            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
+            .andExpect(jsonPath("$.position").value(DEFAULT_POSITION.doubleValue()));
     }
 
     @Test
@@ -198,7 +224,8 @@ public class ImBlockResourceIntTest {
         ImBlock updatedImBlock = imBlockRepository.findOne(imBlock.getId());
         updatedImBlock
                 .label(UPDATED_LABEL)
-                .content(UPDATED_CONTENT);
+                .content(UPDATED_CONTENT)
+                .position(UPDATED_POSITION);
         ImBlockDTO imBlockDTO = imBlockMapper.imBlockToImBlockDTO(updatedImBlock);
 
         restImBlockMockMvc.perform(put("/api/im-blocks")
@@ -212,6 +239,7 @@ public class ImBlockResourceIntTest {
         ImBlock testImBlock = imBlockList.get(imBlockList.size() - 1);
         assertThat(testImBlock.getLabel()).isEqualTo(UPDATED_LABEL);
         assertThat(testImBlock.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testImBlock.getPosition()).isEqualTo(UPDATED_POSITION);
 
         // Validate the ImBlock in ElasticSearch
         ImBlock imBlockEs = imBlockSearchRepository.findOne(testImBlock.getId());
@@ -272,6 +300,7 @@ public class ImBlockResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(imBlock.getId().intValue())))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
+            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())));
     }
 }

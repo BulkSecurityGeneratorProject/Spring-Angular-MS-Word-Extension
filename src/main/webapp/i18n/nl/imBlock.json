@@ -18,6 +18,7 @@
             },
             "label": "Label",
             "content": "Content",
+            "position": "Position",
             "imMap": "Im Map",
             "image": "Image"
         }

@@ -184,26 +184,19 @@ public class ImDocumentResource {
         ImDocumentDTO document = imDocumentService.findOne(id);
 
         // Restrict to current user
-        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)){
-            // full access is okay
-
-        }else {
+        if(!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)){
             // limit to current user
             Long currentUserId = SecurityUtils.getCurrentUser().getId();
 
-            if(document.getUserId().equals(currentUserId)){
-                // Delete is allowed
-                imDocumentService.delete(id);
-                return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
-            }else{
+            if(!document.getUserId().equals(currentUserId)){
                 // Delete someone else's document is forbidden
                 return ResponseEntity.badRequest().body(null);
             }
 
         }
 
-
-
+        imDocumentService.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
     }
 
     /**
