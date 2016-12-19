@@ -13,6 +13,7 @@ import be.storefront.imicloud.web.rest.response.XmlUploadResponse;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 
@@ -81,6 +88,66 @@ public class UploadController {
                 newDocument.setPassword(hashedPassword);
                 newDocument.setUserId(uploadingUser.getId());
 
+
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(xmlString);
+
+                //optional, but recommended, read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+                doc.getDocumentElement().normalize();
+
+                //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+                NodeList mapList = doc.getElementsByTagName("map");
+
+
+
+                for (int i = 0; i < mapList.getLength(); i++) {
+
+                    Node oneMap = mapList.item(i);
+                    if (oneMap.getNodeType() == Node.ELEMENT_NODE) {
+                        Element oneMapElement = (Element) oneMap;
+
+                        String mapGuid = oneMapElement.getAttribute("guid");
+                        String mapLabel = getText(oneMap, "label");
+
+                        String wouter = "wouter";
+
+                        NodeList blockList = oneMapElement.getElementsByTagName("block");
+
+                        for (int j = 0; j < blockList.getLength(); j++) {
+                            Node oneBlock = mapList.item(j);
+
+                            if (oneBlock.getNodeType() == Node.ELEMENT_NODE) {
+                                Element oneBlockElement = (Element) oneBlock;
+
+                                String blockGuid = oneBlockElement.getAttribute("guid");
+                                String blockLabel = getText(oneBlock, "label");
+
+                                NodeList contentNodes = oneBlockElement.getElementsByTagName("content");
+                                if(contentNodes.getLength() > 0){
+                                    Element contentElement = (Element)contentNodes.item(0);
+                                    
+                                }
+
+                            }
+                        }
+                    }
+
+
+//                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+//                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+//
+//                        Element eElement = (Element) nNode;
+//
+//                        System.out.println("Staff id : " + eElement.getAttribute("id"));
+//                        System.out.println("First Name : " + eElement.getElementsByTagName("
+//
+//                    }
+                }
+
+
                 newDocument = imDocumentService.save(newDocument);
 
                 return ResponseEntity.ok()
@@ -96,6 +163,18 @@ public class UploadController {
         } else {
             return accessDeniedResponse();
         }
+    }
+
+    protected String getText(Node node, String childNodeName){
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if(childNode.getNodeType() == Node.ELEMENT_NODE && childNodeName.equals(childNode.getNodeName())){
+                return childNode.getTextContent();
+            }
+        }
+        return null;
     }
 
     @PostMapping("/image/")
