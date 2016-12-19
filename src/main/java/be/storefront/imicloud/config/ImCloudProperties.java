@@ -55,10 +55,19 @@ public class ImCloudProperties {
 
     public static class Magento {
 
-        private final SubscriptionCheck subscriptionCheck = new SubscriptionCheck();
+        private boolean allowMagentoCustomerLogin = false;
+        private final Api api = new Api();
 
-        public SubscriptionCheck getSubscriptionCheck() {
-            return subscriptionCheck;
+        public boolean getAllowMagentoCustomerLogin() {
+            return allowMagentoCustomerLogin;
+        }
+
+        public void setAllowMagentoCustomerLogin(boolean allowMagentoCustomerLogin) {
+            this.allowMagentoCustomerLogin = allowMagentoCustomerLogin;
+        }
+
+        public Api getApi() {
+            return api;
         }
     }
 

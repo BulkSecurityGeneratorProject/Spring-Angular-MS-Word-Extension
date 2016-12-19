@@ -85,6 +85,13 @@ public class UserService {
             });
     }
 
+    public User saveUser(User user){
+        User r = userRepository.save(user);
+        userSearchRepository.save(user);
+
+        return r;
+    }
+
     public User createUser(String login, String password, String firstName, String lastName, String email,
         String langKey) {
 

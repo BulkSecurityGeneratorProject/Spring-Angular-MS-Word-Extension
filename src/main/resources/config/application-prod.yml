@@ -43,7 +43,7 @@ spring:
     cache:
         jcache:
             config: ehcache.xml
-    data:
+#    data:
 #        elasticsearch:
 #            cluster-name:
 #            cluster-nodes: localhost:9300
@@ -71,8 +71,20 @@ server:
 
 imcloud:
     # Enter the full path to the dir where images are stored. Must end with a "/"
-    fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads/
+    fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
+    security:
+        magento:
+            allowMagentoCustomerLogin: true
+            api:
+                url: http://localinformationmapping.com:10089/magento/
+                user: user
+                pass: pass
 
+        fsProCloud:
+            api:
+                url: http://fsprocloud.test.informationmapping.com:8081/
+                user: MyTestUser
+                pass: MyPwd
 
 # ===================================================================
 # JHipster specific properties

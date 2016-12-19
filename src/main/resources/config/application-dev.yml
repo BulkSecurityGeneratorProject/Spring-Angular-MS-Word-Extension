@@ -49,8 +49,9 @@ spring:
         jcache:
             config: ehcache.xml
     data:
-#        elasticsearch:
+        elasticsearch:
 #            cluster-name:
+            cluster-node: false
 #            cluster-nodes:
 #            properties:
 #                path:
@@ -82,10 +83,12 @@ imcloud:
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
     security:
         magento:
-            subscriptionCheck:
-                url: http://localinformationmapping.com:10089/magento/subscriptions/subscription/check
+            allowMagentoCustomerLogin: true
+            api:
+                url: http://localinformationmapping.com:10089/magento/
                 user: user
                 pass: pass
+
         fsProCloud:
             api:
                 url: http://fsprocloud.test.informationmapping.com:8081/

@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,6 +27,7 @@ import java.util.Collection;
 @ComponentScan
 @EnableAutoConfiguration(exclude = { MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class })
 @EnableConfigurationProperties({ImCloudProperties.class, JHipsterProperties.class, LiquibaseProperties.class })
+@SpringBootApplication(exclude = ElasticsearchAutoConfiguration.class)
 public class ImicloudApp {
 
     private static final Logger log = LoggerFactory.getLogger(ImicloudApp.class);
@@ -52,6 +55,9 @@ public class ImicloudApp {
                 "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
     }
+
+
+
 
     /**
      * Main method, used to run the application.

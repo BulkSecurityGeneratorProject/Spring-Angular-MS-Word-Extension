@@ -1,5 +1,7 @@
 package be.storefront.imicloud.web.rest;
 
+import be.storefront.imicloud.config.ImCloudProperties;
+import be.storefront.imicloud.security.MagentoAuthenticationToken;
 import com.codahale.metrics.annotation.Timed;
 
 import be.storefront.imicloud.domain.PersistentToken;
@@ -21,6 +23,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -51,6 +58,9 @@ public class AccountResource {
     @Inject
     private MailService mailService;
 
+    @Inject
+    private ImCloudProperties imCloudProperties;
+
     /**
      * POST  /register : register the user.
      *
@@ -58,7 +68,7 @@ public class AccountResource {
      * @return the ResponseEntity with status 201 (Created) if the user is registered or 400 (Bad Request) if the login or e-mail is already in use
      */
     @PostMapping(path = "/register",
-                    produces={MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @Timed
     public ResponseEntity<?> registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
 
@@ -78,7 +88,7 @@ public class AccountResource {
                     mailService.sendActivationEmail(user);
                     return new ResponseEntity<>(HttpStatus.CREATED);
                 })
-        );
+            );
     }
 
     /**
@@ -116,9 +126,49 @@ public class AccountResource {
     @GetMapping("/account")
     @Timed
     public ResponseEntity<UserDTO> getAccount() {
-        return Optional.ofNullable(userService.getUserWithAuthorities())
-            .map(user -> new ResponseEntity<>(new UserDTO(user), HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+
+        User dbUser = userService.getUserWithAuthorities();
+        Optional<User> optionalUser = Optional.ofNullable(dbUser);
+        UserDTO dto = null;
+
+        ResponseEntity<UserDTO> r;
+
+        if (optionalUser.isPresent()) {
+            dto = new UserDTO(optionalUser.get());
+        } else if (imCloudProperties.getSecurity().getMagento().getAllowMagentoCustomerLogin()) {
+            // Load from Magento
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication instanceof MagentoAuthenticationToken) {
+
+                MagentoAuthenticationToken magentoAuth = (MagentoAuthenticationToken) authentication;
+
+                String email = magentoAuth.getEmail();
+                String firstName = authentication.getName();
+                String lastName = authentication.getName();
+                boolean activated = magentoAuth.isActive();
+                String langCode = magentoAuth.getLangCode();
+
+
+                HashSet<String> authorityStrings = new HashSet<>();
+                for (GrantedAuthority grantedAuthority : magentoAuth.getAuthorities()) {
+                    authorityStrings.add(grantedAuthority.toString());
+                }
+
+                dto = new UserDTO(email, firstName, lastName, email, activated, langCode, authorityStrings);
+            }
+        }
+
+        if (dto != null) {
+            final UserDTO dto2 = dto;
+            r = new ResponseEntity<>(dto2, HttpStatus.OK);
+
+        } else {
+            r = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return r;
+
     }
 
     /**
@@ -165,7 +215,7 @@ public class AccountResource {
      * GET  /account/sessions : get the current open sessions.
      *
      * @return the ResponseEntity with status 200 (OK) and the current open sessions in body,
-     *  or status 500 (Internal Server Error) if the current open sessions couldn't be retrieved
+     * or status 500 (Internal Server Error) if the current open sessions couldn't be retrieved
      */
     @GetMapping("/account/sessions")
     @Timed
@@ -179,16 +229,16 @@ public class AccountResource {
 
     /**
      * DELETE  /account/sessions?series={series} : invalidate an existing session.
-     *
+     * <p>
      * - You can only delete your own sessions, not any other user's session
      * - If you delete one of your existing sessions, and that you are currently logged in on that session, you will
-     *   still be able to use that session, until you quit your browser: it does not work in real time (there is
-     *   no API for that), it only removes the "remember me" cookie
+     * still be able to use that session, until you quit your browser: it does not work in real time (there is
+     * no API for that), it only removes the "remember me" cookie
      * - This is also true if you invalidate your current session: you will still be able to use it until you close
-     *   your browser or that the session times out. But automatic login (the "remember me" cookie) will not work
-     *   anymore.
-     *   There is an API to invalidate the current session, but there is no API to check which session uses which
-     *   cookie.
+     * your browser or that the session times out. But automatic login (the "remember me" cookie) will not work
+     * anymore.
+     * There is an API to invalidate the current session, but there is no API to check which session uses which
+     * cookie.
      *
      * @param series the series of an existing session
      * @throws UnsupportedEncodingException if the series couldnt be URL decoded
@@ -236,8 +286,8 @@ public class AccountResource {
             return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
         }
         return userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey())
-              .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-              .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     private boolean checkPasswordLength(String password) {
