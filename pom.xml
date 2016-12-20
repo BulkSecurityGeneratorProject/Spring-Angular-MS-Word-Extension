@@ -229,6 +229,13 @@
             </exclusions>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jooq/joox -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joox</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
