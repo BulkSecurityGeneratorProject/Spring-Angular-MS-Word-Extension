@@ -1,5 +1,8 @@
 package be.storefront.imicloud.service.dto;
 
+import be.storefront.imicloud.domain.Image;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -23,9 +26,11 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private Float position;
 
+    @JsonIgnore
+    private Set<Image> images = new HashSet<>();
 
     private Long imMapId;
-    
+
     public Long getId() {
         return id;
     }
@@ -82,6 +87,15 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     @Override

@@ -1,12 +1,15 @@
 package be.storefront.imicloud.web.rest;
 
-import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.*;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.dto.ImMapDTO;
 import be.storefront.imicloud.service.dto.ImageDTO;
+import be.storefront.imicloud.service.mapper.ImBlockMapper;
+import be.storefront.imicloud.service.mapper.ImDocumentMapper;
+import be.storefront.imicloud.service.mapper.ImageMapper;
 import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -17,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -45,6 +49,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Controller
@@ -71,6 +76,16 @@ public class UploadController {
     @Inject
     private ImBlockService imBlockService;
 
+
+    @Inject
+    private ImDocumentMapper imDocumentMapper;
+
+    @Inject
+    private ImBlockMapper imBlockMapper;
+
+    @Inject
+    private ImageMapper imageMapper;
+
     @GetMapping("/")
     public String index() {
         return "upload";
@@ -90,95 +105,106 @@ public class UploadController {
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
         if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
-            String xmlString;
 
-            try {
-                ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
-                xmlString = IOUtils.toString(stream, "UTF-8");
+            ImDocumentDTO newDocument = processUploadedDocument(file, password, uploadingUser);
 
-                // Cleanup XML string
-                xmlString = xmlString.trim().replaceFirst("^([\\W]+)<","<");
+            ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument);
 
-                String hashedPassword = null;
-                if (password != null && password.length() > 0) {
-                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    hashedPassword = passwordEncoder.encode(password);
-                }
-
-                ImDocumentDTO newDocument = new ImDocumentDTO();
-                newDocument.setOriginalFilename(file.getOriginalFilename());
-                newDocument.setOriginalXml(xmlString);
-                newDocument.setPassword(hashedPassword);
-                newDocument.setUserId(uploadingUser.getId());
+            return ResponseEntity.ok().body(imDocumentUploaded);
 
 
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                InputSource is = new InputSource(new StringReader(xmlString));
-                Document doc = dBuilder.parse(is);
+        } else {
+            return accessDeniedResponse();
+        }
+    }
 
-                //optional, but recommended, read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-                doc.getDocumentElement().normalize();
+    @Transactional
+    private ImDocumentDTO processUploadedDocument(MultipartFile file, String password, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
 
+        ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
+        String xmlString = IOUtils.toString(stream, "UTF-8");
 
-                newDocument = imDocumentService.save(newDocument);
+        // Cleanup XML string
+        xmlString = xmlString.trim().replaceFirst("^([\\W]+)<", "<");
 
-                //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        String hashedPassword = null;
+        if (password != null && password.length() > 0) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            hashedPassword = passwordEncoder.encode(password);
+        }
 
-                NodeList mapList = doc.getElementsByTagName("map");
-
-                for (int i = 0; i < mapList.getLength(); i++) {
-
-                    Node oneMap = mapList.item(i);
-                    if (oneMap.getNodeType() == Node.ELEMENT_NODE) {
-                        Element oneMapElement = (Element) oneMap;
-
-                        String mapGuid = oneMapElement.getAttribute("guid");
-                        String mapLabel = getText(oneMap, "label");
-
-                        // Save all maps
-                        ImMapDTO newMapDto = new ImMapDTO();
-                        newMapDto.setGuid(mapGuid);
-                        newMapDto.setImDocumentId(newDocument.getId());
-                        newMapDto.setLabel(mapLabel);
-                        newMapDto.setPosition((float) i);
-                        imMapService.save(newMapDto);
-
-                        NodeList blockList = oneMapElement.getElementsByTagName("block");
-
-                        for (int j = 0; j < blockList.getLength(); j++) {
-                            Node oneBlock = blockList.item(j);
-
-                            if (oneBlock.getNodeType() == Node.ELEMENT_NODE) {
-                                Element oneBlockElement = (Element) oneBlock;
-
-                                String blockGuid = oneBlockElement.getAttribute("guid");
-                                String blockLabel = getText(oneBlock, "label");
-
-                                String contentText = null;
-
-                                NodeList contentNodes = oneBlockElement.getElementsByTagName("content");
-                                if (contentNodes.getLength() > 0) {
-                                    Element contentElement = (Element) contentNodes.item(0);
-
-                                    contentText = nodeToString(contentElement).trim();
+        ImDocumentDTO newDocument = new ImDocumentDTO();
+        newDocument.setOriginalFilename(file.getOriginalFilename());
+        newDocument.setOriginalXml(xmlString);
+        newDocument.setPassword(hashedPassword);
+        newDocument.setUserId(user.getId());
 
 
-                                }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        InputSource is = new InputSource(new StringReader(xmlString));
+        Document doc = dBuilder.parse(is);
 
-                                contentText = transformContentToHtml(contentText);
+        //optional, but recommended, read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+        doc.getDocumentElement().normalize();
 
-                                // Save all blocks
-                                ImBlockDTO newBlockDto = new ImBlockDTO();
-                                newBlockDto.setImMapId(newMapDto.getId());
-                                newBlockDto.setLabel(mapLabel);
-                                newBlockDto.setPosition((float) j);
-                                newBlockDto.setContent(contentText);
 
-                                imBlockService.save(newBlockDto);
-                            }
+        newDocument = imDocumentService.save(newDocument);
+
+        //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+        NodeList mapList = doc.getElementsByTagName("map");
+
+        for (int i = 0; i < mapList.getLength(); i++) {
+
+            Node oneMap = mapList.item(i);
+            if (oneMap.getNodeType() == Node.ELEMENT_NODE) {
+                Element oneMapElement = (Element) oneMap;
+
+                String mapGuid = oneMapElement.getAttribute("guid");
+                String mapLabel = getText(oneMap, "label");
+
+                // Save all maps
+                ImMapDTO newMapDto = new ImMapDTO();
+                newMapDto.setGuid(mapGuid);
+                newMapDto.setImDocumentId(newDocument.getId());
+                newMapDto.setLabel(mapLabel);
+                newMapDto.setPosition((float) i);
+                imMapService.save(newMapDto);
+
+                NodeList blockList = oneMapElement.getElementsByTagName("block");
+
+                for (int j = 0; j < blockList.getLength(); j++) {
+                    Node oneBlock = blockList.item(j);
+
+                    if (oneBlock.getNodeType() == Node.ELEMENT_NODE) {
+                        Element oneBlockElement = (Element) oneBlock;
+
+                        String blockGuid = oneBlockElement.getAttribute("guid");
+                        String blockLabel = getText(oneBlock, "label");
+
+                        String contentText = null;
+
+                        NodeList contentNodes = oneBlockElement.getElementsByTagName("content");
+                        if (contentNodes.getLength() > 0) {
+                            Element contentElement = (Element) contentNodes.item(0);
+
+                            contentText = nodeToString(contentElement).trim();
                         }
+
+                        contentText = transformContentToHtml(contentText);
+
+                        // Save all blocks
+                        ImBlockDTO newBlockDto = new ImBlockDTO();
+                        newBlockDto.setImMapId(newMapDto.getId());
+                        newBlockDto.setLabel(blockLabel);
+                        newBlockDto.setPosition((float) j);
+                        newBlockDto.setContent(contentText);
+
+                        imBlockService.save(newBlockDto);
                     }
+                }
+            }
 
 
 //                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
@@ -191,21 +217,10 @@ public class UploadController {
 //                        System.out.println("First Name : " + eElement.getElementsByTagName("
 //
 //                    }
-                }
-
-                ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument);
-
-                return ResponseEntity.ok().body(imDocumentUploaded);
-
-            } catch (Exception ex) {
-                throw ex;
-//                return ResponseEntity.badRequest()
-//                    .body(null);
-            }
-        } else {
-            return accessDeniedResponse();
         }
+        return newDocument;
     }
+
 
     private String transformContentToHtml(String contentText) {
         Match root = $(contentText);
@@ -217,7 +232,7 @@ public class UploadController {
         root.find("list[numbered=true]").rename("ol").removeAttr("numbered");
         root.find("listitem").rename("li");
 
-        renameAttr(root.find("image").rename("img"),"source","src");
+        renameAttr(root.find("image").rename("img"), "source", "data-source");
 
 
 //        List<Match> imgs = root.find("image").rename("img").each();
@@ -235,9 +250,9 @@ public class UploadController {
         root.find("row cell").rename("td");
 
         root.find("headerrow").rename("tr");
-            //.wrap("thead");
+        //.wrap("thead");
         root.find("row").rename("tr");
-            //.wrap("tbody");
+        //.wrap("tbody");
 
         // We need <li> around a sub-list
         root.find("ul > ul").wrap("li");
@@ -248,34 +263,34 @@ public class UploadController {
         contentText = root.toString();
 
         // Remove <content> and </content>
-        contentText = contentText.replaceAll("<content>","");
-        contentText = contentText.replaceAll("</content>","");
+        contentText = contentText.replaceAll("<content>", "");
+        contentText = contentText.replaceAll("</content>", "");
 
         // Remove whitespace between tags
-        contentText = contentText.replaceAll(">\\s+<","><");
+        contentText = contentText.replaceAll(">\\s+<", "><");
 
 
         // Remove meaningless <p><p>... paragraph in paragraph
-        while(contentText.indexOf("<p><p>") != -1){
-            contentText = contentText.replaceAll("<p><p>","<p>");
+        while (contentText.indexOf("<p><p>") != -1) {
+            contentText = contentText.replaceAll("<p><p>", "<p>");
         }
-        while(contentText.indexOf("</p></p>") != -1){
-            contentText = contentText.replaceAll("</p></p>","</p>");
+        while (contentText.indexOf("</p></p>") != -1) {
+            contentText = contentText.replaceAll("</p></p>", "</p>");
         }
 
         // Remove meaningless <p/><p/><p/><p/>...
-        while(contentText.indexOf("<p/><p/>") != -1){
-            contentText = contentText.replaceAll("<p/><p/>","<p/>");
+        while (contentText.indexOf("<p/><p/>") != -1) {
+            contentText = contentText.replaceAll("<p/><p/>", "<p/>");
         }
 
         // Remove meaningless <p/><p>...
-        while(contentText.indexOf("<p/><p>") != -1){
-            contentText = contentText.replaceAll("<p/><p>","<p>");
+        while (contentText.indexOf("<p/><p>") != -1) {
+            contentText = contentText.replaceAll("<p/><p>", "<p>");
         }
 
         // Remove meaningless </strong><strong>...
-        while(contentText.indexOf("</strong><strong>") != -1){
-            contentText = contentText.replaceAll("</strong><strong>","");
+        while (contentText.indexOf("</strong><strong>") != -1) {
+            contentText = contentText.replaceAll("</strong><strong>", "");
         }
 
         // Final trim
@@ -283,21 +298,21 @@ public class UploadController {
 
 
         // Remove meaningless <p/> at the beginning
-        while(contentText.length() > 4 && "<p/>".equals(contentText.substring(0, 4))){
+        while (contentText.length() > 4 && "<p/>".equals(contentText.substring(0, 4))) {
             contentText = contentText.substring(4);
         }
 
         // Remove meaningless <p/> at the end
-        while(contentText.length() > 4 && "<p/>".equals(contentText.substring(contentText.length() - 4))){
-            contentText =contentText.substring(0, contentText.length() - 4);
+        while (contentText.length() > 4 && "<p/>".equals(contentText.substring(contentText.length() - 4))) {
+            contentText = contentText.substring(0, contentText.length() - 4);
         }
 
         return contentText;
     }
 
-    private Match renameAttr(Match m, String oldName, String newName){
+    private Match renameAttr(Match m, String oldName, String newName) {
         String src = m.attr(oldName);
-        m.attr(newName,src);
+        m.attr(newName, src);
         m.removeAttr(oldName);
         return m;
     }
@@ -326,7 +341,7 @@ public class UploadController {
 
     @PostMapping("/image/")
     @Timed
-    public ResponseEntity<ImageDTO> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, @RequestParam("access_token") String accessToken, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<ImageDTO> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, @RequestParam("access_token") String accessToken, @RequestParam("source") String source, @RequestParam("document_id") Long documentId, RedirectAttributes redirectAttributes) {
 
         log.debug("Image upload request: {}", file.getOriginalFilename());
 
@@ -334,51 +349,52 @@ public class UploadController {
 
         if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
 
-
             if (file == null) {
                 return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "missing_image", "There was no file upload with name \"image_file\" present.")).body(null);
             }
 
-            try {
+            String extension = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")).toLowerCase();
 
-                String extension = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")).toLowerCase();
+            if (".jpg".equals(extension) || ".png".equals(extension)) {
 
-                if (".jpg".equals(extension) || ".png".equals(extension)) {
+                try {
+                    // Get the document this image belongs to
+                    ImDocumentDTO documentDto = imDocumentService.findOne(documentId);
+                    ImDocument document = imDocumentMapper.imDocumentDTOToImDocument(documentDto);
 
-                    BufferedImage image = ImageIO.read(file.getInputStream());
-                    Integer width = image.getWidth();
-                    Integer height = image.getHeight();
 
-                    if (width > 0 && height > 0) {
+                    if (documentDto.getUserId().equals(uploadingUser.getId())) {
+                        // Owner is uploading more images
 
-                        // TODO check if image belongs to a valid ImDocument
-                        // TODO check if image belongs to an ImDocument that I have access to!!
-                        // TODO check permissions
+                        BufferedImage image = ImageIO.read(file.getInputStream());
+                        Integer width = image.getWidth();
+                        Integer height = image.getHeight();
 
-                        String filename = fileStorageService.saveFile(file);
+                        if (width > 0 && height > 0) {
+                            ImageDTO savedImage = processUploadedImage(file, source, document);
 
-                        ImageDTO newImage = new ImageDTO();
-                        newImage.setFilename(filename);
+                            return ResponseEntity.ok()
+                                .body(savedImage);
 
-                        ImageDTO savedImage = imageService.save(newImage);
+                        } else {
+                            // Invalid image dimensions
+                            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_image", "The uploaded file is not an image.")).body(null);
+                        }
 
-                        // TODO now the image has been changed
-
-                        return ResponseEntity.ok()
-                            .body(savedImage);
                     } else {
-                        // Invalid image dimensions
-                        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_image", "The uploaded file is not an image.")).body(null);
+                        // Not the document owner, cannot upload
+                        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "only_owner_can_upload", "Only the owner of the document can upload images.")).body(null);
                     }
 
-                } else {
-                    // Invalid extension
-                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
+                } catch (Exception ex) {
+                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "exception", ex.getMessage())).body(null);
                 }
 
-            } catch (Exception ex) {
-                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "exception", ex.getMessage())).body(null);
+            } else {
+                // Invalid extension
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
             }
+
         } else {
             return accessDeniedResponse();
         }
@@ -388,6 +404,46 @@ public class UploadController {
 //            "You successfully uploaded " + file.getOriginalFilename() + "!");
 
 
+    }
+
+    @Transactional
+    private ImageDTO processUploadedImage(MultipartFile file, String source, ImDocument document) throws IOException, NoSuchAlgorithmException {
+        String filename = fileStorageService.saveFile(file);
+
+        ImageDTO newImage = new ImageDTO();
+        newImage.setFilename(filename);
+
+        ImageDTO savedImageDto = imageService.save(newImage);
+
+        // TODO now that the image is uploaded, update all relationships
+
+        for(ImMap map : document.getMaps()){
+            for(ImBlock block : map.getBlocks()){
+                String blockContent = block.getContent();
+
+                Match root = $(blockContent);
+                for(Match img : root.find("img[data-source]").each()){
+
+                    String imgSource = img.attr("data-source");
+                    if(source.equals(imgSource)){
+                        // This is the right image
+                        img.attr("data-id", ""+savedImageDto.getId());
+                        img.removeAttr("data-source");
+                    }
+                }
+
+                Image savedImage = imageMapper.imageDTOToImage(savedImageDto);
+                block.addImage(savedImage);
+                block.setContent(root.toString());
+
+                // Save the block
+                ImBlockDTO blockDto = imBlockMapper.imBlockToImBlockDTO(block);
+
+                imBlockService.save(blockDto);
+            }
+        }
+
+        return savedImageDto;
     }
 
     private ResponseEntity accessDeniedResponse() {
