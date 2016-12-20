@@ -234,8 +234,16 @@ public class UploadController {
         root.find("headerrow cell").rename("th");
         root.find("row cell").rename("td");
 
-        root.find("headerrow").rename("tr").wrap("thead");
-        root.find("row").rename("tr").wrap("tbody");
+        root.find("headerrow").rename("tr");
+            //.wrap("thead");
+        root.find("row").rename("tr");
+            //.wrap("tbody");
+
+        // We need <li> around a sub-list
+        root.find("ul > ul").wrap("li");
+        root.find("ol > ol").wrap("li");
+        root.find("ol > ul").wrap("li");
+        root.find("ul > ol").wrap("li");
 
         contentText = root.toString();
 
@@ -270,11 +278,14 @@ public class UploadController {
             contentText = contentText.replaceAll("</strong><strong>","");
         }
 
-        // TODO nested <ul><ul> should be replaced with <ul><li><ul>
-
-
         // Final trim
         contentText = contentText.trim();
+
+
+        // Remove meaningless <p/> at the beginning
+        while(contentText.length() > 4 && "<p/>".equals(contentText.substring(0, 4))){
+            contentText = contentText.substring(4);
+        }
 
         // Remove meaningless <p/> at the end
         while(contentText.length() > 4 && "<p/>".equals(contentText.substring(contentText.length() - 4))){
@@ -350,6 +361,8 @@ public class UploadController {
                         newImage.setFilename(filename);
 
                         ImageDTO savedImage = imageService.save(newImage);
+
+                        // TODO now the image has been changed
 
                         return ResponseEntity.ok()
                             .body(savedImage);
