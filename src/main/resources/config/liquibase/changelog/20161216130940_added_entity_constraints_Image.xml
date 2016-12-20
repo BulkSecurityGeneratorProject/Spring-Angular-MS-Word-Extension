@@ -8,11 +8,16 @@
     -->
     <changeSet id="20161216130940-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="im_block_id"
-                                 baseTableName="image"
-                                 constraintName="fk_image_im_block_id"
+        <addForeignKeyConstraint baseColumnNames="images_id"
+                                 baseTableName="image_im_block"
+                                 constraintName="fk_image_im_block_images_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="image"/>
+        <addForeignKeyConstraint baseColumnNames="im_blocks_id"
+                                 baseTableName="image_im_block"
+                                 constraintName="fk_image_im_block_im_blocks_id"
                                  referencedColumnNames="id"
                                  referencedTableName="im_block"/>
-
+        
     </changeSet>
 </databaseChangeLog>

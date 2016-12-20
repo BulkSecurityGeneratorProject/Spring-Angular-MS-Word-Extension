@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -32,8 +34,12 @@ public class Image extends AbstractAuditingEntity implements Serializable {
     @Column(name = "created_at")
     private ZonedDateTime createdAt;
 
-    @ManyToOne
-    private ImBlock imBlock;
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "image_im_block",
+               joinColumns = @JoinColumn(name="images_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="im_blocks_id", referencedColumnName="ID"))
+    private Set<ImBlock> imBlocks = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -69,17 +75,27 @@ public class Image extends AbstractAuditingEntity implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public ImBlock getImBlock() {
-        return imBlock;
+    public Set<ImBlock> getImBlocks() {
+        return imBlocks;
     }
 
-    public Image imBlock(ImBlock imBlock) {
-        this.imBlock = imBlock;
+    public Image imBlocks(Set<ImBlock> imBlocks) {
+        this.imBlocks = imBlocks;
         return this;
     }
 
-    public void setImBlock(ImBlock imBlock) {
-        this.imBlock = imBlock;
+    public Image addImBlock(ImBlock imBlock) {
+        imBlocks.add(imBlock);
+        return this;
+    }
+
+    public Image removeImBlock(ImBlock imBlock) {
+        imBlocks.remove(imBlock);
+        return this;
+    }
+
+    public void setImBlocks(Set<ImBlock> imBlocks) {
+        this.imBlocks = imBlocks;
     }
 
     @Override

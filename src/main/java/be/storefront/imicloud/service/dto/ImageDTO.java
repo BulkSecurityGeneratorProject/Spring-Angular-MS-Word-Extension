@@ -21,8 +21,8 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
     private ZonedDateTime createdAt;
 
 
-    private Long imBlockId;
-    
+    private Set<ImBlockDTO> imBlocks = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -45,12 +45,12 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public Long getImBlockId() {
-        return imBlockId;
+    public Set<ImBlockDTO> getImBlocks() {
+        return imBlocks;
     }
 
-    public void setImBlockId(Long imBlockId) {
-        this.imBlockId = imBlockId;
+    public void setImBlocks(Set<ImBlockDTO> imBlocks) {
+        this.imBlocks = imBlocks;
     }
 
     @Override

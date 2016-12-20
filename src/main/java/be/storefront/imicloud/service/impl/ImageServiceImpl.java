@@ -60,7 +60,7 @@ public class ImageServiceImpl implements ImageService{
     @Transactional(readOnly = true) 
     public List<ImageDTO> findAll() {
         log.debug("Request to get all Images");
-        List<ImageDTO> result = imageRepository.findAll().stream()
+        List<ImageDTO> result = imageRepository.findAllWithEagerRelationships().stream()
             .map(imageMapper::imageToImageDTO)
             .collect(Collectors.toCollection(LinkedList::new));
 
@@ -76,7 +76,7 @@ public class ImageServiceImpl implements ImageService{
     @Transactional(readOnly = true) 
     public ImageDTO findOne(Long id) {
         log.debug("Request to get Image : {}", id);
-        Image image = imageRepository.findOne(id);
+        Image image = imageRepository.findOneWithEagerRelationships(id);
         ImageDTO imageDTO = imageMapper.imageToImageDTO(image);
         return imageDTO;
     }

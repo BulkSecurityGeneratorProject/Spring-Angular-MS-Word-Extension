@@ -48,7 +48,9 @@
                     <td>{{image.filename}}</td>
                     <td>{{image.createdAt | date:'medium'}}</td>
                     <td>
-                        <a ui-sref="im-blockroute-detail({id:image.imBlockId})">{{image.imBlockId}}</a>
+                        <span ng-repeat="imBlock in image.imBlocks">
+                            <a class="form-control-static" ui-sref="im-blockroute-detail({id: imBlock.id})">{{imBlock.id}}</a>{{$last ? '' : ', '}}
+                        </span>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

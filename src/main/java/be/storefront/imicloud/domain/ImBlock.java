@@ -41,7 +41,7 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
     @ManyToOne
     private ImMap imMap;
 
-    @OneToMany(mappedBy = "imBlock")
+    @ManyToMany(mappedBy = "imBlocks")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Image> images = new HashSet<>();
@@ -117,13 +117,13 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
 
     public ImBlock addImage(Image image) {
         images.add(image);
-        image.setImBlock(this);
+        image.getImBlocks().add(this);
         return this;
     }
 
     public ImBlock removeImage(Image image) {
         images.remove(image);
-        image.setImBlock(null);
+        image.getImBlocks().remove(this);
         return this;
     }
 

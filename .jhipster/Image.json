@@ -4,8 +4,9 @@
         {
             "relationshipName": "imBlock",
             "otherEntityName": "imBlock",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "relationshipType": "many-to-many",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [
@@ -26,5 +27,6 @@
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "angularJSSuffix": "route"
+    "angularJSSuffix": "route",
+    "enableEntityAudit": true
 }

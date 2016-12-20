@@ -38,9 +38,7 @@
 
         <div class="form-group">
             <label data-translate="imicloudApp.image.imBlock" for="field_imBlock">Im Block</label>
-            <select class="form-control" id="field_imBlock" name="imBlock" ng-model="vm.image.imBlockId" ng-options="imBlock.id as imBlock.id for imBlock in vm.imblocks"            >
-                <option value=""></option>
-            </select>
+            <select class="form-control" id="field_imBlock" multiple name="imBlock" ng-model="vm.image.imBlocks" ng-options="imBlock as imBlock.id for imBlock in vm.imblocks track by imBlock.id"></select>
         </div>
     </div>
     <div class="modal-footer">

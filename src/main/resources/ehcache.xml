@@ -42,5 +42,7 @@
 
     <cache alias="be.storefront.imicloud.domain.Image" uses-template="simple"/>
 
+    <cache alias="be.storefront.imicloud.domain.Image.imBlocks" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

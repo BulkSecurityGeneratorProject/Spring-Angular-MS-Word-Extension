@@ -8,10 +8,12 @@
             "otherEntityField": "id"
         },
         {
-            "relationshipType": "one-to-many",
+            "relationshipType": "many-to-many",
             "relationshipName": "image",
             "otherEntityName": "image",
-            "otherEntityRelationshipName": "imBlock"
+            "otherEntityRelationshipName": "imBlock",
+            "otherEntityField": "id",
+            "ownerSide": false
         }
     ],
     "fields": [

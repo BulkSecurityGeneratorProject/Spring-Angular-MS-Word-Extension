@@ -32,10 +32,6 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="im_block_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
@@ -47,6 +43,17 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="image" columnName="created_at" columnDataType="datetime"/>
+        
+        <createTable tableName="image_im_block">
+            <column name="im_blocks_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="images_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="images_id, im_blocks_id" tableName="image_im_block"/>
         
     </changeSet>
 </databaseChangeLog>
