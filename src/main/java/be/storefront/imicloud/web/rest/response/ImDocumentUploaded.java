@@ -10,7 +10,7 @@ public class ImDocumentUploaded {
     private ImDocumentDTO imDocument;
 
     public ImDocumentUploaded(ImDocumentDTO imDocumentDTO){
-        this.imDocument = imDocument;
+        this.imDocument = imDocumentDTO;
     }
 
     public Long getDocumentId(){

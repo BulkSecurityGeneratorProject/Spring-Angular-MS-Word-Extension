@@ -198,6 +198,7 @@ public class UploadController {
                         ImBlockDTO newBlockDto = new ImBlockDTO();
                         newBlockDto.setImMapId(newMapDto.getId());
                         newBlockDto.setLabel(blockLabel);
+                        newBlockDto.setGuid(blockGuid);
                         newBlockDto.setPosition((float) j);
                         newBlockDto.setContent(contentText);
 
