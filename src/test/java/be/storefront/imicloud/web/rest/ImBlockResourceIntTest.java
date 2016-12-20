@@ -51,6 +51,9 @@ public class ImBlockResourceIntTest {
     private static final Float DEFAULT_POSITION = 1F;
     private static final Float UPDATED_POSITION = 2F;
 
+    private static final String DEFAULT_GUID = "AAAAAAAAAA";
+    private static final String UPDATED_GUID = "BBBBBBBBBB";
+
     @Inject
     private ImBlockRepository imBlockRepository;
 
@@ -96,7 +99,8 @@ public class ImBlockResourceIntTest {
         ImBlock imBlock = new ImBlock()
                 .label(DEFAULT_LABEL)
                 .content(DEFAULT_CONTENT)
-                .position(DEFAULT_POSITION);
+                .position(DEFAULT_POSITION)
+                .guid(DEFAULT_GUID);
         return imBlock;
     }
 
@@ -126,6 +130,7 @@ public class ImBlockResourceIntTest {
         assertThat(testImBlock.getLabel()).isEqualTo(DEFAULT_LABEL);
         assertThat(testImBlock.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testImBlock.getPosition()).isEqualTo(DEFAULT_POSITION);
+        assertThat(testImBlock.getGuid()).isEqualTo(DEFAULT_GUID);
 
         // Validate the ImBlock in ElasticSearch
         ImBlock imBlockEs = imBlockSearchRepository.findOne(testImBlock.getId());
@@ -185,7 +190,8 @@ public class ImBlockResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(imBlock.getId().intValue())))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())));
+            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())))
+            .andExpect(jsonPath("$.[*].guid").value(hasItem(DEFAULT_GUID.toString())));
     }
 
     @Test
@@ -201,7 +207,8 @@ public class ImBlockResourceIntTest {
             .andExpect(jsonPath("$.id").value(imBlock.getId().intValue()))
             .andExpect(jsonPath("$.label").value(DEFAULT_LABEL.toString()))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
-            .andExpect(jsonPath("$.position").value(DEFAULT_POSITION.doubleValue()));
+            .andExpect(jsonPath("$.position").value(DEFAULT_POSITION.doubleValue()))
+            .andExpect(jsonPath("$.guid").value(DEFAULT_GUID.toString()));
     }
 
     @Test
@@ -225,7 +232,8 @@ public class ImBlockResourceIntTest {
         updatedImBlock
                 .label(UPDATED_LABEL)
                 .content(UPDATED_CONTENT)
-                .position(UPDATED_POSITION);
+                .position(UPDATED_POSITION)
+                .guid(UPDATED_GUID);
         ImBlockDTO imBlockDTO = imBlockMapper.imBlockToImBlockDTO(updatedImBlock);
 
         restImBlockMockMvc.perform(put("/api/im-blocks")
@@ -240,6 +248,7 @@ public class ImBlockResourceIntTest {
         assertThat(testImBlock.getLabel()).isEqualTo(UPDATED_LABEL);
         assertThat(testImBlock.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testImBlock.getPosition()).isEqualTo(UPDATED_POSITION);
+        assertThat(testImBlock.getGuid()).isEqualTo(UPDATED_GUID);
 
         // Validate the ImBlock in ElasticSearch
         ImBlock imBlockEs = imBlockSearchRepository.findOne(testImBlock.getId());
@@ -301,6 +310,7 @@ public class ImBlockResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(imBlock.getId().intValue())))
             .andExpect(jsonPath("$.[*].label").value(hasItem(DEFAULT_LABEL.toString())))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())));
+            .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())))
+            .andExpect(jsonPath("$.[*].guid").value(hasItem(DEFAULT_GUID.toString())));
     }
 }

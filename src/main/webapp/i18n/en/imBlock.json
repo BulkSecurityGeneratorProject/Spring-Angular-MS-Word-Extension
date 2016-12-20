@@ -19,6 +19,7 @@
             "label": "Label",
             "content": "Content",
             "position": "Position",
+            "guid": "Guid",
             "imMap": "Im Map",
             "image": "Image"
         }

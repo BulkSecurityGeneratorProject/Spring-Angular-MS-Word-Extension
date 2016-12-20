@@ -32,6 +32,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "guid",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20161216130939",

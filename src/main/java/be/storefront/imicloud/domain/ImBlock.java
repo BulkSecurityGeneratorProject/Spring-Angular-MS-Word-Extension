@@ -38,6 +38,9 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
     @Column(name = "position", nullable = false)
     private Float position;
 
+    @Column(name = "guid")
+    private String guid;
+
     @ManyToOne
     private ImMap imMap;
 
@@ -91,6 +94,19 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
 
     public void setPosition(Float position) {
         this.position = position;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public ImBlock guid(String guid) {
+        this.guid = guid;
+        return this;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public ImMap getImMap() {
@@ -158,6 +174,7 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
             ", label='" + label + "'" +
             ", content='" + content + "'" +
             ", position='" + position + "'" +
+            ", guid='" + guid + "'" +
             '}';
     }
 }

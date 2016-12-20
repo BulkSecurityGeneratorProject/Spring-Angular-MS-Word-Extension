@@ -26,6 +26,8 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private Float position;
 
+    private String guid;
+
     @JsonIgnore
     private Set<Image> images = new HashSet<>();
 
@@ -59,6 +61,13 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     public void setPosition(Float position) {
         this.position = position;
     }
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
 
     public Long getImMapId() {
         return imMapId;
@@ -67,6 +76,15 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     public void setImMapId(Long imMapId) {
         this.imMapId = imMapId;
     }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -89,15 +107,6 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
         return Objects.hashCode(id);
     }
 
-
-    public Set<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<Image> images) {
-        this.images = images;
-    }
-
     @Override
     public String toString() {
         return "ImBlockDTO{" +
@@ -105,6 +114,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
             ", label='" + label + "'" +
             ", content='" + content + "'" +
             ", position='" + position + "'" +
+            ", guid='" + guid + "'" +
             '}';
     }
 }

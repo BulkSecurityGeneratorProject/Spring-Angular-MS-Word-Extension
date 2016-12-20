@@ -107,6 +107,7 @@
                                 label: null,
                                 content: null,
                                 position: null,
+                                guid: null,
                                 id: null
                             };
                         }

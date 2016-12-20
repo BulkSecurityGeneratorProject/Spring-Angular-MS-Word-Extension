@@ -67,7 +67,7 @@ class ImBlockGatlingTest extends Simulation {
             .exec(http("Create new imBlock")
             .post("/api/im-blocks")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "label":"SAMPLE_TEXT", "content":null, "position":null}""")).asJSON
+            .body(StringBody("""{"id":null, "label":"SAMPLE_TEXT", "content":null, "position":null, "guid":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_imBlock_url"))).exitHereIfFailed
             .pause(10)
