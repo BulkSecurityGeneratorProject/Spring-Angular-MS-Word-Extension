@@ -1,6 +1,5 @@
 package be.storefront.imicloud.service.dto;
 
-import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -18,8 +17,6 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private String filename;
 
-    private ZonedDateTime createdAt;
-
 
     private Set<ImBlockDTO> imBlocks = new HashSet<>();
 
@@ -36,13 +33,6 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Set<ImBlockDTO> getImBlocks() {
@@ -79,7 +69,6 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
         return "ImageDTO{" +
             "id=" + id +
             ", filename='" + filename + "'" +
-            ", createdAt='" + createdAt + "'" +
             '}';
     }
 }

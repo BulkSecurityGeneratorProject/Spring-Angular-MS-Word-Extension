@@ -37,7 +37,6 @@
                 <tr>
                     <th><span data-translate="global.field.id">ID</span></th>
                     <th><span data-translate="imicloudApp.folder.name">Name</span></th>
-                    <th><span data-translate="imicloudApp.folder.createdAt">Created At</span></th>
                     <th><span data-translate="imicloudApp.folder.organization">Organization</span></th>
                     <th></th>
                 </tr>
@@ -46,7 +45,6 @@
                 <tr ng-repeat="folder in vm.folders track by folder.id">
                     <td><a ui-sref="folderroute-detail({id:folder.id})">{{folder.id}}</a></td>
                     <td>{{folder.name}}</td>
-                    <td>{{folder.createdAt | date:'medium'}}</td>
                     <td>
                         <a ui-sref="organizationroute-detail({id:folder.organizationId})">{{folder.organizationId}}</a>
                     </td>

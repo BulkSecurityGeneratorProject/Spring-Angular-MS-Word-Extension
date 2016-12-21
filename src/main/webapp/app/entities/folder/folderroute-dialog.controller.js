@@ -12,8 +12,6 @@
 
         vm.folder = entity;
         vm.clear = clear;
-        vm.datePickerOpenStatus = {};
-        vm.openCalendar = openCalendar;
         vm.save = save;
         vm.organizations = Organization.query();
         vm.imdocuments = ImDocument.query();
@@ -45,10 +43,6 @@
             vm.isSaving = false;
         }
 
-        vm.datePickerOpenStatus.createdAt = false;
 
-        function openCalendar (date) {
-            vm.datePickerOpenStatus[date] = true;
-        }
     }
 })();

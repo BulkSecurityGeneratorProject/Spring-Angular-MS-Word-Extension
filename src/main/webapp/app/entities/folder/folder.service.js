@@ -4,9 +4,9 @@
         .module('imicloudApp')
         .factory('Folder', Folder);
 
-    Folder.$inject = ['$resource', 'DateUtils'];
+    Folder.$inject = ['$resource'];
 
-    function Folder ($resource, DateUtils) {
+    function Folder ($resource) {
         var resourceUrl =  'api/folders/:id';
 
         return $resource(resourceUrl, {}, {
@@ -16,7 +16,6 @@
                 transformResponse: function (data) {
                     if (data) {
                         data = angular.fromJson(data);
-                        data.createdAt = DateUtils.convertDateTimeFromServer(data.createdAt);
                     }
                     return data;
                 }

@@ -12,8 +12,6 @@
 
         vm.image = entity;
         vm.clear = clear;
-        vm.datePickerOpenStatus = {};
-        vm.openCalendar = openCalendar;
         vm.save = save;
         vm.imblocks = ImBlock.query();
 
@@ -44,10 +42,6 @@
             vm.isSaving = false;
         }
 
-        vm.datePickerOpenStatus.createdAt = false;
 
-        function openCalendar (date) {
-            vm.datePickerOpenStatus[date] = true;
-        }
     }
 })();

@@ -25,13 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
 import java.util.List;
 
-import static be.storefront.imicloud.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,9 +43,6 @@ public class ImageResourceIntTest {
 
     private static final String DEFAULT_FILENAME = "AAAAAAAAAA";
     private static final String UPDATED_FILENAME = "BBBBBBBBBB";
-
-    private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Inject
     private ImageRepository imageRepository;
@@ -95,8 +87,7 @@ public class ImageResourceIntTest {
      */
     public static Image createEntity(EntityManager em) {
         Image image = new Image()
-                .filename(DEFAULT_FILENAME)
-                .createdAt(DEFAULT_CREATED_AT);
+                .filename(DEFAULT_FILENAME);
         return image;
     }
 
@@ -124,7 +115,6 @@ public class ImageResourceIntTest {
         assertThat(imageList).hasSize(databaseSizeBeforeCreate + 1);
         Image testImage = imageList.get(imageList.size() - 1);
         assertThat(testImage.getFilename()).isEqualTo(DEFAULT_FILENAME);
-        assertThat(testImage.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -182,8 +172,7 @@ public class ImageResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
-            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())));
     }
 
     @Test
@@ -197,8 +186,7 @@ public class ImageResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(image.getId().intValue()))
-            .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME.toString()))
-            .andExpect(jsonPath("$.createdAt").value(sameInstant(DEFAULT_CREATED_AT)));
+            .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME.toString()));
     }
 
     @Test
@@ -220,8 +208,7 @@ public class ImageResourceIntTest {
         // Update the image
         Image updatedImage = imageRepository.findOne(image.getId());
         updatedImage
-                .filename(UPDATED_FILENAME)
-                .createdAt(UPDATED_CREATED_AT);
+                .filename(UPDATED_FILENAME);
         ImageDTO imageDTO = imageMapper.imageToImageDTO(updatedImage);
 
         restImageMockMvc.perform(put("/api/images")
@@ -234,7 +221,6 @@ public class ImageResourceIntTest {
         assertThat(imageList).hasSize(databaseSizeBeforeUpdate);
         Image testImage = imageList.get(imageList.size() - 1);
         assertThat(testImage.getFilename()).isEqualTo(UPDATED_FILENAME);
-        assertThat(testImage.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -294,7 +280,6 @@ public class ImageResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
-            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())));
     }
 }

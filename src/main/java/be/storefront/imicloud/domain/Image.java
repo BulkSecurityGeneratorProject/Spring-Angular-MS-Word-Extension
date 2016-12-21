@@ -7,7 +7,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -30,9 +29,6 @@ public class Image extends AbstractAuditingEntity implements Serializable {
     @NotNull
     @Column(name = "filename", nullable = false)
     private String filename;
-
-    @Column(name = "created_at")
-    private ZonedDateTime createdAt;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -60,19 +56,6 @@ public class Image extends AbstractAuditingEntity implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public Image createdAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Set<ImBlock> getImBlocks() {
@@ -123,7 +106,6 @@ public class Image extends AbstractAuditingEntity implements Serializable {
         return "Image{" +
             "id=" + id +
             ", filename='" + filename + "'" +
-            ", createdAt='" + createdAt + "'" +
             '}';
     }
 }

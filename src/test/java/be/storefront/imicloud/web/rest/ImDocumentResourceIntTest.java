@@ -27,13 +27,8 @@ import org.springframework.util.Base64Utils;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
 import java.util.List;
 
-import static be.storefront.imicloud.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,8 +55,8 @@ public class ImDocumentResourceIntTest {
     private static final String DEFAULT_ORIGINAL_XML = "AAAAAAAAAA";
     private static final String UPDATED_ORIGINAL_XML = "BBBBBBBBBB";
 
-    private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final String DEFAULT_SECRET = "AAAAAAAAAA";
+    private static final String UPDATED_SECRET = "BBBBBBBBBB";
 
     @Inject
     private ImDocumentRepository imDocumentRepository;
@@ -110,7 +105,7 @@ public class ImDocumentResourceIntTest {
                 .password(DEFAULT_PASSWORD)
                 .originalFilename(DEFAULT_ORIGINAL_FILENAME)
                 .originalXml(DEFAULT_ORIGINAL_XML)
-                .createdAt(DEFAULT_CREATED_AT);
+                .secret(DEFAULT_SECRET);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -146,7 +141,7 @@ public class ImDocumentResourceIntTest {
         assertThat(testImDocument.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testImDocument.getOriginalFilename()).isEqualTo(DEFAULT_ORIGINAL_FILENAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(DEFAULT_ORIGINAL_XML);
-        assertThat(testImDocument.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testImDocument.getSecret()).isEqualTo(DEFAULT_SECRET);
 
         // Validate the ImDocument in ElasticSearch
         ImDocument imDocumentEs = imDocumentSearchRepository.findOne(testImDocument.getId());
@@ -214,6 +209,25 @@ public class ImDocumentResourceIntTest {
 
     @Test
     @Transactional
+    public void checkSecretIsRequired() throws Exception {
+        int databaseSizeBeforeTest = imDocumentRepository.findAll().size();
+        // set the field null
+        imDocument.setSecret(null);
+
+        // Create the ImDocument, which fails.
+        ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(imDocument);
+
+        restImDocumentMockMvc.perform(post("/api/im-documents")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(imDocumentDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<ImDocument> imDocumentList = imDocumentRepository.findAll();
+        assertThat(imDocumentList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllImDocuments() throws Exception {
         // Initialize the database
         imDocumentRepository.saveAndFlush(imDocument);
@@ -227,7 +241,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].originalFilename").value(hasItem(DEFAULT_ORIGINAL_FILENAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())));
     }
 
     @Test
@@ -245,7 +259,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
             .andExpect(jsonPath("$.originalFilename").value(DEFAULT_ORIGINAL_FILENAME.toString()))
             .andExpect(jsonPath("$.originalXml").value(DEFAULT_ORIGINAL_XML.toString()))
-            .andExpect(jsonPath("$.createdAt").value(sameInstant(DEFAULT_CREATED_AT)));
+            .andExpect(jsonPath("$.secret").value(DEFAULT_SECRET.toString()));
     }
 
     @Test
@@ -271,7 +285,7 @@ public class ImDocumentResourceIntTest {
                 .password(UPDATED_PASSWORD)
                 .originalFilename(UPDATED_ORIGINAL_FILENAME)
                 .originalXml(UPDATED_ORIGINAL_XML)
-                .createdAt(UPDATED_CREATED_AT);
+                .secret(UPDATED_SECRET);
         ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(updatedImDocument);
 
         restImDocumentMockMvc.perform(put("/api/im-documents")
@@ -287,7 +301,7 @@ public class ImDocumentResourceIntTest {
         assertThat(testImDocument.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testImDocument.getOriginalFilename()).isEqualTo(UPDATED_ORIGINAL_FILENAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(UPDATED_ORIGINAL_XML);
-        assertThat(testImDocument.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testImDocument.getSecret()).isEqualTo(UPDATED_SECRET);
 
         // Validate the ImDocument in ElasticSearch
         ImDocument imDocumentEs = imDocumentSearchRepository.findOne(testImDocument.getId());
@@ -351,6 +365,6 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].originalFilename").value(hasItem(DEFAULT_ORIGINAL_FILENAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())));
     }
 }

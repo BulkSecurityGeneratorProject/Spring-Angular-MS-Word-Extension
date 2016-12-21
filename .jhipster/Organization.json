@@ -19,10 +19,6 @@
         {
             "fieldName": "magentoCustomerId",
             "fieldType": "Integer"
-        },
-        {
-            "fieldName": "createdAt",
-            "fieldType": "ZonedDateTime"
         }
     ],
     "changelogDate": "20161216130935",
@@ -30,5 +26,6 @@
     "dto": "mapstruct",
     "pagination": "infinite-scroll",
     "service": "serviceImpl",
-    "angularJSSuffix": "route"
+    "angularJSSuffix": "route",
+    "enableEntityAudit": true
 }

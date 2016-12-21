@@ -1,4 +1,4 @@
-package be.storefront.imicloud.web.rest;
+package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.security.ImCloudSecurity;
@@ -11,6 +11,7 @@ import be.storefront.imicloud.service.mapper.ImBlockMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
 import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
+import be.storefront.imicloud.web.rest.util.BaseUrlUtil;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.io.IOUtils;
@@ -35,6 +36,7 @@ import static org.joox.JOOX.*;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,7 +52,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @Controller
 @RequestMapping("/upload")
@@ -98,7 +99,7 @@ public class UploadController {
     @ResponseBody
     ResponseEntity<ImDocumentUploaded> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam("xml_file") MultipartFile file,
                                                            @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
-                                                           RedirectAttributes redirectAttributes) throws ParserConfigurationException, TransformerException, SAXException, IOException {
+                                                           RedirectAttributes redirectAttributes, HttpServletRequest request) throws ParserConfigurationException, TransformerException, SAXException, IOException {
 
         log.debug("XML upload request: {}", file.getOriginalFilename());
 
@@ -108,7 +109,8 @@ public class UploadController {
 
             ImDocumentDTO newDocument = processUploadedDocument(file, password, uploadingUser);
 
-            ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument);
+            String baseUrl = BaseUrlUtil.getBaseUrl(request);
+            ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument, baseUrl);
 
             return ResponseEntity.ok().body(imDocumentUploaded);
 
@@ -418,17 +420,17 @@ public class UploadController {
 
         // TODO now that the image is uploaded, update all relationships
 
-        for(ImMap map : document.getMaps()){
-            for(ImBlock block : map.getBlocks()){
+        for (ImMap map : document.getMaps()) {
+            for (ImBlock block : map.getBlocks()) {
                 String blockContent = block.getContent();
 
                 Match root = $(blockContent);
-                for(Match img : root.find("img[data-source]").each()){
+                for (Match img : root.find("img[data-source]").each()) {
 
                     String imgSource = img.attr("data-source");
-                    if(source.equals(imgSource)){
+                    if (source.equals(imgSource)) {
                         // This is the right image
-                        img.attr("data-id", ""+savedImageDto.getId());
+                        img.attr("data-id", "" + savedImageDto.getId());
                         img.removeAttr("data-source");
                     }
                 }

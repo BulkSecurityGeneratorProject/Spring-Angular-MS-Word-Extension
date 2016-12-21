@@ -8,7 +8,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -34,9 +33,6 @@ public class Organization extends AbstractAuditingEntity implements Serializable
 
     @Column(name = "magento_customer_id")
     private Integer magentoCustomerId;
-
-    @Column(name = "created_at")
-    private ZonedDateTime createdAt;
 
     @OneToMany(mappedBy = "organization")
     @JsonIgnore
@@ -75,19 +71,6 @@ public class Organization extends AbstractAuditingEntity implements Serializable
 
     public void setMagentoCustomerId(Integer magentoCustomerId) {
         this.magentoCustomerId = magentoCustomerId;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public Organization createdAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Set<Folder> getFolders() {
@@ -141,7 +124,6 @@ public class Organization extends AbstractAuditingEntity implements Serializable
             "id=" + id +
             ", name='" + name + "'" +
             ", magentoCustomerId='" + magentoCustomerId + "'" +
-            ", createdAt='" + createdAt + "'" +
             '}';
     }
 }

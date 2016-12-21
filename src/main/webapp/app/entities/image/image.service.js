@@ -4,9 +4,9 @@
         .module('imicloudApp')
         .factory('Image', Image);
 
-    Image.$inject = ['$resource', 'DateUtils'];
+    Image.$inject = ['$resource'];
 
-    function Image ($resource, DateUtils) {
+    function Image ($resource) {
         var resourceUrl =  'api/images/:id';
 
         return $resource(resourceUrl, {}, {
@@ -16,7 +16,6 @@
                 transformResponse: function (data) {
                     if (data) {
                         data = angular.fromJson(data);
-                        data.createdAt = DateUtils.convertDateTimeFromServer(data.createdAt);
                     }
                     return data;
                 }

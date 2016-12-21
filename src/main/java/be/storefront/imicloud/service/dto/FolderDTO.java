@@ -1,6 +1,5 @@
 package be.storefront.imicloud.service.dto;
 
-import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -18,8 +17,6 @@ public class FolderDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private String name;
 
-    private ZonedDateTime createdAt;
-
 
     private Long organizationId;
     
@@ -36,13 +33,6 @@ public class FolderDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Long getOrganizationId() {
@@ -79,7 +69,6 @@ public class FolderDTO extends AbstractAuditingDTO implements Serializable {
         return "FolderDTO{" +
             "id=" + id +
             ", name='" + name + "'" +
-            ", createdAt='" + createdAt + "'" +
             '}';
     }
 }

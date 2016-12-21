@@ -20,7 +20,7 @@
             "password": "Password",
             "originalFilename": "Original Filename",
             "originalXml": "Original Xml",
-            "createdAt": "Created At",
+            "secret": "Secret",
             "folder": "Folder",
             "map": "Map",
             "user": "User"

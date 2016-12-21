@@ -108,7 +108,7 @@
                                 password: null,
                                 originalFilename: null,
                                 originalXml: null,
-                                createdAt: null,
+                                secret: null,
                                 id: null
                             };
                         }

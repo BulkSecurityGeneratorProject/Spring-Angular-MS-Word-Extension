@@ -25,13 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
 import java.util.List;
 
-import static be.storefront.imicloud.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,9 +46,6 @@ public class OrganizationResourceIntTest {
 
     private static final Integer DEFAULT_MAGENTO_CUSTOMER_ID = 1;
     private static final Integer UPDATED_MAGENTO_CUSTOMER_ID = 2;
-
-    private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Inject
     private OrganizationRepository organizationRepository;
@@ -99,8 +91,7 @@ public class OrganizationResourceIntTest {
     public static Organization createEntity(EntityManager em) {
         Organization organization = new Organization()
                 .name(DEFAULT_NAME)
-                .magentoCustomerId(DEFAULT_MAGENTO_CUSTOMER_ID)
-                .createdAt(DEFAULT_CREATED_AT);
+                .magentoCustomerId(DEFAULT_MAGENTO_CUSTOMER_ID);
         return organization;
     }
 
@@ -129,7 +120,6 @@ public class OrganizationResourceIntTest {
         Organization testOrganization = organizationList.get(organizationList.size() - 1);
         assertThat(testOrganization.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testOrganization.getMagentoCustomerId()).isEqualTo(DEFAULT_MAGENTO_CUSTOMER_ID);
-        assertThat(testOrganization.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
 
         // Validate the Organization in ElasticSearch
         Organization organizationEs = organizationSearchRepository.findOne(testOrganization.getId());
@@ -188,8 +178,7 @@ public class OrganizationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(organization.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].magentoCustomerId").value(hasItem(DEFAULT_MAGENTO_CUSTOMER_ID)))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].magentoCustomerId").value(hasItem(DEFAULT_MAGENTO_CUSTOMER_ID)));
     }
 
     @Test
@@ -204,8 +193,7 @@ public class OrganizationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(organization.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.magentoCustomerId").value(DEFAULT_MAGENTO_CUSTOMER_ID))
-            .andExpect(jsonPath("$.createdAt").value(sameInstant(DEFAULT_CREATED_AT)));
+            .andExpect(jsonPath("$.magentoCustomerId").value(DEFAULT_MAGENTO_CUSTOMER_ID));
     }
 
     @Test
@@ -228,8 +216,7 @@ public class OrganizationResourceIntTest {
         Organization updatedOrganization = organizationRepository.findOne(organization.getId());
         updatedOrganization
                 .name(UPDATED_NAME)
-                .magentoCustomerId(UPDATED_MAGENTO_CUSTOMER_ID)
-                .createdAt(UPDATED_CREATED_AT);
+                .magentoCustomerId(UPDATED_MAGENTO_CUSTOMER_ID);
         OrganizationDTO organizationDTO = organizationMapper.organizationToOrganizationDTO(updatedOrganization);
 
         restOrganizationMockMvc.perform(put("/api/organizations")
@@ -243,7 +230,6 @@ public class OrganizationResourceIntTest {
         Organization testOrganization = organizationList.get(organizationList.size() - 1);
         assertThat(testOrganization.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testOrganization.getMagentoCustomerId()).isEqualTo(UPDATED_MAGENTO_CUSTOMER_ID);
-        assertThat(testOrganization.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
 
         // Validate the Organization in ElasticSearch
         Organization organizationEs = organizationSearchRepository.findOne(testOrganization.getId());
@@ -304,7 +290,6 @@ public class OrganizationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(organization.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].magentoCustomerId").value(hasItem(DEFAULT_MAGENTO_CUSTOMER_ID)))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].magentoCustomerId").value(hasItem(DEFAULT_MAGENTO_CUSTOMER_ID)));
     }
 }

@@ -4,9 +4,9 @@
         .module('imicloudApp')
         .factory('Organization', Organization);
 
-    Organization.$inject = ['$resource', 'DateUtils'];
+    Organization.$inject = ['$resource'];
 
-    function Organization ($resource, DateUtils) {
+    function Organization ($resource) {
         var resourceUrl =  'api/organizations/:id';
 
         return $resource(resourceUrl, {}, {
@@ -16,7 +16,6 @@
                 transformResponse: function (data) {
                     if (data) {
                         data = angular.fromJson(data);
-                        data.createdAt = DateUtils.convertDateTimeFromServer(data.createdAt);
                     }
                     return data;
                 }

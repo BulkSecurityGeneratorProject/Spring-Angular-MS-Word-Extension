@@ -8,7 +8,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -31,9 +30,6 @@ public class Folder extends AbstractAuditingEntity implements Serializable {
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "created_at")
-    private ZonedDateTime createdAt;
 
     @ManyToOne
     private Organization organization;
@@ -62,19 +58,6 @@ public class Folder extends AbstractAuditingEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public Folder createdAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Organization getOrganization() {
@@ -140,7 +123,6 @@ public class Folder extends AbstractAuditingEntity implements Serializable {
         return "Folder{" +
             "id=" + id +
             ", name='" + name + "'" +
-            ", createdAt='" + createdAt + "'" +
             '}';
     }
 }

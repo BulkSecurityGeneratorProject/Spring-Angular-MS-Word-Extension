@@ -38,7 +38,6 @@
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="name"><span data-translate="imicloudApp.organization.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="magentoCustomerId"><span data-translate="imicloudApp.organization.magentoCustomerId">Magento Customer Id</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="createdAt"><span data-translate="imicloudApp.organization.createdAt">Created At</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -47,7 +46,6 @@
                     <td><a ui-sref="organizationroute-detail({id:organization.id})">{{organization.id}}</a></td>
                     <td>{{organization.name}}</td>
                     <td>{{organization.magentoCustomerId}}</td>
-                    <td>{{organization.createdAt | date:'medium'}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

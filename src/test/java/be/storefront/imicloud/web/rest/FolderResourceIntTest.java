@@ -25,13 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
 import java.util.List;
 
-import static be.storefront.imicloud.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,9 +43,6 @@ public class FolderResourceIntTest {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
-
-    private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Inject
     private FolderRepository folderRepository;
@@ -95,8 +87,7 @@ public class FolderResourceIntTest {
      */
     public static Folder createEntity(EntityManager em) {
         Folder folder = new Folder()
-                .name(DEFAULT_NAME)
-                .createdAt(DEFAULT_CREATED_AT);
+                .name(DEFAULT_NAME);
         return folder;
     }
 
@@ -124,7 +115,6 @@ public class FolderResourceIntTest {
         assertThat(folderList).hasSize(databaseSizeBeforeCreate + 1);
         Folder testFolder = folderList.get(folderList.size() - 1);
         assertThat(testFolder.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testFolder.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
 
         // Validate the Folder in ElasticSearch
         Folder folderEs = folderSearchRepository.findOne(testFolder.getId());
@@ -182,8 +172,7 @@ public class FolderResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(folder.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
 
     @Test
@@ -197,8 +186,7 @@ public class FolderResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(folder.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.createdAt").value(sameInstant(DEFAULT_CREATED_AT)));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
     @Test
@@ -220,8 +208,7 @@ public class FolderResourceIntTest {
         // Update the folder
         Folder updatedFolder = folderRepository.findOne(folder.getId());
         updatedFolder
-                .name(UPDATED_NAME)
-                .createdAt(UPDATED_CREATED_AT);
+                .name(UPDATED_NAME);
         FolderDTO folderDTO = folderMapper.folderToFolderDTO(updatedFolder);
 
         restFolderMockMvc.perform(put("/api/folders")
@@ -234,7 +221,6 @@ public class FolderResourceIntTest {
         assertThat(folderList).hasSize(databaseSizeBeforeUpdate);
         Folder testFolder = folderList.get(folderList.size() - 1);
         assertThat(testFolder.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testFolder.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
 
         // Validate the Folder in ElasticSearch
         Folder folderEs = folderSearchRepository.findOne(testFolder.getId());
@@ -294,7 +280,6 @@ public class FolderResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(folder.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
 }

@@ -28,10 +28,6 @@
                 <constraints nullable="false" />
             </column>
             
-            <column name="created_at" type="timestamp">
-                <constraints nullable="true" />
-            </column>
-            
             <column name="organization_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -46,7 +42,6 @@
             <column name="last_modified_date" type="timestamp"/>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="folder" columnName="created_at" columnDataType="datetime"/>
         
     </changeSet>
 </databaseChangeLog>

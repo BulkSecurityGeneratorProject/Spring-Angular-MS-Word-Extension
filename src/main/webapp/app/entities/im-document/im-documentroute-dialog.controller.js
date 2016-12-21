@@ -12,8 +12,6 @@
 
         vm.imDocument = entity;
         vm.clear = clear;
-        vm.datePickerOpenStatus = {};
-        vm.openCalendar = openCalendar;
         vm.byteSize = DataUtils.byteSize;
         vm.openFile = DataUtils.openFile;
         vm.save = save;
@@ -48,10 +46,6 @@
             vm.isSaving = false;
         }
 
-        vm.datePickerOpenStatus.createdAt = false;
 
-        function openCalendar (date) {
-            vm.datePickerOpenStatus[date] = true;
-        }
     }
 })();

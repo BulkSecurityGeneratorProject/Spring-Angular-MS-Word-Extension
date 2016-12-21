@@ -21,10 +21,6 @@
             "fieldValidateRules": [
                 "required"
             ]
-        },
-        {
-            "fieldName": "createdAt",
-            "fieldType": "ZonedDateTime"
         }
     ],
     "changelogDate": "20161216130936",
@@ -32,5 +28,6 @@
     "dto": "mapstruct",
     "pagination": "no",
     "service": "serviceImpl",
-    "angularJSSuffix": "route"
+    "angularJSSuffix": "route",
+    "enableEntityAudit": true
 }

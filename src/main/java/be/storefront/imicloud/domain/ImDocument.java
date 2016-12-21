@@ -8,7 +8,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -43,8 +42,10 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @Column(name = "original_xml", nullable = false)
     private String originalXml;
 
-    @Column(name = "created_at")
-    private ZonedDateTime createdAt;
+    @NotNull
+    @Size(min = 10, max = 10)
+    @Column(name = "secret", length = 10, nullable = false)
+    private String secret;
 
     @ManyToOne
     private Folder folder;
@@ -118,17 +119,17 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
         this.originalXml = originalXml;
     }
 
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
+    public String getSecret() {
+        return secret;
     }
 
-    public ImDocument createdAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
+    public ImDocument secret(String secret) {
+        this.secret = secret;
         return this;
     }
 
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public Folder getFolder() {
@@ -210,7 +211,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
             ", password='" + password + "'" +
             ", originalFilename='" + originalFilename + "'" +
             ", originalXml='" + originalXml + "'" +
-            ", createdAt='" + createdAt + "'" +
+            ", secret='" + secret + "'" +
             '}';
     }
 }

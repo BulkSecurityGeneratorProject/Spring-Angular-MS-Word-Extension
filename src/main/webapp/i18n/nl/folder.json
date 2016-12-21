@@ -17,7 +17,6 @@
                 "title": "Folder"
             },
             "name": "Name",
-            "createdAt": "Created At",
             "organization": "Organization",
             "document": "Document"
         }

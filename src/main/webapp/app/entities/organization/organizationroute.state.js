@@ -106,7 +106,6 @@
                             return {
                                 name: null,
                                 magentoCustomerId: null,
-                                createdAt: null,
                                 id: null
                             };
                         }

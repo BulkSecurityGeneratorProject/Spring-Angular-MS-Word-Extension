@@ -18,7 +18,6 @@
             },
             "name": "Name",
             "magentoCustomerId": "Magento Customer Id",
-            "createdAt": "Created At",
             "folder": "Folder"
         }
     }

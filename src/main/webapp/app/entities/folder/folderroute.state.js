@@ -105,7 +105,6 @@
                         entity: function () {
                             return {
                                 name: null,
-                                createdAt: null,
                                 id: null
                             };
                         }

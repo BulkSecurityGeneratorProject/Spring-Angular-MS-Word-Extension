@@ -1,6 +1,5 @@
 package be.storefront.imicloud.service.dto;
 
-import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -19,8 +18,6 @@ public class OrganizationDTO extends AbstractAuditingDTO implements Serializable
     private String name;
 
     private Integer magentoCustomerId;
-
-    private ZonedDateTime createdAt;
 
 
     public Long getId() {
@@ -43,13 +40,6 @@ public class OrganizationDTO extends AbstractAuditingDTO implements Serializable
 
     public void setMagentoCustomerId(Integer magentoCustomerId) {
         this.magentoCustomerId = magentoCustomerId;
-    }
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     @Override
@@ -79,7 +69,6 @@ public class OrganizationDTO extends AbstractAuditingDTO implements Serializable
             "id=" + id +
             ", name='" + name + "'" +
             ", magentoCustomerId='" + magentoCustomerId + "'" +
-            ", createdAt='" + createdAt + "'" +
             '}';
     }
 }

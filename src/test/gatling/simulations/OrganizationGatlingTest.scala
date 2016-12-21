@@ -67,7 +67,7 @@ class OrganizationGatlingTest extends Simulation {
             .exec(http("Create new organization")
             .post("/api/organizations")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "magentoCustomerId":"0", "createdAt":"2020-01-01T00:00:00.000Z"}""")).asJSON
+            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "magentoCustomerId":"0"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_organization_url"))).exitHereIfFailed
             .pause(10)
