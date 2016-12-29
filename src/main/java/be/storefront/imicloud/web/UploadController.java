@@ -93,11 +93,13 @@ public class UploadController {
     }
 
 
+    // TODO API for determining if a document already exists
+
     @PostMapping("/xml/")
     @Timed
     public
     @ResponseBody
-    ResponseEntity<ImDocumentUploaded> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam("xml_file") MultipartFile file,
+    ResponseEntity<ImDocumentUploaded> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password,@RequestParam(value = "document_name", required = true) String documentName, @RequestParam("xml_file") MultipartFile file,
                                                            @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
                                                            RedirectAttributes redirectAttributes, HttpServletRequest request) throws ParserConfigurationException, TransformerException, SAXException, IOException {
 
@@ -107,7 +109,7 @@ public class UploadController {
 
         if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
 
-            ImDocumentDTO newDocument = processUploadedDocument(file, password, uploadingUser);
+            ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, uploadingUser);
 
             String baseUrl = BaseUrlUtil.getBaseUrl(request);
             ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument, baseUrl);
@@ -121,7 +123,7 @@ public class UploadController {
     }
 
     @Transactional
-    private ImDocumentDTO processUploadedDocument(MultipartFile file, String password, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
 
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
         String xmlString = IOUtils.toString(stream, "UTF-8");
@@ -136,7 +138,7 @@ public class UploadController {
         }
 
         ImDocumentDTO newDocument = new ImDocumentDTO();
-        newDocument.setOriginalFilename(file.getOriginalFilename());
+        newDocument.setDocumentName(documentName);
         newDocument.setOriginalXml(xmlString);
         newDocument.setPassword(hashedPassword);
         newDocument.setUserId(user.getId());
