@@ -34,7 +34,7 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "originalFilename",
+            "fieldName": "documentName",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
