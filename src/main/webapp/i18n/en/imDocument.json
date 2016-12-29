@@ -18,7 +18,7 @@
             },
             "language": "Language",
             "password": "Password",
-            "originalFilename": "Original Filename",
+            "documentName": "Document Name",
             "originalXml": "Original Xml",
             "secret": "Secret",
             "folder": "Folder",

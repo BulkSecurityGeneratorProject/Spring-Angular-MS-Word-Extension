@@ -26,13 +26,13 @@
                      />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.imDocument.originalFilename" for="field_originalFilename">Original Filename</label>
-            <input type="text" class="form-control" name="originalFilename" id="field_originalFilename"
-                    ng-model="vm.imDocument.originalFilename"
+            <label class="control-label" data-translate="imicloudApp.imDocument.documentName" for="field_documentName">Document Name</label>
+            <input type="text" class="form-control" name="documentName" id="field_documentName"
+                    ng-model="vm.imDocument.documentName"
                     required />
-            <div ng-show="editForm.originalFilename.$invalid">
+            <div ng-show="editForm.documentName.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.originalFilename.$error.required" data-translate="entity.validation.required">
+                    ng-show="editForm.documentName.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
             </div>

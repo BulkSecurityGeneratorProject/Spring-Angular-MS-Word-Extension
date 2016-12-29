@@ -20,7 +20,7 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     private String password;
 
     @NotNull
-    private String originalFilename;
+    private String documentName;
 
     @NotNull
     @Lob
@@ -59,12 +59,12 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getOriginalFilename() {
-        return originalFilename;
+    public String getDocumentName() {
+        return documentName;
     }
 
-    public void setOriginalFilename(String originalFilename) {
-        this.originalFilename = originalFilename;
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
     }
     public String getOriginalXml() {
         return originalXml;
@@ -133,7 +133,7 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
             "id=" + id +
             ", language='" + language + "'" +
             ", password='" + password + "'" +
-            ", originalFilename='" + originalFilename + "'" +
+            ", documentName='" + documentName + "'" +
             ", originalXml='" + originalXml + "'" +
             ", secret='" + secret + "'" +
             '}';

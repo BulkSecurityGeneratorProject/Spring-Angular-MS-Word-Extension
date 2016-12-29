@@ -106,7 +106,7 @@
                             return {
                                 language: null,
                                 password: null,
-                                originalFilename: null,
+                                documentName: null,
                                 originalXml: null,
                                 secret: null,
                                 id: null

@@ -34,8 +34,8 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     private String password;
 
     @NotNull
-    @Column(name = "original_filename", nullable = false)
-    private String originalFilename;
+    @Column(name = "document_name", nullable = false)
+    private String documentName;
 
     @NotNull
     @Lob
@@ -93,17 +93,17 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
         this.password = password;
     }
 
-    public String getOriginalFilename() {
-        return originalFilename;
+    public String getDocumentName() {
+        return documentName;
     }
 
-    public ImDocument originalFilename(String originalFilename) {
-        this.originalFilename = originalFilename;
+    public ImDocument documentName(String documentName) {
+        this.documentName = documentName;
         return this;
     }
 
-    public void setOriginalFilename(String originalFilename) {
-        this.originalFilename = originalFilename;
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
     }
 
     public String getOriginalXml() {
@@ -209,7 +209,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
             "id=" + id +
             ", language='" + language + "'" +
             ", password='" + password + "'" +
-            ", originalFilename='" + originalFilename + "'" +
+            ", documentName='" + documentName + "'" +
             ", originalXml='" + originalXml + "'" +
             ", secret='" + secret + "'" +
             '}';

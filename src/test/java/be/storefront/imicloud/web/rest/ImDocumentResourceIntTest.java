@@ -49,8 +49,8 @@ public class ImDocumentResourceIntTest {
     private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
     private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ORIGINAL_FILENAME = "AAAAAAAAAA";
-    private static final String UPDATED_ORIGINAL_FILENAME = "BBBBBBBBBB";
+    private static final String DEFAULT_DOCUMENT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_DOCUMENT_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_ORIGINAL_XML = "AAAAAAAAAA";
     private static final String UPDATED_ORIGINAL_XML = "BBBBBBBBBB";
@@ -103,7 +103,7 @@ public class ImDocumentResourceIntTest {
         ImDocument imDocument = new ImDocument()
                 .language(DEFAULT_LANGUAGE)
                 .password(DEFAULT_PASSWORD)
-                .originalFilename(DEFAULT_ORIGINAL_FILENAME)
+                .documentName(DEFAULT_DOCUMENT_NAME)
                 .originalXml(DEFAULT_ORIGINAL_XML)
                 .secret(DEFAULT_SECRET);
         // Add required entity
@@ -139,7 +139,7 @@ public class ImDocumentResourceIntTest {
         ImDocument testImDocument = imDocumentList.get(imDocumentList.size() - 1);
         assertThat(testImDocument.getLanguage()).isEqualTo(DEFAULT_LANGUAGE);
         assertThat(testImDocument.getPassword()).isEqualTo(DEFAULT_PASSWORD);
-        assertThat(testImDocument.getOriginalFilename()).isEqualTo(DEFAULT_ORIGINAL_FILENAME);
+        assertThat(testImDocument.getDocumentName()).isEqualTo(DEFAULT_DOCUMENT_NAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(DEFAULT_ORIGINAL_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(DEFAULT_SECRET);
 
@@ -171,10 +171,10 @@ public class ImDocumentResourceIntTest {
 
     @Test
     @Transactional
-    public void checkOriginalFilenameIsRequired() throws Exception {
+    public void checkDocumentNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = imDocumentRepository.findAll().size();
         // set the field null
-        imDocument.setOriginalFilename(null);
+        imDocument.setDocumentName(null);
 
         // Create the ImDocument, which fails.
         ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(imDocument);
@@ -239,7 +239,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(imDocument.getId().intValue())))
             .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
-            .andExpect(jsonPath("$.[*].originalFilename").value(hasItem(DEFAULT_ORIGINAL_FILENAME.toString())))
+            .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
             .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())));
     }
@@ -257,7 +257,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.id").value(imDocument.getId().intValue()))
             .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
-            .andExpect(jsonPath("$.originalFilename").value(DEFAULT_ORIGINAL_FILENAME.toString()))
+            .andExpect(jsonPath("$.documentName").value(DEFAULT_DOCUMENT_NAME.toString()))
             .andExpect(jsonPath("$.originalXml").value(DEFAULT_ORIGINAL_XML.toString()))
             .andExpect(jsonPath("$.secret").value(DEFAULT_SECRET.toString()));
     }
@@ -283,7 +283,7 @@ public class ImDocumentResourceIntTest {
         updatedImDocument
                 .language(UPDATED_LANGUAGE)
                 .password(UPDATED_PASSWORD)
-                .originalFilename(UPDATED_ORIGINAL_FILENAME)
+                .documentName(UPDATED_DOCUMENT_NAME)
                 .originalXml(UPDATED_ORIGINAL_XML)
                 .secret(UPDATED_SECRET);
         ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(updatedImDocument);
@@ -299,7 +299,7 @@ public class ImDocumentResourceIntTest {
         ImDocument testImDocument = imDocumentList.get(imDocumentList.size() - 1);
         assertThat(testImDocument.getLanguage()).isEqualTo(UPDATED_LANGUAGE);
         assertThat(testImDocument.getPassword()).isEqualTo(UPDATED_PASSWORD);
-        assertThat(testImDocument.getOriginalFilename()).isEqualTo(UPDATED_ORIGINAL_FILENAME);
+        assertThat(testImDocument.getDocumentName()).isEqualTo(UPDATED_DOCUMENT_NAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(UPDATED_ORIGINAL_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(UPDATED_SECRET);
 
@@ -363,7 +363,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(imDocument.getId().intValue())))
             .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
-            .andExpect(jsonPath("$.[*].originalFilename").value(hasItem(DEFAULT_ORIGINAL_FILENAME.toString())))
+            .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
             .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())));
     }
