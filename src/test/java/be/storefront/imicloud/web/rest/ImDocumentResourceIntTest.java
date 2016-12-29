@@ -58,6 +58,9 @@ public class ImDocumentResourceIntTest {
     private static final String DEFAULT_SECRET = "AAAAAAAAAA";
     private static final String UPDATED_SECRET = "BBBBBBBBBB";
 
+    private static final String DEFAULT_DEFAULT_TEMPLATE = "AAAAAAAAAA";
+    private static final String UPDATED_DEFAULT_TEMPLATE = "BBBBBBBBBB";
+
     @Inject
     private ImDocumentRepository imDocumentRepository;
 
@@ -105,7 +108,8 @@ public class ImDocumentResourceIntTest {
                 .password(DEFAULT_PASSWORD)
                 .documentName(DEFAULT_DOCUMENT_NAME)
                 .originalXml(DEFAULT_ORIGINAL_XML)
-                .secret(DEFAULT_SECRET);
+                .secret(DEFAULT_SECRET)
+                .defaultTemplate(DEFAULT_DEFAULT_TEMPLATE);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -142,6 +146,7 @@ public class ImDocumentResourceIntTest {
         assertThat(testImDocument.getDocumentName()).isEqualTo(DEFAULT_DOCUMENT_NAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(DEFAULT_ORIGINAL_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(DEFAULT_SECRET);
+        assertThat(testImDocument.getDefaultTemplate()).isEqualTo(DEFAULT_DEFAULT_TEMPLATE);
 
         // Validate the ImDocument in ElasticSearch
         ImDocument imDocumentEs = imDocumentSearchRepository.findOne(testImDocument.getId());
@@ -241,7 +246,8 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
-            .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())));
+            .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())))
+            .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())));
     }
 
     @Test
@@ -259,7 +265,8 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
             .andExpect(jsonPath("$.documentName").value(DEFAULT_DOCUMENT_NAME.toString()))
             .andExpect(jsonPath("$.originalXml").value(DEFAULT_ORIGINAL_XML.toString()))
-            .andExpect(jsonPath("$.secret").value(DEFAULT_SECRET.toString()));
+            .andExpect(jsonPath("$.secret").value(DEFAULT_SECRET.toString()))
+            .andExpect(jsonPath("$.defaultTemplate").value(DEFAULT_DEFAULT_TEMPLATE.toString()));
     }
 
     @Test
@@ -285,7 +292,8 @@ public class ImDocumentResourceIntTest {
                 .password(UPDATED_PASSWORD)
                 .documentName(UPDATED_DOCUMENT_NAME)
                 .originalXml(UPDATED_ORIGINAL_XML)
-                .secret(UPDATED_SECRET);
+                .secret(UPDATED_SECRET)
+                .defaultTemplate(UPDATED_DEFAULT_TEMPLATE);
         ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(updatedImDocument);
 
         restImDocumentMockMvc.perform(put("/api/im-documents")
@@ -302,6 +310,7 @@ public class ImDocumentResourceIntTest {
         assertThat(testImDocument.getDocumentName()).isEqualTo(UPDATED_DOCUMENT_NAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(UPDATED_ORIGINAL_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(UPDATED_SECRET);
+        assertThat(testImDocument.getDefaultTemplate()).isEqualTo(UPDATED_DEFAULT_TEMPLATE);
 
         // Validate the ImDocument in ElasticSearch
         ImDocument imDocumentEs = imDocumentSearchRepository.findOne(testImDocument.getId());
@@ -365,6 +374,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
-            .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())));
+            .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())))
+            .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())));
     }
 }

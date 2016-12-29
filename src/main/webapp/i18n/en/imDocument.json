@@ -21,6 +21,7 @@
             "documentName": "Document Name",
             "originalXml": "Original Xml",
             "secret": "Secret",
+            "defaultTemplate": "Default Template",
             "folder": "Folder",
             "map": "Map",
             "user": "User"

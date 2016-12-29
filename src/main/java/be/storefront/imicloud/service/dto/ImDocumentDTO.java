@@ -30,6 +30,8 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     @Size(min = 10, max = 10)
     private String secret;
 
+    private String defaultTemplate;
+
 
     private Long folderId;
     
@@ -79,6 +81,13 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+    public String getDefaultTemplate() {
+        return defaultTemplate;
+    }
+
+    public void setDefaultTemplate(String defaultTemplate) {
+        this.defaultTemplate = defaultTemplate;
     }
 
     public Long getFolderId() {
@@ -136,6 +145,7 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
             ", documentName='" + documentName + "'" +
             ", originalXml='" + originalXml + "'" +
             ", secret='" + secret + "'" +
+            ", defaultTemplate='" + defaultTemplate + "'" +
             '}';
     }
 }

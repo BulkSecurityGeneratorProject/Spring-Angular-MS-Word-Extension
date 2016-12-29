@@ -47,6 +47,9 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @Column(name = "secret", length = 10, nullable = false)
     private String secret;
 
+    @Column(name = "default_template")
+    private String defaultTemplate;
+
     @ManyToOne
     private Folder folder;
 
@@ -132,6 +135,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
         this.secret = secret;
     }
 
+    public String getDefaultTemplate() {
+        return defaultTemplate;
+    }
+
+    public ImDocument defaultTemplate(String defaultTemplate) {
+        this.defaultTemplate = defaultTemplate;
+        return this;
+    }
+
+    public void setDefaultTemplate(String defaultTemplate) {
+        this.defaultTemplate = defaultTemplate;
+    }
+
     public Folder getFolder() {
         return folder;
     }
@@ -212,6 +228,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
             ", documentName='" + documentName + "'" +
             ", originalXml='" + originalXml + "'" +
             ", secret='" + secret + "'" +
+            ", defaultTemplate='" + defaultTemplate + "'" +
             '}';
     }
 }

@@ -109,6 +109,7 @@
                                 documentName: null,
                                 originalXml: null,
                                 secret: null,
+                                defaultTemplate: null,
                                 id: null
                             };
                         }

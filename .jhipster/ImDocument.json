@@ -58,6 +58,10 @@
             ],
             "fieldValidateRulesMinlength": "10",
             "fieldValidateRulesMaxlength": "10"
+        },
+        {
+            "fieldName": "defaultTemplate",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20161216130937",
