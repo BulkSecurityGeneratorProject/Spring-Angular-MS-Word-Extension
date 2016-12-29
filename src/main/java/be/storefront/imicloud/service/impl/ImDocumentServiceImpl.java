@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImDocumentServiceImpl implements ImDocumentService{
 
     private final Logger log = LoggerFactory.getLogger(ImDocumentServiceImpl.class);
-    
+
     @Inject
     private ImDocumentRepository imDocumentRepository;
 
@@ -48,6 +50,15 @@ public class ImDocumentServiceImpl implements ImDocumentService{
     public ImDocumentDTO save(ImDocumentDTO imDocumentDTO) {
         log.debug("Request to save ImDocument : {}", imDocumentDTO);
         ImDocument imDocument = imDocumentMapper.imDocumentDTOToImDocument(imDocumentDTO);
+
+        if(imDocument.getSecret() == null) {
+            // Add missing random secret
+            SecureRandom random = new SecureRandom();
+            String newSecret = new BigInteger(130, random).toString(32);
+            newSecret = newSecret.substring(0, 10);
+            imDocument.setSecret(newSecret);
+        }
+
         imDocument = imDocumentRepository.save(imDocument);
         ImDocumentDTO result = imDocumentMapper.imDocumentToImDocumentDTO(imDocument);
         imDocumentSearchRepository.save(imDocument);
@@ -56,11 +67,11 @@ public class ImDocumentServiceImpl implements ImDocumentService{
 
     /**
      *  Get all the imDocuments.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<ImDocumentDTO> findAll(Pageable pageable) {
         log.debug("Request to get all ImDocuments");
         Page<ImDocument> result = imDocumentRepository.findAll(pageable);
@@ -73,7 +84,7 @@ public class ImDocumentServiceImpl implements ImDocumentService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public ImDocumentDTO findOne(Long id) {
         log.debug("Request to get ImDocument : {}", id);
         ImDocument imDocument = imDocumentRepository.findOne(id);
