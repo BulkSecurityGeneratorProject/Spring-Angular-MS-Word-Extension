@@ -7,6 +7,7 @@ import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import com.codahale.metrics.annotation.Timed;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,10 +41,13 @@ public class LoginAndGotoController {
         if(uploadingUser != null) {
             // Auto login
 
-            Authentication auth =
-                SecurityUtils.createUserDetailsFromDBUser(uploadingUser, null);
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            // TODO fix auto login
+
+//            Authentication auth =
+//                SecurityUtils.createUserDetailsFromDBUser(uploadingUser, null, null);
+//
+//            SecurityContextHolder.getContext().setAuthentication(auth);
 
 
         }else{
