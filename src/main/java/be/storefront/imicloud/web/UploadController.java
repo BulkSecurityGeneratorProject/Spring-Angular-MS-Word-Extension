@@ -109,7 +109,7 @@ public class UploadController {
 
         if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
 
-            ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, uploadingUser);
+            ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, templateCode, uploadingUser);
 
             String baseUrl = BaseUrlUtil.getBaseUrl(request);
             ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument, baseUrl);
@@ -123,7 +123,7 @@ public class UploadController {
     }
 
     @Transactional
-    private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, String templateCode, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
 
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
         String xmlString = IOUtils.toString(stream, "UTF-8");
@@ -142,7 +142,7 @@ public class UploadController {
         newDocument.setOriginalXml(xmlString);
         newDocument.setPassword(hashedPassword);
         newDocument.setUserId(user.getId());
-
+        newDocument.setDefaultTemplate(templateCode);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

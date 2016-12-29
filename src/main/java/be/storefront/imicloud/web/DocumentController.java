@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -35,13 +36,17 @@ public class DocumentController {
         if (imDocumentDto != null) {
             if (secret != null && secret.equals(imDocumentDto.getSecret())) {
 
-String template;
-               if(!optionalTemplate.isPresent()){
-template = optionalTemplate.get();
-               }else{
-                   template = imDocumentDto.get
-               }
-                return new ModelAndView("redirect:/document/" + documentId);
+                String template;
+                if (optionalTemplate.isPresent()) {
+                    template = optionalTemplate.get();
+                } else {
+                    template = imDocumentDto.getDefaultTemplate();
+                }
+
+                HashMap<String, Object> viewMap = new HashMap<>();
+                viewMap.put("ImDocumentDTO", imDocumentDto);
+
+                return new ModelAndView(template + "/index", viewMap);
 
             } else {
                 throw new AccessDeniedException();
@@ -50,7 +55,6 @@ template = optionalTemplate.get();
         } else {
             throw new NotFoundException();
         }
-
 
 
     }
