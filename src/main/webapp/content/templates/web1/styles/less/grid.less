@@ -1,0 +1,117 @@
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+1.  CSS Reset
+2.  Global Grid
+3.  Mobile Grid
+4.  Extra Classes
+5.  LESS prefixes
+6.  Site styles
+7.  Media queries
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+/*
+1.  CSS Reset by Eric Meyer http://meyerweb.com/eric/tools/css/reset/
+============================================================================================*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a,
+abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small,
+strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form,
+label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details,
+embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,
+time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline;}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+body { line-height: 1; }
+ol, ul { list-style: none;}
+blockquote, q { quotes: none;}
+blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
+table { border-collapse: collapse; border-spacing: 0;}
+input[type="text"], input[type="submit"], input[type="button"], textarea{ -webkit-appearance: none; .border-radius(0,0,0,0); }
+
+
+/*
+2.  Global Grid
+============================================================================================*/
+.wrapper { margin: auto; width: 100%; max-width: @max-width-wrapper; }
+.container { margin: auto; width: 100%; max-width: @max-width-content; }
+.one { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 4.25%; }
+.two { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 10.5%; }
+.three { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 16.75%; }
+.four { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 23%; }
+.five { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 29.25%; }
+.six { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 35.5%; }
+.seven { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 41.75%; }
+.eight { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 48%; }
+.nine { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 54.25%; }
+.ten { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 60.5%; }
+.eleven { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 66.75%; }
+.twelve	{ display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 73%; }
+.thirteen { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 79.25%; }
+.fourteen { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 85.5%; }
+.fifteen { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 91.75%; }
+.sixteen { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 98%; }
+.one-third { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 31.333333%; }
+.two-third { display: inline; float: left; margin-left: 1%; margin-right: 1%; width: 64.666666%; }
+
+.one-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 6.25%; }
+.two-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 12.5%; }
+.three-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 18.75%; }
+.four-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 25%; }
+.five-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 31.25%; }
+.six-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 37.5%; }
+.seven-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 43.75%; }
+.eight-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 50%; }
+.nine-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 56.25%; }
+.ten-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 62.5%; }
+.eleven-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 68.75%; }
+.twelve-no-space	{ display: inline; float: left; margin-left: 0; margin-right: 0; width: 75%; }
+.thirteen-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 81.25%; }
+.fourteen-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 87.5%; }
+.fifteen-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 93.75%; }
+.sixteen-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 100%; }
+.one-third-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 33.333333%; }
+.two-third-no-space { display: inline; float: left; margin-left: 0; margin-right: 0; width: 66.666666%; }
+
+
+/*
+3.  Mobile Grid
+============================================================================================*/
+@media only screen and (max-width: 719px) {
+
+    .container { width: 100%;}
+
+    .one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .ten, .eleven, .twelve,
+    .thirteen, .fourteen, .fifteen, .sixteen, .one-third, .two-third { width: 100%; margin-left: 0px; margin-right: 0px; }
+
+    .one-no-space, .two-no-space, .three-no-space, .four-no-space, .five-no-space, .six-no-space, .seven-no-space, .eight-no-space, .nine-no-space, .ten-no-space, .eleven-no-space, .twelve-no-space,
+    .thirteen-no-space, .fourteen-no-space, .fifteen-no-space, .sixteen-no-space, .one-third-no-space, .two-third-no-space { width: 100%; margin-left: 0px; margin-right: 0px; }
+}
+
+
+/*
+4.  Extra classes
+============================================================================================*/
+a { -webkit-transition: all 0.3s ease; -moz-transition: all 0.3s ease; -ms-transition: all 0.3s ease; -o-transition: all 0.3s ease; transition: all 0.3s ease; }
+img.scale { max-width: 100%; height: auto; }
+.clear { clear: both; display: block; overflow: hidden; visibility: hidden; width: 0; height:0; }
+.left { float: left; }
+.right { float: right; }
+
+/*selection color*/
+::selection { background: #ffd204; color: #fff; }
+::-moz-selection { background: #ffd204; color: #fff; }
+
+/*enable touch if possible*/
+canvas { -ms-touch-action: double-tap-zoom; }
+
+
+/*
+5.  LESS prefixes
+============================================================================================*/
+.border-radius (@a: 4px, @b: 4px, @c: 4px, @d: 4px) { -webkit-border-radius: @a @b @c @d; -moz-border-radius: @a @b @c @d; -ms-border-radius: @a @b @c @d; -o-border-radius: @a @b @c @d;; border-radius: @a @b @c @d;; }
+.box-shadow (@x: 1px, @y: 1px, @blur: 1px, @feather: 0px, @color: #000000) { -webkit-shadow: @x @y @blur @feather @color; -moz-shadow: @x @y @blur @feather @color; -ms-box-shadow: @x @y @blur @feather @color; -o-box-shadow: @x @y @blur @feather @color; box-shadow: @x @y @blur @feather @color; }
+.box-shadow-inset ( @x-i: 1px, @y-i: 1px, @blur-i: 1px, @feather-i: 0px, @color-i: #000000) { -webkit-shadow: inset @x-i @y-i @blur-i @feather-i @color-i; -moz-shadow: inset @x-i @y-i @blur-i @feather-i @color-i; -ms-box-shadow: inset @x-i @y-i @blur-i @feather-i @color-i; -o-box-shadow: inset @x-i @y-i @blur-i @feather-i @color-i; box-shadow: inset @x-i @y-i @blur-i @feather-i @color-i; }
+.transition(@type: all, @time: 0.3s, @ease: ease) { -webkit-transition: @type @time @ease; -moz-transition: @type @time @ease; -ms-transition: @type @time @ease; -o-transition: @type @time @ease; transition: @type @time @ease; }
+.gradient (@startColor: #eee, @endColor: white) { background-color: @startColor; background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor)); background: -webkit-linear-gradient(top, @startColor, @endColor); background: -moz-linear-gradient(top, @startColor, @endColor); background: -ms-linear-gradient(top, @startColor, @endColor); background: -o-linear-gradient(top, @startColor, @endColor); }
+.backface(@hidden: hidden) { -webkit-backface-visibility: @hidden; -moz-backface-visibility: @hidden; -ms-backface-visibility: @hidden; -o-backface-visibility: @hidden; backface-visibility: @hidden; }
+

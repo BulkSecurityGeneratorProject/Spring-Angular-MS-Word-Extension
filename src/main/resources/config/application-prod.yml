@@ -40,6 +40,7 @@ spring:
             hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
             hibernate.javax.cache.uri: ${spring.cache.jcache.config}
             hibernate.cache.region.factory_class: be.storefront.imicloud.config.jcache.SpringCacheRegionFactory
+            hibernate.enable_lazy_load_no_trans: true
     cache:
         jcache:
             config: ehcache.xml
