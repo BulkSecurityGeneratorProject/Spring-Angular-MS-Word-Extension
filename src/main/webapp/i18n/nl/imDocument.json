@@ -22,6 +22,7 @@
             "originalXml": "Original Xml",
             "secret": "Secret",
             "defaultTemplate": "Default Template",
+            "uploadComplete": "Upload Complete",
             "folder": "Folder",
             "map": "Map",
             "user": "User"

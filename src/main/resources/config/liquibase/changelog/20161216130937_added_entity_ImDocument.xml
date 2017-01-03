@@ -48,6 +48,10 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="upload_complete" type="bit">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="folder_id" type="bigint">
                 <constraints nullable="true" />
             </column>

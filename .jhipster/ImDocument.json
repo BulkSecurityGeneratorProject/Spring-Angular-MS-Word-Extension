@@ -62,6 +62,10 @@
         {
             "fieldName": "defaultTemplate",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "uploadComplete",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20161216130937",

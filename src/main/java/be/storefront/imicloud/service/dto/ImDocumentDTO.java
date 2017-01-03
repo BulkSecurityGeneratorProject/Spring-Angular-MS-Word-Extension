@@ -32,6 +32,8 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     private String defaultTemplate;
 
+    private Boolean uploadComplete;
+
 
     private Long folderId;
     
@@ -88,6 +90,13 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setDefaultTemplate(String defaultTemplate) {
         this.defaultTemplate = defaultTemplate;
+    }
+    public Boolean getUploadComplete() {
+        return uploadComplete;
+    }
+
+    public void setUploadComplete(Boolean uploadComplete) {
+        this.uploadComplete = uploadComplete;
     }
 
     public Long getFolderId() {
@@ -146,6 +155,7 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
             ", originalXml='" + originalXml + "'" +
             ", secret='" + secret + "'" +
             ", defaultTemplate='" + defaultTemplate + "'" +
+            ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }
 }

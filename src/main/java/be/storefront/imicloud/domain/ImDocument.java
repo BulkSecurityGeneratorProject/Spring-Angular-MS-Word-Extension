@@ -50,6 +50,9 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @Column(name = "default_template")
     private String defaultTemplate;
 
+    @Column(name = "upload_complete")
+    private Boolean uploadComplete;
+
     @ManyToOne
     private Folder folder;
 
@@ -148,6 +151,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
         this.defaultTemplate = defaultTemplate;
     }
 
+    public Boolean isUploadComplete() {
+        return uploadComplete;
+    }
+
+    public ImDocument uploadComplete(Boolean uploadComplete) {
+        this.uploadComplete = uploadComplete;
+        return this;
+    }
+
+    public void setUploadComplete(Boolean uploadComplete) {
+        this.uploadComplete = uploadComplete;
+    }
+
     public Folder getFolder() {
         return folder;
     }
@@ -229,6 +245,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
             ", originalXml='" + originalXml + "'" +
             ", secret='" + secret + "'" +
             ", defaultTemplate='" + defaultTemplate + "'" +
+            ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }
 }

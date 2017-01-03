@@ -67,7 +67,7 @@ class ImDocumentGatlingTest extends Simulation {
             .exec(http("Create new imDocument")
             .post("/api/im-documents")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "language":"SAMPLE_TEXT", "password":"SAMPLE_TEXT", "documentName":"SAMPLE_TEXT", "originalXml":null, "secret":"SAMPLE_TEXT", "defaultTemplate":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "language":"SAMPLE_TEXT", "password":"SAMPLE_TEXT", "documentName":"SAMPLE_TEXT", "originalXml":null, "secret":"SAMPLE_TEXT", "defaultTemplate":"SAMPLE_TEXT", "uploadComplete":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_imDocument_url"))).exitHereIfFailed
             .pause(10)

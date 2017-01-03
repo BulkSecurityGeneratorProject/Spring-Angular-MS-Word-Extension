@@ -110,6 +110,7 @@
                                 originalXml: null,
                                 secret: null,
                                 defaultTemplate: null,
+                                uploadComplete: null,
                                 id: null
                             };
                         }

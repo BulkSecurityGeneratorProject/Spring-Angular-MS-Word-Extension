@@ -61,6 +61,9 @@ public class ImDocumentResourceIntTest {
     private static final String DEFAULT_DEFAULT_TEMPLATE = "AAAAAAAAAA";
     private static final String UPDATED_DEFAULT_TEMPLATE = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_UPLOAD_COMPLETE = false;
+    private static final Boolean UPDATED_UPLOAD_COMPLETE = true;
+
     @Inject
     private ImDocumentRepository imDocumentRepository;
 
@@ -109,7 +112,8 @@ public class ImDocumentResourceIntTest {
                 .documentName(DEFAULT_DOCUMENT_NAME)
                 .originalXml(DEFAULT_ORIGINAL_XML)
                 .secret(DEFAULT_SECRET)
-                .defaultTemplate(DEFAULT_DEFAULT_TEMPLATE);
+                .defaultTemplate(DEFAULT_DEFAULT_TEMPLATE)
+                .uploadComplete(DEFAULT_UPLOAD_COMPLETE);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -147,6 +151,7 @@ public class ImDocumentResourceIntTest {
         assertThat(testImDocument.getOriginalXml()).isEqualTo(DEFAULT_ORIGINAL_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(DEFAULT_SECRET);
         assertThat(testImDocument.getDefaultTemplate()).isEqualTo(DEFAULT_DEFAULT_TEMPLATE);
+        assertThat(testImDocument.isUploadComplete()).isEqualTo(DEFAULT_UPLOAD_COMPLETE);
 
         // Validate the ImDocument in ElasticSearch
         ImDocument imDocumentEs = imDocumentSearchRepository.findOne(testImDocument.getId());
@@ -247,7 +252,8 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
             .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())))
-            .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())));
+            .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())))
+            .andExpect(jsonPath("$.[*].uploadComplete").value(hasItem(DEFAULT_UPLOAD_COMPLETE.booleanValue())));
     }
 
     @Test
@@ -266,7 +272,8 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.documentName").value(DEFAULT_DOCUMENT_NAME.toString()))
             .andExpect(jsonPath("$.originalXml").value(DEFAULT_ORIGINAL_XML.toString()))
             .andExpect(jsonPath("$.secret").value(DEFAULT_SECRET.toString()))
-            .andExpect(jsonPath("$.defaultTemplate").value(DEFAULT_DEFAULT_TEMPLATE.toString()));
+            .andExpect(jsonPath("$.defaultTemplate").value(DEFAULT_DEFAULT_TEMPLATE.toString()))
+            .andExpect(jsonPath("$.uploadComplete").value(DEFAULT_UPLOAD_COMPLETE.booleanValue()));
     }
 
     @Test
@@ -293,7 +300,8 @@ public class ImDocumentResourceIntTest {
                 .documentName(UPDATED_DOCUMENT_NAME)
                 .originalXml(UPDATED_ORIGINAL_XML)
                 .secret(UPDATED_SECRET)
-                .defaultTemplate(UPDATED_DEFAULT_TEMPLATE);
+                .defaultTemplate(UPDATED_DEFAULT_TEMPLATE)
+                .uploadComplete(UPDATED_UPLOAD_COMPLETE);
         ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(updatedImDocument);
 
         restImDocumentMockMvc.perform(put("/api/im-documents")
@@ -311,6 +319,7 @@ public class ImDocumentResourceIntTest {
         assertThat(testImDocument.getOriginalXml()).isEqualTo(UPDATED_ORIGINAL_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(UPDATED_SECRET);
         assertThat(testImDocument.getDefaultTemplate()).isEqualTo(UPDATED_DEFAULT_TEMPLATE);
+        assertThat(testImDocument.isUploadComplete()).isEqualTo(UPDATED_UPLOAD_COMPLETE);
 
         // Validate the ImDocument in ElasticSearch
         ImDocument imDocumentEs = imDocumentSearchRepository.findOne(testImDocument.getId());
@@ -375,6 +384,7 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
             .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())))
-            .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())));
+            .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())))
+            .andExpect(jsonPath("$.[*].uploadComplete").value(hasItem(DEFAULT_UPLOAD_COMPLETE.booleanValue())));
     }
 }
