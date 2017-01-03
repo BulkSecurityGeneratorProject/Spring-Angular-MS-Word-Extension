@@ -28,6 +28,10 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="original_name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

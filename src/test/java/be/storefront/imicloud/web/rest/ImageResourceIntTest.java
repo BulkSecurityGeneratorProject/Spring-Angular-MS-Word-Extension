@@ -44,6 +44,9 @@ public class ImageResourceIntTest {
     private static final String DEFAULT_FILENAME = "AAAAAAAAAA";
     private static final String UPDATED_FILENAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_ORIGINAL_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_ORIGINAL_NAME = "BBBBBBBBBB";
+
     @Inject
     private ImageRepository imageRepository;
 
@@ -87,7 +90,8 @@ public class ImageResourceIntTest {
      */
     public static Image createEntity(EntityManager em) {
         Image image = new Image()
-                .filename(DEFAULT_FILENAME);
+                .filename(DEFAULT_FILENAME)
+                .originalName(DEFAULT_ORIGINAL_NAME);
         return image;
     }
 
@@ -115,6 +119,7 @@ public class ImageResourceIntTest {
         assertThat(imageList).hasSize(databaseSizeBeforeCreate + 1);
         Image testImage = imageList.get(imageList.size() - 1);
         assertThat(testImage.getFilename()).isEqualTo(DEFAULT_FILENAME);
+        assertThat(testImage.getOriginalName()).isEqualTo(DEFAULT_ORIGINAL_NAME);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -163,6 +168,25 @@ public class ImageResourceIntTest {
 
     @Test
     @Transactional
+    public void checkOriginalNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = imageRepository.findAll().size();
+        // set the field null
+        image.setOriginalName(null);
+
+        // Create the Image, which fails.
+        ImageDTO imageDTO = imageMapper.imageToImageDTO(image);
+
+        restImageMockMvc.perform(post("/api/images")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(imageDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Image> imageList = imageRepository.findAll();
+        assertThat(imageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllImages() throws Exception {
         // Initialize the database
         imageRepository.saveAndFlush(image);
@@ -172,7 +196,8 @@ public class ImageResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
-            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())));
+            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())))
+            .andExpect(jsonPath("$.[*].originalName").value(hasItem(DEFAULT_ORIGINAL_NAME.toString())));
     }
 
     @Test
@@ -186,7 +211,8 @@ public class ImageResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(image.getId().intValue()))
-            .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME.toString()));
+            .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME.toString()))
+            .andExpect(jsonPath("$.originalName").value(DEFAULT_ORIGINAL_NAME.toString()));
     }
 
     @Test
@@ -208,7 +234,8 @@ public class ImageResourceIntTest {
         // Update the image
         Image updatedImage = imageRepository.findOne(image.getId());
         updatedImage
-                .filename(UPDATED_FILENAME);
+                .filename(UPDATED_FILENAME)
+                .originalName(UPDATED_ORIGINAL_NAME);
         ImageDTO imageDTO = imageMapper.imageToImageDTO(updatedImage);
 
         restImageMockMvc.perform(put("/api/images")
@@ -221,6 +248,7 @@ public class ImageResourceIntTest {
         assertThat(imageList).hasSize(databaseSizeBeforeUpdate);
         Image testImage = imageList.get(imageList.size() - 1);
         assertThat(testImage.getFilename()).isEqualTo(UPDATED_FILENAME);
+        assertThat(testImage.getOriginalName()).isEqualTo(UPDATED_ORIGINAL_NAME);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -280,6 +308,7 @@ public class ImageResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
-            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())));
+            .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())))
+            .andExpect(jsonPath("$.[*].originalName").value(hasItem(DEFAULT_ORIGINAL_NAME.toString())));
     }
 }

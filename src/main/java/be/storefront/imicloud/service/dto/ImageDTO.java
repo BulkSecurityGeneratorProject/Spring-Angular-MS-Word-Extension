@@ -17,6 +17,9 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private String filename;
 
+    @NotNull
+    private String originalName;
+
 
     private Set<ImBlockDTO> imBlocks = new HashSet<>();
 
@@ -33,6 +36,13 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
     }
 
     public Set<ImBlockDTO> getImBlocks() {
@@ -69,6 +79,7 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
         return "ImageDTO{" +
             "id=" + id +
             ", filename='" + filename + "'" +
+            ", originalName='" + originalName + "'" +
             '}';
     }
 }

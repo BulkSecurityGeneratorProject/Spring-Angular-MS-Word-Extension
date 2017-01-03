@@ -17,6 +17,7 @@
                 "title": "Image"
             },
             "filename": "Filename",
+            "originalName": "Original Name",
             "imBlock": "Im Block"
         }
     }

@@ -30,6 +30,10 @@ public class Image extends AbstractAuditingEntity implements Serializable {
     @Column(name = "filename", nullable = false)
     private String filename;
 
+    @NotNull
+    @Column(name = "original_name", nullable = false)
+    private String originalName;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "image_im_block",
@@ -56,6 +60,19 @@ public class Image extends AbstractAuditingEntity implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public Image originalName(String originalName) {
+        this.originalName = originalName;
+        return this;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
     }
 
     public Set<ImBlock> getImBlocks() {
@@ -106,6 +123,7 @@ public class Image extends AbstractAuditingEntity implements Serializable {
         return "Image{" +
             "id=" + id +
             ", filename='" + filename + "'" +
+            ", originalName='" + originalName + "'" +
             '}';
     }
 }

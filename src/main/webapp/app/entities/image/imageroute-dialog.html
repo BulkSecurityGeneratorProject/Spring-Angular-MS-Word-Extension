@@ -25,6 +25,18 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.image.originalName" for="field_originalName">Original Name</label>
+            <input type="text" class="form-control" name="originalName" id="field_originalName"
+                    ng-model="vm.image.originalName"
+                    required />
+            <div ng-show="editForm.originalName.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.originalName.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label data-translate="imicloudApp.image.imBlock" for="field_imBlock">Im Block</label>
