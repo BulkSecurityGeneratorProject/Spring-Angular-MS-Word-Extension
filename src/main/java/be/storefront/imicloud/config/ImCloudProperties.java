@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class ImCloudProperties {
 
     private String fileStorageDir = null;
+    private String baseUrl = null;
     private final Security security = new Security();
 
     private final FsProCloud fsProCloud = new FsProCloud();
@@ -33,6 +34,19 @@ public class ImCloudProperties {
             fileStorageDir += "/";
         }
         this.fileStorageDir = fileStorageDir;
+    }
+
+    public String getBaseUrl(){
+        return this.baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+
+        // Force ending with "/"
+        if (!"/".equals(baseUrl.substring(baseUrl.length() - 1, baseUrl.length()))) {
+            baseUrl += "/";
+        }
+        this.baseUrl = baseUrl;
     }
 
     public Security getSecurity() {

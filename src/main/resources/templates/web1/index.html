@@ -33,13 +33,6 @@
 </head>
 <body>
 
-<!--
-<h1 th:text="${ImDocumentDTO.documentName}">Document Name</h1>
-
-<p th:text="${ImDocumentDTO.defaultTemplate}">Default template</p>
-
-<p th:text="${ImDocument.documentName}">Document Name</p>
--->
 
 
 <!-- MOBILE MENU OVERLAY
@@ -116,8 +109,6 @@ END INTRO: FULL SCREEN OVERLAY-->
         -->
         <nav>
             <ul>
-
-
                 <li>
                     <a href="#">
                         <span th:text="${ImDocument.documentName}">Map name</span>
@@ -131,171 +122,6 @@ END INTRO: FULL SCREEN OVERLAY-->
                         </li>
                     </ul>
                 </li>
-
-                <!--
-
-                <li>
-                    <a href="#">
-                        Discussienota - Hoe omgaan met de zuivelcrisis?
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="001">
-                                Overzicht
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        Analyse van de zuivelmarkt
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="002">
-                                Overzicht
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="003">
-                                Lage en dalende prijzen
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="004">
-                                Stijgende melkproductie
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="005">
-                                Rendabiliteit melkveebedrijven
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        Europese maatregelen
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="006">
-                                Overzicht
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="007">
-                                Verhoging interventievolumes
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="008">
-                                Tijdelijke verhoging staatssteun ( de-minimissteun )
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="009">
-                                Productiebeperking op basis van Art. 222
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        Crisismaatregelen in België
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="010">
-                                Overzicht
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="011">
-                                Maatregelen op federaal en Vlaams niveau
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        Situatie buurlanden
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="012">
-                                Overzicht
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="013">
-                                Posities belangenorganisaties
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="014">
-                                Duitsland
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="015">
-                                Nederland
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="016">
-                                Frankrijk
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="017">
-                                Wallonië en Vlaanderen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        Positie Boerenbond
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="018">
-                                Overzicht
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="019">
-                                Deelname aan debat over zuivelcrisis
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" data-viewid="020">
-                                Standpunten uit het verleden
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        Bijlagen
-                        <i class="icon-plus"></i>
-                    </a>
-                    <ul class="sub-nav">
-                        <li>
-                            <a href="#" data-viewid="021">
-                                Afkortingen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                -->
             </ul>
         </nav>
     </div>
@@ -306,78 +132,48 @@ END INTRO: FULL SCREEN OVERLAY-->
 <section id="right-side" canvas="container">
     <div class="wrapper">
 
-        <!--view-->
-        <section th:each="map,mapIter : ${ImDocument.getMaps()}" class="view" data-th-attr="data-viewid=${mapIter.index}">
-            <div class="view-header">
+
+       <section class="view" th:each="map,mapIter : ${ImDocument.getMaps()}" data-th-attr="data-viewid=${mapIter.index}">
+            <div class="view-content" data-th-attr="data-viewid=${mapIter.index + '-overview'}">
                 <div class="container">
                     <div class="sixteen">
-                        <h1>Discussienota - Hoe omgaan met de zuivelcrisis?</h1>
+                        <h2 th:text="${map.label}">About Publishing in FS Pro  2013</h2>
                     </div>
                     <div class="clear"></div>
-                </div>
-            </div>
-            <div th:each="block,blockIter : ${map.getBlocks()}" class="view-content" data-th-attr="data-viewid=${mapIter.index + '-' + blockIter.index}" data-viewid="001-01">
-                <div class="container">
-                    <div class="sixteen">
-                        <h2 th:text="${map.label}">Overzicht</h2>
-                    </div>
-
-                    <div class="clear"></div>
-
                     <div class="parts block">
-                        <a href="#een" data-viewid="001-02" class="part" style="background-image:url('images/bg-button-001.jpg');">
-                            <span>Documentinformatie</span>
-                            <div class="more">
-                                <i class="icon-right-light"></i>
-                            </div>
-                        </a>
-                        <a href="#twee" data-viewid="001-02" class="part" style="background-image:url('images/bg-button-002.jpg');">
-                            <span>Doel</span>
-                            <div class="more">
-                                <i class="icon-right-light"></i>
-                            </div>
-                        </a>
-                        <a href="#drie" data-viewid="001-02" class="part" style="background-image:url('images/bg-button-001.jpg');">
-                            <span>Onderwerp</span>
-                            <div class="more">
-                                <i class="icon-right-light"></i>
-                            </div>
-                        </a>
-                        <a href="#vier" data-viewid="001-02" class="part" style="background-image:url('images/bg-button-002.jpg');">
-                            <span>Achtergrond</span>
-                            <div class="more">
-                                <i class="icon-right-light"></i>
-                            </div>
-                        </a>
-                        <a href="#vijf" data-viewid="001-02" class="part" style="background-image:url('images/bg-button-001.jpg');">
-                            <span>Vervolgstappen</span>
-                            <div class="more">
-                                <i class="icon-right-light"></i>
-                            </div>
-                        </a>
-                        <div class="clear"></div>
-                    </div>
 
-                    <div class="sixteen">
-                        <p>
-                            Tekst met <a href="#" class="anchor" data-viewid="002-01">link</a> naar ander gedeelte in het document: andere view andere view-content geen carousel
-                        </p>
-                        <p>
-                            Tekst met <a href="#zes" class="anchor" data-viewid="003-02">link</a> naar ander gedeelte in het document: andere view andere view-content met carousel
-                        </p>
-                        <p>
-                            Voorbeeld tekst met een externe link content in popup: <a class="popup" data-popupid="information_mapping_tutorial" href="http://fontello.com/">popup link</a>
-                        </p>
-                    </div>
+                       <a th:each="block,blockIter : ${map.getBlocks()}"
+                           href="..."
+                           th:href="${'#'+mapIter.index + '|'+ blockIter.index}"
+                           data-th-attr="data-viewid=${mapIter.index + '-content'}"
+                           class="part">
+                            <span th:text="${block.label}">Block label</span>
+                        </a>
 
+                    </div>
                     <div class="clear"></div>
                 </div>
             </div>
+            <div class="view-content" data-th-attr="data-viewid=${mapIter.index + '-content'}">
+                <div class="container">
+                    <div class="sixteen">
+                        <a href="#" class="button back" data-th-attr="data-viewid=${mapIter.index + '-overview'}">
+                            <i class="icon-arrow-left"></i>
+                        </a>
+                        <h2 th:text="${map.label}">About Publishing in FS Pro  2013</h2>
 
+                        <div class="view-content-slider owl-carousel">
+                            <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
+                                <h3 th:text="${block.label}">The Benefits</h3>
+                                <div class="block" th:utext="${block.content}">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
-
-
-
 
 
 

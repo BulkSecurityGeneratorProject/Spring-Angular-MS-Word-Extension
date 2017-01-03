@@ -28,9 +28,39 @@ public class LoginAndGotoController {
 
     @Inject private ImDocumentService imDocumentService;
 
+
+
+    @GetMapping("/loginAndRedirect/")
+    @Timed
+    public ModelAndView loginAndRedirect(@RequestParam("access_token") String accessToken) {
+
+        // TODO login the user
+        User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
+
+        if(uploadingUser != null) {
+            // Auto login
+
+
+            // TODO fix auto login
+
+//            Authentication auth =
+//                SecurityUtils.createUserDetailsFromDBUser(uploadingUser, null, null);
+//
+//            SecurityContextHolder.getContext().setAuthentication(auth);
+
+
+        }else{
+            // Cannot log in, but continue anyway...
+        }
+
+        return new ModelAndView("redirect:/");
+    }
+
+
+
     @GetMapping("/loginAndRedirect/document/{documentId}")
     @Timed
-    public ModelAndView loginAndRedirect(@PathVariable(value="documentId") Long documentId, @RequestParam("access_token") String accessToken) {
+    public ModelAndView loginAndRedirectToDocument(@PathVariable(value="documentId") Long documentId, @RequestParam("access_token") String accessToken) {
 
         // TODO login the user
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
@@ -56,6 +86,8 @@ public class LoginAndGotoController {
 
         return new ModelAndView("redirect:/document/" + documentId);
     }
+
+
 
 }
 

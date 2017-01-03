@@ -80,6 +80,9 @@ server:
 # ===================================================================
 
 imcloud:
+    # The base URL of the app. Must end with a "/"
+    baseUrl: http://localhost:8080/
+
     # Enter the full path to the dir where images are stored. Must end with a "/"
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
     security:

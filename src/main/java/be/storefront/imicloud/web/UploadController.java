@@ -1,5 +1,6 @@
 package be.storefront.imicloud.web;
 
+import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.*;
@@ -10,6 +11,7 @@ import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImBlockMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
+import be.storefront.imicloud.web.exception.NotFoundException;
 import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
 import be.storefront.imicloud.web.rest.util.BaseUrlUtil;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,6 +72,9 @@ public class UploadController {
     private ImDocumentService imDocumentService;
 
     @Inject
+    private ImCloudProperties imCloudProperties;
+
+    @Inject
     private ImCloudSecurity imCloudSecurity;
 
     @Inject
@@ -93,13 +99,26 @@ public class UploadController {
     }
 
 
-    // TODO API for determining if a document already exists
+    @GetMapping("/xml/")
+    @Timed
+    public @ResponseBody String checkFileExists(@RequestParam(value = "document_name") String documentName,
+                                        @RequestParam("access_token") String accessToken,
+                                        HttpServletRequest request) {
+
+        //return "Document already exists";
+
+        // TODO API for determining if a document already exists. Returns 200 or 404
+
+        throw new NotFoundException();
+
+    }
+
 
     @PostMapping("/xml/")
     @Timed
     public
     @ResponseBody
-    ResponseEntity<ImDocumentUploaded> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password,@RequestParam(value = "document_name", required = true) String documentName, @RequestParam("xml_file") MultipartFile file,
+    ResponseEntity<ImDocumentUploaded> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam(value = "document_name") String documentName, @RequestParam("xml_file") MultipartFile file,
                                                            @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
                                                            RedirectAttributes redirectAttributes, HttpServletRequest request) throws ParserConfigurationException, TransformerException, SAXException, IOException {
 
@@ -111,7 +130,7 @@ public class UploadController {
 
             ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, templateCode, uploadingUser);
 
-            String baseUrl = BaseUrlUtil.getBaseUrl(request);
+            String baseUrl = imCloudProperties.getBaseUrl();
             ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument, baseUrl);
 
             return ResponseEntity.ok().body(imDocumentUploaded);
@@ -174,7 +193,7 @@ public class UploadController {
                 newMapDto.setImDocumentId(newDocument.getId());
                 newMapDto.setLabel(mapLabel);
                 newMapDto.setPosition((float) i);
-                imMapService.save(newMapDto);
+                newMapDto = imMapService.save(newMapDto);
 
                 NodeList blockList = oneMapElement.getElementsByTagName("block");
 
@@ -206,7 +225,7 @@ public class UploadController {
                         newBlockDto.setPosition((float) j);
                         newBlockDto.setContent(contentText);
 
-                        imBlockService.save(newBlockDto);
+                        newBlockDto = imBlockService.save(newBlockDto);
                     }
                 }
             }

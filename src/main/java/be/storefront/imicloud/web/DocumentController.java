@@ -2,6 +2,7 @@ package be.storefront.imicloud.web;
 
 
 import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.ImMap;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.ImDocumentService;
@@ -37,12 +38,17 @@ public class DocumentController {
     @Inject
     private ImDocumentMapper imDocumentMapper;
 
+    @GetMapping("/document/{documentId}/{secret}")
+    public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret) {
+        return processView(documentId, secret, null);
+    }
+
     @GetMapping("/document/{documentId}/{secret}/{template}")
-    public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret, @PathVariable("template") Optional<String> optionalTemplate) {
+    public ModelAndView viewWithTemplate(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret, @PathVariable("template") String template) {
+        return processView(documentId, secret, template);
+    }
 
-
-
-
+    protected ModelAndView processView(Long documentId, String secret, String templateCode) {
         ImDocumentDTO imDocumentDto = imDocumentService.findOne(documentId);
         if (imDocumentDto != null) {
             if (secret != null && secret.equals(imDocumentDto.getSecret())) {
@@ -50,13 +56,11 @@ public class DocumentController {
                 ImDocument imDocument = imDocumentRepository.getOne(documentId);
 
                 String template;
-                if (optionalTemplate.isPresent()) {
-                    template = optionalTemplate.get();
+                if (templateCode != null) {
+                    template = templateCode;
                 } else {
                     template = imDocumentDto.getDefaultTemplate();
                 }
-
-                imDocument.getMaps();
 
                 HashMap<String, Object> viewMap = new HashMap<>();
                 viewMap.put("ImDocumentDTO", imDocumentDto);
@@ -71,8 +75,6 @@ public class DocumentController {
         } else {
             throw new NotFoundException();
         }
-
-
     }
 
 }
