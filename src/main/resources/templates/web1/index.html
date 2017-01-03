@@ -140,7 +140,9 @@ END INTRO: FULL SCREEN OVERLAY-->
                         <h2 th:text="${map.label}">About Publishing in FS Pro  2013</h2>
                     </div>
                     <div class="clear"></div>
-                    <div class="parts block">
+
+                    <!-- Show the block links if there is more then 1 block -->
+                    <div th:if="${mapIter.count} > 1" class="parts block">
 
                        <a th:each="block,blockIter : ${map.getBlocks()}"
                            href="..."
@@ -151,9 +153,22 @@ END INTRO: FULL SCREEN OVERLAY-->
                         </a>
 
                     </div>
+
+                    <!-- Show the contents immediately if only 1 block -->
+                    <div th:if="${mapIter.count} == 1" class="view-content-slider owl-carousel">
+                        <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
+                            <h3 th:text="${block.label}">The Benefits</h3>
+                            <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent())}">
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="clear"></div>
+
                 </div>
             </div>
+
             <div class="view-content" data-th-attr="data-viewid=${mapIter.index + '-content'}">
                 <div class="container">
                     <div class="sixteen">
@@ -165,7 +180,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                         <div class="view-content-slider owl-carousel">
                             <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
                                 <h3 th:text="${block.label}">The Benefits</h3>
-                                <div class="block" th:utext="${block.content}">
+                                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent())}">
 
                                 </div>
                             </div>

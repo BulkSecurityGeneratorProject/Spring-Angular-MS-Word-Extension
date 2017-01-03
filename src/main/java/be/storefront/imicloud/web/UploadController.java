@@ -99,6 +99,9 @@ public class UploadController {
     }
 
 
+    // TODO call to mark an upload as "finished"!
+
+
     @GetMapping("/xml/")
     @Timed
     public @ResponseBody String checkFileExists(@RequestParam(value = "document_name") String documentName,
@@ -297,6 +300,8 @@ public class UploadController {
             // Remove the original wrongly positioned rows
             //childRows.remove();
         }
+
+        // If table cells only contain a single <p>, unwrap it
 
 
         //.wrap("tbody");
