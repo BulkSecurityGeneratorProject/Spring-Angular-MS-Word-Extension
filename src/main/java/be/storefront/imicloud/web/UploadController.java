@@ -144,6 +144,8 @@ public class UploadController {
     @Transactional
     private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, String templateCode, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
 
+        // TODO overwrite existing documents
+
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
         String xmlString = IOUtils.toString(stream, "UTF-8");
 
@@ -269,13 +271,34 @@ public class UploadController {
         // Rename table type to class
         renameAttr(root.find("table[type]"), "type", "class");
 
-
         root.find("headerrow cell").rename("th");
         root.find("row cell").rename("td");
 
-        root.find("headerrow").rename("tr");
-        //.wrap("thead");
+        // Convert header rows into <thead>
+        Match headerRows = root.find("headerrow");
+        headerRows.wrap("thead");
+        headerRows.rename("tr");
+
+        // Add a <tbody> and more normal rows inside it
+        Match allTables = root.find("table");
+
+        // Rename to <tr>
         root.find("row").rename("tr");
+
+        // Move all direct child rows into <tbody>
+        for(Match table : allTables.each()){
+            table.append("<tbody></tbody>");
+            Match childRows = table.children("tr");
+            Match tbody = table.find("tbody");
+
+            // Add the rows to the <tbody>
+            tbody.append(childRows);
+
+            // Remove the original wrongly positioned rows
+            //childRows.remove();
+        }
+
+
         //.wrap("tbody");
 
         // We need <li> around a sub-list
