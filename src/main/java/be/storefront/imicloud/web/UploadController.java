@@ -2,6 +2,8 @@ package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.repository.ImDocumentRepository;
+import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.*;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
@@ -13,7 +15,6 @@ import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
 import be.storefront.imicloud.web.exception.NotFoundException;
 import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
-import be.storefront.imicloud.web.rest.util.BaseUrlUtil;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +27,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,6 +53,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/upload")
@@ -67,7 +68,13 @@ public class UploadController {
     private ImageService imageService;
 
     @Inject
+    private ImageRepository imageRepository;
+
+    @Inject
     private ImDocumentService imDocumentService;
+
+    @Inject
+    private ImDocumentRepository imDocumentRepository;
 
     @Inject
     private ImCloudProperties imCloudProperties;
@@ -80,7 +87,6 @@ public class UploadController {
 
     @Inject
     private ImBlockService imBlockService;
-
 
     @Inject
     private ImDocumentMapper imDocumentMapper;
@@ -321,12 +327,13 @@ public class UploadController {
 
 
         // Remove meaningless <p><p>... paragraph in paragraph
-        while (contentText.indexOf("<p><p>") != -1) {
-            contentText = contentText.replaceAll("<p><p>", "<p>");
-        }
-        while (contentText.indexOf("</p></p>") != -1) {
-            contentText = contentText.replaceAll("</p></p>", "</p>");
-        }
+        // WOUTER: This can cause problems, for example <p bookmark="..."><p> is not handled
+//        while (contentText.indexOf("<p><p>") != -1) {
+//            contentText = contentText.replaceAll("<p><p>", "<p>");
+//        }
+//        while (contentText.indexOf("</p></p>") != -1) {
+//            contentText = contentText.replaceAll("</p></p>", "</p>");
+//        }
 
         // Remove meaningless <p/><p/><p/><p/>...
         while (contentText.indexOf("<p/><p/>") != -1) {
@@ -421,8 +428,7 @@ public class UploadController {
                 try {
                     // Get the document this image belongs to
                     ImDocumentDTO documentDto = imDocumentService.findOne(documentId);
-                    ImDocument document = imDocumentMapper.imDocumentDTOToImDocument(documentDto);
-
+                    ImDocument document = imDocumentRepository.findOne(documentDto.getId());
 
                     if (documentDto.getUserId().equals(uploadingUser.getId())) {
                         // Owner is uploading more images
@@ -432,10 +438,10 @@ public class UploadController {
                         Integer height = image.getHeight();
 
                         if (width > 0 && height > 0) {
-                            ImageDTO savedImage = processUploadedImage(file, source, document, contentType);
+                            Image savedImage = processUploadedImage(file, source, document, contentType, width, height, uploadingUser);
 
                             return ResponseEntity.ok()
-                                .body(savedImage);
+                                .body(imageMapper.imageToImageDTO(savedImage));
 
                         } else {
                             // Invalid image dimensions
@@ -468,30 +474,36 @@ public class UploadController {
     }
 
     @Transactional
-    private ImageDTO processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType) throws IOException, NoSuchAlgorithmException {
-        String filename = fileStorageService.saveFile(file);
+    private Image processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType, int width, int height, User uploadingUser) throws IOException, NoSuchAlgorithmException {
+        String filename = fileStorageService.saveFileAndGetPath(file);
 
-        File f = new File(filename);
-        BufferedImage bimg = ImageIO.read(f);
-        int width          = bimg.getWidth();
-        int height         = bimg.getHeight();
-
+        File f = fileStorageService.loadFile(filename);
         long contentLength = Files.size(f.toPath());
 
-        ImageDTO newImage = new ImageDTO();
-        newImage.setFilename(filename);
-        newImage.setContentType(contentType);
-        newImage.setContentLength(contentLength);
-        newImage.setImageWidth(width);
-        newImage.setImageHeight(height);
+        Image image = imageRepository.findByFilename(filename);
 
-        ImageDTO savedImageDto = imageService.save(newImage);
+        if(image != null){
+            // This image has already been uploaded before. Don't create a new record.
+        }else{
+            image = new Image();
+            image.setFilename(filename);
+            image.setContentType(contentType);
+            image.setContentLength(contentLength);
+            image.setImageWidth(width);
+            image.setImageHeight(height);
+            image.setUploadedByUser(uploadingUser);
 
-        // TODO now that the image is uploaded, update all relationships
+            image = imageRepository.save(image);
+        }
 
         for (ImMap map : document.getMaps()) {
             for (ImBlock block : map.getBlocks()) {
+
+                boolean imageIsUsedInBlock = false;
+
                 String blockContent = block.getContent();
+
+                blockContent = "<root>" + blockContent + "</root>";
 
                 Match root = $(blockContent);
                 for (Match img : root.find("img[data-source]").each()) {
@@ -499,23 +511,26 @@ public class UploadController {
                     String imgSource = img.attr("data-source");
                     if (source.equals(imgSource)) {
                         // This is the right image
-                        img.attr("data-id", "" + savedImageDto.getId());
+                        img.attr("data-id", "" + image.getId());
                         img.removeAttr("data-source");
+
+                        imageIsUsedInBlock  = true;
                     }
                 }
 
-                Image savedImage = imageMapper.imageDTOToImage(savedImageDto);
-                block.addImage(savedImage);
-                block.setContent(root.toString());
+                if(imageIsUsedInBlock) {
+                    block.addImage(image);
+                    block.setContent(root.find("root").toString());
 
-                // Save the block
-                ImBlockDTO blockDto = imBlockMapper.imBlockToImBlockDTO(block);
+                    // Save the block
+                    ImBlockDTO blockDto = imBlockMapper.imBlockToImBlockDTO(block);
 
-                imBlockService.save(blockDto);
+                    imBlockService.save(blockDto);
+                }
             }
         }
 
-        return savedImageDto;
+        return image;
     }
 
     private ResponseEntity accessDeniedResponse() {

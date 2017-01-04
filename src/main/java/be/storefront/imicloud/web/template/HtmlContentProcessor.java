@@ -1,6 +1,10 @@
 package be.storefront.imicloud.web.template;
 
 import be.storefront.imicloud.config.ImCloudProperties;
+import be.storefront.imicloud.domain.Image;
+import be.storefront.imicloud.repository.ImageRepository;
+import be.storefront.imicloud.service.ImageService;
+import be.storefront.imicloud.service.dto.ImageDTO;
 import org.joox.Match;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +16,28 @@ import static org.joox.JOOX.$;
 public class HtmlContentProcessor {
 
     @Inject
-    ImCloudProperties imCloudProperties;
+    private ImCloudProperties imCloudProperties;
+
+    @Inject
+    private ImageRepository imageRepository;
 
     public String process(String html){
 
         // Resolve URLs to images
-        Match root = $(html);
+        Match root = $("<root>"+html+"</root>");
 
         for(Match img : root.find("img").each()){
-            String imgSrc = imCloudProperties.getBaseUrl()+"ABC";
+            String source = img.attr("data-source");
+            Image image = imageRepository.findByFilename(source);
+            String imgSrc = imCloudProperties.getBaseUrl()+"image/"+image.getId();
             img.attr("src", imgSrc);
         }
 
 
 
-        return root.toString();
+        html =  root.find("root").toString();
+
+        return html;
     }
 
 }

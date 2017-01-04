@@ -18,7 +18,7 @@ public interface ImageService {
 
     /**
      *  Get all the images.
-     *  
+     *
      *  @return the list of entities
      */
     List<ImageDTO> findAll();
@@ -42,7 +42,7 @@ public interface ImageService {
      * Search for the image corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @return the list of entities
      */
     List<ImageDTO> search(String query);

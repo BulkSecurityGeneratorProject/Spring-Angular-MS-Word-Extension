@@ -22,7 +22,7 @@ public class FileStorageService {
     private ImCloudProperties imCloudProperties;
 
 
-    public String saveFile(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
+    public String saveFileAndGetPath(MultipartFile multipartFile) throws IOException, NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
         String checksum = getFileChecksum(digest, multipartFile.getInputStream());
@@ -34,10 +34,17 @@ public class FileStorageService {
         char dir1 = checksum.charAt(0);
         char dir2 = checksum.charAt(1);
         char dir3 = checksum.charAt(2);
-        String targetFileString = uploadDir + dir1 + "/" + dir2 + "/" + dir3 + "/" + checksum + extension;
+        String targetDir = uploadDir + dir1 + "/" + dir2 + "/" + dir3;
+        String targetFileString = targetDir + "/" + checksum + extension;
+
+        File targetDirFile = new File(targetDir);
+        targetDirFile.mkdirs();
 
         File targetFile = new File(targetFileString);
-        multipartFile.transferTo(targetFile);
+
+        if (!targetFile.exists()) {
+            multipartFile.transferTo(targetFile);
+        }
 
         String absPath = targetFile.getAbsolutePath();
 
@@ -45,10 +52,11 @@ public class FileStorageService {
         return relPath;
     }
 
-    public File loadFile(String fileName){
-        return new File(fileName);
-    }
+    public File loadFile(String fileName) {
+        String uploadDir = imCloudProperties.getFileStorageDir();
 
+        return new File(uploadDir + "/"+fileName);
+    }
 
     private static String getFileChecksum(MessageDigest digest, InputStream is) throws IOException {
 

@@ -35,6 +35,8 @@ public class ImageController {
     @GetMapping("/image/{imageId}")
     public ResponseEntity<InputStreamResource> image(@PathVariable(value = "imageId") Long imageId) throws IOException {
 
+        // TODO check if user is allowed to see this image
+
         ImageDTO imageDTO = imageService.findOne(imageId);
         File file = fileStorageService.loadFile(imageDTO.getFilename());
 

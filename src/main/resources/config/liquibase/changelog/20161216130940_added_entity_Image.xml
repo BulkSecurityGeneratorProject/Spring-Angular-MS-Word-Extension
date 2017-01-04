@@ -27,23 +27,23 @@
             <column name="filename" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="content_type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="image_width" type="integer">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="image_height" type="integer">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="content_length" type="bigint">
                 <constraints nullable="false" />
             </column>
-            
+
             <column name="uploaded_by_user_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -58,7 +58,7 @@
             <column name="last_modified_date" type="timestamp"/>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
         <createTable tableName="image_im_block">
             <column name="im_blocks_id" type="bigint">
                 <constraints nullable="false"/>
@@ -68,7 +68,16 @@
             </column>
         </createTable>
 
+        <addUniqueConstraint
+                             columnNames="filename"
+                             constraintName="unq_filename"
+                             deferrable="true"
+                             disabled="true"
+                             initiallyDeferred="true"
+                             tableName="image"
+                             />
+
         <addPrimaryKey columnNames="images_id, im_blocks_id" tableName="image_im_block"/>
-        
+
     </changeSet>
 </databaseChangeLog>

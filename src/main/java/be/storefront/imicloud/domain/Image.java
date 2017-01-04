@@ -27,7 +27,7 @@ public class Image extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "filename", nullable = false)
+    @Column(name = "filename", nullable = false, unique = true)
     private String filename;
 
     @NotNull

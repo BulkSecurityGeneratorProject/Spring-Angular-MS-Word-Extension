@@ -7,24 +7,16 @@ import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
-import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.web.exception.AccessDeniedException;
 import be.storefront.imicloud.web.exception.NotFoundException;
 import be.storefront.imicloud.web.template.HtmlContentProcessor;
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
-import java.io.InputStream;
 import java.util.HashMap;
 
 /**
