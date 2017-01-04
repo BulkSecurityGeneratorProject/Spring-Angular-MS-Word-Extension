@@ -9,13 +9,16 @@ import java.util.List;
 /**
  * Mapper for the entity Image and its DTO ImageDTO.
  */
-@Mapper(componentModel = "spring", uses = {ImBlockMapper.class, })
+@Mapper(componentModel = "spring", uses = {ImBlockMapper.class, UserMapper.class, })
 public interface ImageMapper {
 
+    @Mapping(source = "uploadedByUser.id", target = "uploadedByUserId")
+    @Mapping(source = "uploadedByUser.email", target = "uploadedByUserEmail")
     ImageDTO imageToImageDTO(Image image);
 
     List<ImageDTO> imagesToImageDTOs(List<Image> images);
 
+    @Mapping(source = "uploadedByUserId", target = "uploadedByUser")
     Image imageDTOToImage(ImageDTO imageDTO);
 
     List<Image> imageDTOsToImages(List<ImageDTO> imageDTOs);

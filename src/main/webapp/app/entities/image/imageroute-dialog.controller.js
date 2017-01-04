@@ -5,15 +5,16 @@
         .module('imicloudApp')
         .controller('ImageRouteDialogController', ImageRouteDialogController);
 
-    ImageRouteDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Image', 'ImBlock'];
+    ImageRouteDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Image', 'ImBlock', 'User'];
 
-    function ImageRouteDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Image, ImBlock) {
+    function ImageRouteDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Image, ImBlock, User) {
         var vm = this;
 
         vm.image = entity;
         vm.clear = clear;
         vm.save = save;
         vm.imblocks = ImBlock.query();
+        vm.users = User.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

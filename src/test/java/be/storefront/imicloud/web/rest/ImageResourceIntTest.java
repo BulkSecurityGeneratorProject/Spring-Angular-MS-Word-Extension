@@ -3,6 +3,7 @@ package be.storefront.imicloud.web.rest;
 import be.storefront.imicloud.ImicloudApp;
 
 import be.storefront.imicloud.domain.Image;
+import be.storefront.imicloud.domain.User;
 import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.repository.search.ImageSearchRepository;
@@ -44,8 +45,14 @@ public class ImageResourceIntTest {
     private static final String DEFAULT_FILENAME = "AAAAAAAAAA";
     private static final String UPDATED_FILENAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ORIGINAL_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_ORIGINAL_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_CONTENT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_CONTENT_TYPE = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_IMAGE_WIDTH = 1;
+    private static final Integer UPDATED_IMAGE_WIDTH = 2;
+
+    private static final Integer DEFAULT_IMAGE_HEIGHT = 1;
+    private static final Integer UPDATED_IMAGE_HEIGHT = 2;
 
     @Inject
     private ImageRepository imageRepository;
@@ -91,7 +98,14 @@ public class ImageResourceIntTest {
     public static Image createEntity(EntityManager em) {
         Image image = new Image()
                 .filename(DEFAULT_FILENAME)
-                .originalName(DEFAULT_ORIGINAL_NAME);
+                .contentType(DEFAULT_CONTENT_TYPE)
+                .imageWidth(DEFAULT_IMAGE_WIDTH)
+                .imageHeight(DEFAULT_IMAGE_HEIGHT);
+        // Add required entity
+        User uploadedByUser = UserResourceIntTest.createEntity(em);
+        em.persist(uploadedByUser);
+        em.flush();
+        image.setUploadedByUser(uploadedByUser);
         return image;
     }
 
@@ -119,7 +133,9 @@ public class ImageResourceIntTest {
         assertThat(imageList).hasSize(databaseSizeBeforeCreate + 1);
         Image testImage = imageList.get(imageList.size() - 1);
         assertThat(testImage.getFilename()).isEqualTo(DEFAULT_FILENAME);
-        assertThat(testImage.getOriginalName()).isEqualTo(DEFAULT_ORIGINAL_NAME);
+        assertThat(testImage.getContentType()).isEqualTo(DEFAULT_CONTENT_TYPE);
+        assertThat(testImage.getImageWidth()).isEqualTo(DEFAULT_IMAGE_WIDTH);
+        assertThat(testImage.getImageHeight()).isEqualTo(DEFAULT_IMAGE_HEIGHT);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -168,10 +184,48 @@ public class ImageResourceIntTest {
 
     @Test
     @Transactional
-    public void checkOriginalNameIsRequired() throws Exception {
+    public void checkContentTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = imageRepository.findAll().size();
         // set the field null
-        image.setOriginalName(null);
+        image.setContentType(null);
+
+        // Create the Image, which fails.
+        ImageDTO imageDTO = imageMapper.imageToImageDTO(image);
+
+        restImageMockMvc.perform(post("/api/images")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(imageDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Image> imageList = imageRepository.findAll();
+        assertThat(imageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkImageWidthIsRequired() throws Exception {
+        int databaseSizeBeforeTest = imageRepository.findAll().size();
+        // set the field null
+        image.setImageWidth(null);
+
+        // Create the Image, which fails.
+        ImageDTO imageDTO = imageMapper.imageToImageDTO(image);
+
+        restImageMockMvc.perform(post("/api/images")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(imageDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Image> imageList = imageRepository.findAll();
+        assertThat(imageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkImageHeightIsRequired() throws Exception {
+        int databaseSizeBeforeTest = imageRepository.findAll().size();
+        // set the field null
+        image.setImageHeight(null);
 
         // Create the Image, which fails.
         ImageDTO imageDTO = imageMapper.imageToImageDTO(image);
@@ -197,7 +251,9 @@ public class ImageResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
             .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())))
-            .andExpect(jsonPath("$.[*].originalName").value(hasItem(DEFAULT_ORIGINAL_NAME.toString())));
+            .andExpect(jsonPath("$.[*].contentType").value(hasItem(DEFAULT_CONTENT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].imageWidth").value(hasItem(DEFAULT_IMAGE_WIDTH)))
+            .andExpect(jsonPath("$.[*].imageHeight").value(hasItem(DEFAULT_IMAGE_HEIGHT)));
     }
 
     @Test
@@ -212,7 +268,9 @@ public class ImageResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(image.getId().intValue()))
             .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME.toString()))
-            .andExpect(jsonPath("$.originalName").value(DEFAULT_ORIGINAL_NAME.toString()));
+            .andExpect(jsonPath("$.contentType").value(DEFAULT_CONTENT_TYPE.toString()))
+            .andExpect(jsonPath("$.imageWidth").value(DEFAULT_IMAGE_WIDTH))
+            .andExpect(jsonPath("$.imageHeight").value(DEFAULT_IMAGE_HEIGHT));
     }
 
     @Test
@@ -235,7 +293,9 @@ public class ImageResourceIntTest {
         Image updatedImage = imageRepository.findOne(image.getId());
         updatedImage
                 .filename(UPDATED_FILENAME)
-                .originalName(UPDATED_ORIGINAL_NAME);
+                .contentType(UPDATED_CONTENT_TYPE)
+                .imageWidth(UPDATED_IMAGE_WIDTH)
+                .imageHeight(UPDATED_IMAGE_HEIGHT);
         ImageDTO imageDTO = imageMapper.imageToImageDTO(updatedImage);
 
         restImageMockMvc.perform(put("/api/images")
@@ -248,7 +308,9 @@ public class ImageResourceIntTest {
         assertThat(imageList).hasSize(databaseSizeBeforeUpdate);
         Image testImage = imageList.get(imageList.size() - 1);
         assertThat(testImage.getFilename()).isEqualTo(UPDATED_FILENAME);
-        assertThat(testImage.getOriginalName()).isEqualTo(UPDATED_ORIGINAL_NAME);
+        assertThat(testImage.getContentType()).isEqualTo(UPDATED_CONTENT_TYPE);
+        assertThat(testImage.getImageWidth()).isEqualTo(UPDATED_IMAGE_WIDTH);
+        assertThat(testImage.getImageHeight()).isEqualTo(UPDATED_IMAGE_HEIGHT);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -309,6 +371,8 @@ public class ImageResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
             .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME.toString())))
-            .andExpect(jsonPath("$.[*].originalName").value(hasItem(DEFAULT_ORIGINAL_NAME.toString())));
+            .andExpect(jsonPath("$.[*].contentType").value(hasItem(DEFAULT_CONTENT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].imageWidth").value(hasItem(DEFAULT_IMAGE_WIDTH)))
+            .andExpect(jsonPath("$.[*].imageHeight").value(hasItem(DEFAULT_IMAGE_HEIGHT)));
     }
 }

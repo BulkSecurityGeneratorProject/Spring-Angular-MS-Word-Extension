@@ -19,5 +19,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="im_block"/>
         
+        <addForeignKeyConstraint baseColumnNames="uploaded_by_user_id"
+                                 baseTableName="image"
+                                 constraintName="fk_image_uploaded_by_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
     </changeSet>
 </databaseChangeLog>

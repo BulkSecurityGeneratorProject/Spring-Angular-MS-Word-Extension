@@ -105,7 +105,9 @@
                         entity: function () {
                             return {
                                 filename: null,
-                                originalName: null,
+                                contentType: null,
+                                imageWidth: null,
+                                imageHeight: null,
                                 id: null
                             };
                         }

@@ -26,14 +26,46 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.image.originalName" for="field_originalName">Original Name</label>
-            <input type="text" class="form-control" name="originalName" id="field_originalName"
-                    ng-model="vm.image.originalName"
+            <label class="control-label" data-translate="imicloudApp.image.contentType" for="field_contentType">Content Type</label>
+            <input type="text" class="form-control" name="contentType" id="field_contentType"
+                    ng-model="vm.image.contentType"
                     required />
-            <div ng-show="editForm.originalName.$invalid">
+            <div ng-show="editForm.contentType.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.originalName.$error.required" data-translate="entity.validation.required">
+                    ng-show="editForm.contentType.$error.required" data-translate="entity.validation.required">
                     This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.image.imageWidth" for="field_imageWidth">Image Width</label>
+            <input type="number" class="form-control" name="imageWidth" id="field_imageWidth"
+                    ng-model="vm.image.imageWidth"
+                    required />
+            <div ng-show="editForm.imageWidth.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.imageWidth.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.imageWidth.$error.number" data-translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.image.imageHeight" for="field_imageHeight">Image Height</label>
+            <input type="number" class="form-control" name="imageHeight" id="field_imageHeight"
+                    ng-model="vm.image.imageHeight"
+                    required />
+            <div ng-show="editForm.imageHeight.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.imageHeight.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.imageHeight.$error.number" data-translate="entity.validation.number">
+                    This field should be a number.
                 </p>
             </div>
         </div>
@@ -41,6 +73,18 @@
         <div class="form-group">
             <label data-translate="imicloudApp.image.imBlock" for="field_imBlock">Im Block</label>
             <select class="form-control" id="field_imBlock" multiple name="imBlock" ng-model="vm.image.imBlocks" ng-options="imBlock as imBlock.id for imBlock in vm.imblocks track by imBlock.id"></select>
+        </div>
+        <div class="form-group">
+            <label data-translate="imicloudApp.image.uploadedByUser" for="field_uploadedByUser">Uploaded By User</label>
+            <select class="form-control" id="field_uploadedByUser" name="uploadedByUser" ng-model="vm.image.uploadedByUserId" ng-options="user.id as user.email for user in vm.users"             required>
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-show="editForm.uploadedByUser.$invalid">
+            <p class="help-block"
+                ng-show="editForm.uploadedByUser.$error.required" data-translate="entity.validation.required">
+                This field is required.
+            </p>
         </div>
     </div>
     <div class="modal-footer">

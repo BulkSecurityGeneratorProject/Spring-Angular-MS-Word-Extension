@@ -8,15 +8,27 @@
         <dd>
             <span>{{vm.image.filename}}</span>
         </dd>
-        <dt><span data-translate="imicloudApp.image.originalName">Original Name</span></dt>
+        <dt><span data-translate="imicloudApp.image.contentType">Content Type</span></dt>
         <dd>
-            <span>{{vm.image.originalName}}</span>
+            <span>{{vm.image.contentType}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.image.imageWidth">Image Width</span></dt>
+        <dd>
+            <span>{{vm.image.imageWidth}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.image.imageHeight">Image Height</span></dt>
+        <dd>
+            <span>{{vm.image.imageHeight}}</span>
         </dd>
         <dt><span data-translate="imicloudApp.image.imBlock">Im Block</span></dt>
         <dd>
             <span ng-repeat="imBlock in vm.image.imBlocks">
                 <a ui-sref="im-blockroute-detail({id: imBlock.id})">{{imBlock.id}}</a>{{$last ? '' : ', '}}
             </span>
+        </dd>
+        <dt><span data-translate="imicloudApp.image.uploadedByUser">Uploaded By User</span></dt>
+        <dd>
+            {{vm.image.uploadedByUserEmail}}
         </dd>
     </dl>
 

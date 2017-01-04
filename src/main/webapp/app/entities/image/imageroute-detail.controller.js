@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('ImageRouteDetailController', ImageRouteDetailController);
 
-    ImageRouteDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Image', 'ImBlock'];
+    ImageRouteDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Image', 'ImBlock', 'User'];
 
-    function ImageRouteDetailController($scope, $rootScope, $stateParams, previousState, entity, Image, ImBlock) {
+    function ImageRouteDetailController($scope, $rootScope, $stateParams, previousState, entity, Image, ImBlock, User) {
         var vm = this;
 
         vm.image = entity;

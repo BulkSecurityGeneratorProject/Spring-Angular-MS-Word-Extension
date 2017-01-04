@@ -7,6 +7,16 @@
             "relationshipType": "many-to-many",
             "otherEntityField": "id",
             "ownerSide": true
+        },
+        {
+            "relationshipName": "uploadedByUser",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "email",
+            "ownerSide": true
         }
     ],
     "fields": [
@@ -18,8 +28,22 @@
             ]
         },
         {
-            "fieldName": "originalName",
+            "fieldName": "contentType",
             "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "imageWidth",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "imageHeight",
+            "fieldType": "Integer",
             "fieldValidateRules": [
                 "required"
             ]

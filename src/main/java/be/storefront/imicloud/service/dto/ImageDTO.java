@@ -18,10 +18,21 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
     private String filename;
 
     @NotNull
-    private String originalName;
+    private String contentType;
+
+    @NotNull
+    private Integer imageWidth;
+
+    @NotNull
+    private Integer imageHeight;
 
 
     private Set<ImBlockDTO> imBlocks = new HashSet<>();
+
+    private Long uploadedByUserId;
+    
+
+    private String uploadedByUserEmail;
 
     public Long getId() {
         return id;
@@ -37,12 +48,26 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
     public void setFilename(String filename) {
         this.filename = filename;
     }
-    public String getOriginalName() {
-        return originalName;
+    public String getContentType() {
+        return contentType;
     }
 
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+    public Integer getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+    public Integer getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
     }
 
     public Set<ImBlockDTO> getImBlocks() {
@@ -51,6 +76,23 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setImBlocks(Set<ImBlockDTO> imBlocks) {
         this.imBlocks = imBlocks;
+    }
+
+    public Long getUploadedByUserId() {
+        return uploadedByUserId;
+    }
+
+    public void setUploadedByUserId(Long userId) {
+        this.uploadedByUserId = userId;
+    }
+
+
+    public String getUploadedByUserEmail() {
+        return uploadedByUserEmail;
+    }
+
+    public void setUploadedByUserEmail(String userEmail) {
+        this.uploadedByUserEmail = userEmail;
     }
 
     @Override
@@ -79,7 +121,9 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
         return "ImageDTO{" +
             "id=" + id +
             ", filename='" + filename + "'" +
-            ", originalName='" + originalName + "'" +
+            ", contentType='" + contentType + "'" +
+            ", imageWidth='" + imageWidth + "'" +
+            ", imageHeight='" + imageHeight + "'" +
             '}';
     }
 }

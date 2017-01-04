@@ -13,6 +13,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface ImageRepository extends JpaRepository<Image,Long> {
 
+    @Query("select image from Image image where image.uploadedByUser.login = ?#{principal.username}")
+    List<Image> findByUploadedByUserIsCurrentUser();
+
     @Query("select distinct image from Image image left join fetch image.imBlocks")
     List<Image> findAllWithEagerRelationships();
 

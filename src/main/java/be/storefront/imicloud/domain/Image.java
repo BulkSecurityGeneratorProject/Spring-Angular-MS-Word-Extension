@@ -31,8 +31,16 @@ public class Image extends AbstractAuditingEntity implements Serializable {
     private String filename;
 
     @NotNull
-    @Column(name = "original_name", nullable = false)
-    private String originalName;
+    @Column(name = "content_type", nullable = false)
+    private String contentType;
+
+    @NotNull
+    @Column(name = "image_width", nullable = false)
+    private Integer imageWidth;
+
+    @NotNull
+    @Column(name = "image_height", nullable = false)
+    private Integer imageHeight;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -40,6 +48,10 @@ public class Image extends AbstractAuditingEntity implements Serializable {
                joinColumns = @JoinColumn(name="images_id", referencedColumnName="ID"),
                inverseJoinColumns = @JoinColumn(name="im_blocks_id", referencedColumnName="ID"))
     private Set<ImBlock> imBlocks = new HashSet<>();
+
+    @ManyToOne
+    @NotNull
+    private User uploadedByUser;
 
     public Long getId() {
         return id;
@@ -62,17 +74,43 @@ public class Image extends AbstractAuditingEntity implements Serializable {
         this.filename = filename;
     }
 
-    public String getOriginalName() {
-        return originalName;
+    public String getContentType() {
+        return contentType;
     }
 
-    public Image originalName(String originalName) {
-        this.originalName = originalName;
+    public Image contentType(String contentType) {
+        this.contentType = contentType;
         return this;
     }
 
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public Integer getImageWidth() {
+        return imageWidth;
+    }
+
+    public Image imageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+        return this;
+    }
+
+    public void setImageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public Integer getImageHeight() {
+        return imageHeight;
+    }
+
+    public Image imageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
+        return this;
+    }
+
+    public void setImageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
     }
 
     public Set<ImBlock> getImBlocks() {
@@ -96,6 +134,19 @@ public class Image extends AbstractAuditingEntity implements Serializable {
 
     public void setImBlocks(Set<ImBlock> imBlocks) {
         this.imBlocks = imBlocks;
+    }
+
+    public User getUploadedByUser() {
+        return uploadedByUser;
+    }
+
+    public Image uploadedByUser(User user) {
+        this.uploadedByUser = user;
+        return this;
+    }
+
+    public void setUploadedByUser(User user) {
+        this.uploadedByUser = user;
     }
 
     @Override
@@ -123,7 +174,9 @@ public class Image extends AbstractAuditingEntity implements Serializable {
         return "Image{" +
             "id=" + id +
             ", filename='" + filename + "'" +
-            ", originalName='" + originalName + "'" +
+            ", contentType='" + contentType + "'" +
+            ", imageWidth='" + imageWidth + "'" +
+            ", imageHeight='" + imageHeight + "'" +
             '}';
     }
 }

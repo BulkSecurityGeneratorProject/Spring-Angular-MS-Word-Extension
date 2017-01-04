@@ -28,10 +28,22 @@
                 <constraints nullable="false" />
             </column>
             
-            <column name="original_name" type="varchar(255)">
+            <column name="content_type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             
+            <column name="image_width" type="integer">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="image_height" type="integer">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="uploaded_by_user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

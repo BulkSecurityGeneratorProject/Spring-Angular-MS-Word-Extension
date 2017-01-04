@@ -17,8 +17,11 @@
                 "title": "Image"
             },
             "filename": "Filename",
-            "originalName": "Original Name",
-            "imBlock": "Im Block"
+            "contentType": "Content Type",
+            "imageWidth": "Image Width",
+            "imageHeight": "Image Height",
+            "imBlock": "Im Block",
+            "uploadedByUser": "Uploaded By User"
         }
     }
 }
