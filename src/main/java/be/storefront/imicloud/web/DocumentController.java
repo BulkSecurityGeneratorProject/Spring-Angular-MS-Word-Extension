@@ -7,6 +7,7 @@ import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
+import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.web.exception.AccessDeniedException;
 import be.storefront.imicloud.web.exception.NotFoundException;
@@ -91,24 +92,6 @@ public class DocumentController {
         }
     }
 
-    @GetMapping("/image/{source}/{blockId}")
-    public ResponseEntity<InputStreamResource> image(@PathVariable(value = "source") String source){
-
-        imageService.
-
-        InputStream in = servletContext.getResourceAsStream("/images/no_image.jpg");
-
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-
-        File fileOnDisk
-
-        return ResponseEntity.ok()
-            .contentLength(fileOnDisk.getLength())
-            .contentType(MediaType.parseMediaType(gridFsFile.getContentType()))
-            .body(new InputStreamResource(fileOnDisk.getInputStream()));
-
-    }
 
 }
 

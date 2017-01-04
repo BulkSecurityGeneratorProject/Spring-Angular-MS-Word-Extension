@@ -69,6 +69,22 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.image.contentLength" for="field_contentLength">Content Length</label>
+            <input type="number" class="form-control" name="contentLength" id="field_contentLength"
+                    ng-model="vm.image.contentLength"
+                    required />
+            <div ng-show="editForm.contentLength.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.contentLength.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.contentLength.$error.number" data-translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label data-translate="imicloudApp.image.imBlock" for="field_imBlock">Im Block</label>

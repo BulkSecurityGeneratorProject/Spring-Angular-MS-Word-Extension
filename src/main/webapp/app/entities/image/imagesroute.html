@@ -40,6 +40,7 @@
                     <th><span data-translate="imicloudApp.image.contentType">Content Type</span></th>
                     <th><span data-translate="imicloudApp.image.imageWidth">Image Width</span></th>
                     <th><span data-translate="imicloudApp.image.imageHeight">Image Height</span></th>
+                    <th><span data-translate="imicloudApp.image.contentLength">Content Length</span></th>
                     <th><span data-translate="imicloudApp.image.imBlock">Im Block</span></th>
                     <th><span data-translate="imicloudApp.image.uploadedByUser">Uploaded By User</span></th>
                     <th></th>
@@ -52,6 +53,7 @@
                     <td>{{image.contentType}}</td>
                     <td>{{image.imageWidth}}</td>
                     <td>{{image.imageHeight}}</td>
+                    <td>{{image.contentLength}}</td>
                     <td>
                         <span ng-repeat="imBlock in image.imBlocks">
                             <a class="form-control-static" ui-sref="im-blockroute-detail({id: imBlock.id})">{{imBlock.id}}</a>{{$last ? '' : ', '}}

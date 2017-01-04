@@ -20,7 +20,7 @@ public class HtmlContentProcessor {
         Match root = $(html);
 
         for(Match img : root.find("img").each()){
-            String imgSrc = imCloudProperties.getBaseUrl()+
+            String imgSrc = imCloudProperties.getBaseUrl()+"ABC";
             img.attr("src", imgSrc);
         }
 

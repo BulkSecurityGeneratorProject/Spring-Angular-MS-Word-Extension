@@ -40,6 +40,10 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="content_length" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            
             <column name="uploaded_by_user_id" type="bigint">
                 <constraints nullable="false" />
             </column>

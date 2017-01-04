@@ -108,6 +108,7 @@
                                 contentType: null,
                                 imageWidth: null,
                                 imageHeight: null,
+                                contentLength: null,
                                 id: null
                             };
                         }

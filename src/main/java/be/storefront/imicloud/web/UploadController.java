@@ -50,10 +50,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 
 @Controller
@@ -407,7 +405,18 @@ public class UploadController {
 
             String extension = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")).toLowerCase();
 
-            if (".jpg".equals(extension) || ".png".equals(extension)) {
+            String contentType = null;
+
+            if(".jpg".equals(extension)){
+                // Check if this is a valid JPG
+                contentType = "image/jpg";
+
+            }else if(".png".equals(extension)){
+                // Check if this is a valid PNG
+                contentType = "image/png";
+            }
+
+            if (contentType != null) {
 
                 try {
                     // Get the document this image belongs to
@@ -423,7 +432,7 @@ public class UploadController {
                         Integer height = image.getHeight();
 
                         if (width > 0 && height > 0) {
-                            ImageDTO savedImage = processUploadedImage(file, source, document);
+                            ImageDTO savedImage = processUploadedImage(file, source, document, contentType);
 
                             return ResponseEntity.ok()
                                 .body(savedImage);
@@ -459,11 +468,22 @@ public class UploadController {
     }
 
     @Transactional
-    private ImageDTO processUploadedImage(MultipartFile file, String source, ImDocument document) throws IOException, NoSuchAlgorithmException {
+    private ImageDTO processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType) throws IOException, NoSuchAlgorithmException {
         String filename = fileStorageService.saveFile(file);
+
+        File f = new File(filename);
+        BufferedImage bimg = ImageIO.read(f);
+        int width          = bimg.getWidth();
+        int height         = bimg.getHeight();
+
+        long contentLength = Files.size(f.toPath());
 
         ImageDTO newImage = new ImageDTO();
         newImage.setFilename(filename);
+        newImage.setContentType(contentType);
+        newImage.setContentLength(contentLength);
+        newImage.setImageWidth(width);
+        newImage.setImageHeight(height);
 
         ImageDTO savedImageDto = imageService.save(newImage);
 

@@ -45,6 +45,10 @@ public class FileStorageService {
         return relPath;
     }
 
+    public File loadFile(String fileName){
+        return new File(fileName);
+    }
+
 
     private static String getFileChecksum(MessageDigest digest, InputStream is) throws IOException {
 
