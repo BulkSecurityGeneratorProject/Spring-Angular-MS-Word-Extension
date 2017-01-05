@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{email.document_uploaded.title}">Document uploaded</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="#{email.document_uploaded.greeting(${user.login})}">
+    Dear
+</p>
+<p th:text="#{email.document_uploaded.text1(document.documentName, cloudName)}">
+    Your document {0} has been uploaded to {1}. Please click on the URL below to access it:
+</p>
+<p>
+    <a th:href="@{|${baseUrl}document/${document.id}/${document.secret}|}"
+       th:text="#{email.document_uploaded.view_button}">View document</a>
+</p>
+
+</body>
+</html>

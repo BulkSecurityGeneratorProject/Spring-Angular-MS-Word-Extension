@@ -18,10 +18,19 @@ public class ImCloudProperties {
 
     private String fileStorageDir = null;
     private String baseUrl = null;
+    private String cloudName = null;
     private final Security security = new Security();
 
     private final FsProCloud fsProCloud = new FsProCloud();
 
+
+    public String getCloudName() {
+        return cloudName;
+    }
+
+    public void setCloudName(String cloudName) {
+        this.cloudName = cloudName;
+    }
 
     public String getFileStorageDir() {
         return fileStorageDir;

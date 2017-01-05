@@ -97,6 +97,9 @@ public class UploadController {
     @Inject
     private ImageMapper imageMapper;
 
+    @Inject
+    private MailService mailService;
+
     @GetMapping("/")
     public String index() {
         return "upload";
@@ -108,9 +111,11 @@ public class UploadController {
 
     @GetMapping("/xml/")
     @Timed
-    public @ResponseBody String checkFileExists(@RequestParam(value = "document_name") String documentName,
-                                        @RequestParam("access_token") String accessToken,
-                                        HttpServletResponse response) {
+    public
+    @ResponseBody
+    String checkFileExists(@RequestParam(value = "document_name") String documentName,
+                           @RequestParam("access_token") String accessToken,
+                           HttpServletResponse response) {
 
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
@@ -118,16 +123,16 @@ public class UploadController {
             //return "Document already exists";
             List<ImDocument> docs = imDocumentRepository.findByUserAndDocumentName(uploadingUser.getId(), documentName);
 
-            if(docs.size() > 0){
+            if (docs.size() > 0) {
                 response.setStatus(200);
                 return "A document already exists with this name";
 
-            }else{
+            } else {
                 response.setStatus(404);
                 return "No document with this name yet";
             }
 
-        }else{
+        } else {
             response.setStatus(403);
             return "Access denied";
         }
@@ -164,10 +169,10 @@ public class UploadController {
     @Transactional
     private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, String templateCode, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         // DELETE ALL PREVIOUS DOCUMENTS
-        List<ImDocument> existingDocs = imDocumentRepository.findByUserAndDocumentName(user.getId(),documentName);
+        List<ImDocument> existingDocs = imDocumentRepository.findByUserAndDocumentName(user.getId(), documentName);
 
-        for(ImDocument existingDoc : existingDocs){
-            imDocumentRepository.delete(existingDoc);
+        for (ImDocument existingDoc : existingDocs) {
+            imDocumentRepository.delete(existingDoc.getId());
         }
 
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
@@ -312,7 +317,7 @@ public class UploadController {
         root.find("row").rename("tr");
 
         // Move all direct child rows into <tbody>
-        for(Match table : allTables.each()){
+        for (Match table : allTables.each()) {
             table.append("<tbody></tbody>");
             Match childRows = table.children("tr");
             Match tbody = table.find("tbody");
@@ -445,11 +450,11 @@ public class UploadController {
 
             String contentType = null;
 
-            if(".jpg".equals(extension)){
+            if (".jpg".equals(extension)) {
                 // Check if this is a valid JPG
                 contentType = "image/jpg";
 
-            }else if(".png".equals(extension)){
+            } else if (".png".equals(extension)) {
                 // Check if this is a valid PNG
                 contentType = "image/png";
             }
@@ -507,7 +512,7 @@ public class UploadController {
 
     @PostMapping("/xml/complete")
     @Timed
-    public ResponseEntity<ImDocumentDTO> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId) {
+    public ResponseEntity<ImDocumentDTO> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId, @RequestParam(value = "send_email", required = false) Boolean sendEmail) {
         log.debug("Document complete request: {}", documentId);
 
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
@@ -519,6 +524,10 @@ public class UploadController {
 
             doc = imDocumentRepository.save(doc);
 
+            if (sendEmail) {
+                mailService.sendDocumentUploadedEmail(uploadingUser, doc);
+            }
+
             return ResponseEntity.ok().body(imDocumentMapper.imDocumentToImDocumentDTO(doc));
 
         } else {
@@ -528,7 +537,7 @@ public class UploadController {
     }
 
 
-        @Transactional
+    @Transactional
     private Image processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType, int width, int height, User uploadingUser) throws IOException, NoSuchAlgorithmException {
         String filename = fileStorageService.saveFileAndGetPath(file);
 
@@ -537,9 +546,9 @@ public class UploadController {
 
         Image image = imageRepository.findByFilename(filename);
 
-        if(image != null){
+        if (image != null) {
             // This image has already been uploaded before. Don't create a new record.
-        }else{
+        } else {
             image = new Image();
             image.setFilename(filename);
             image.setContentType(contentType);
@@ -555,7 +564,7 @@ public class UploadController {
             for (ImBlock block : map.getBlocks()) {
 
                 // Check block image label
-                if(source.equals(block.getLabelImageSource())){
+                if (source.equals(block.getLabelImageSource())) {
                     block.setLabelImage(image);
                     block.setLabelImageSource(null);
                 }
@@ -577,11 +586,11 @@ public class UploadController {
                         img.attr("data-id", "" + image.getId());
                         img.removeAttr("data-source");
 
-                        imageIsUsedInBlock  = true;
+                        imageIsUsedInBlock = true;
                     }
                 }
 
-                if(imageIsUsedInBlock) {
+                if (imageIsUsedInBlock) {
                     block.addImage(image);
                     block.setContent(root.find("root").toString());
 

@@ -1,6 +1,8 @@
 package be.storefront.imicloud.service;
 
+import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.config.JHipsterProperties;
+import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.domain.User;
 
 import org.apache.commons.lang3.CharEncoding;
@@ -33,6 +35,8 @@ public class MailService {
 
     private static final String BASE_URL = "baseUrl";
 
+    private static final String CLOUD_NAME = "cloudName";
+
     @Inject
     private JHipsterProperties jHipsterProperties;
 
@@ -44,6 +48,9 @@ public class MailService {
 
     @Inject
     private SpringTemplateEngine templateEngine;
+
+    @Inject
+    private ImCloudProperties imCloudProperties;
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -71,7 +78,7 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        context.setVariable(BASE_URL, imCloudProperties.getBaseUrl());
         String content = templateEngine.process("activationEmail", context);
         String subject = messageSource.getMessage("email.activation.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
@@ -83,7 +90,7 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        context.setVariable(BASE_URL, imCloudProperties.getBaseUrl());
         String content = templateEngine.process("creationEmail", context);
         String subject = messageSource.getMessage("email.activation.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
@@ -95,9 +102,24 @@ public class MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey());
         Context context = new Context(locale);
         context.setVariable(USER, user);
-        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+        context.setVariable(BASE_URL, imCloudProperties.getBaseUrl());
         String content = templateEngine.process("passwordResetEmail", context);
         String subject = messageSource.getMessage("email.reset.title", null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+
+    @Async
+    public void sendDocumentUploadedEmail(User user, ImDocument imDocument) {
+        log.debug("Sending document uploaded e-mail to '{}'", user.getEmail());
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable(USER, user);
+        context.setVariable(BASE_URL, imCloudProperties.getBaseUrl());
+        context.setVariable(CLOUD_NAME, imCloudProperties.getCloudName());
+
+        String content = templateEngine.process("documentUploadedEmail", context);
+        String subject = messageSource.getMessage("email.documentUploaded.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 }

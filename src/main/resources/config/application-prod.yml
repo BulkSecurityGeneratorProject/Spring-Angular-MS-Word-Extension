@@ -74,6 +74,8 @@ imcloud:
     # The base URL of the app. Must end with a "/"
     baseUrl: http://localhost:8080/
 
+    cloudName: Information Mapping Cloud
+
     # Enter the full path to the dir where images are stored. Must end with a "/"
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
     security:
@@ -107,7 +109,7 @@ jhipster:
             key: aee1b8c0456d55e87bb20919adf47ae0d519a41f
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: imicloud@localhost
-        baseUrl: http://my-server-url-to-change # Modify according to your server's URL
+
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:

@@ -83,6 +83,8 @@ imcloud:
     # The base URL of the app. Must end with a "/"
     baseUrl: http://localhost:8080/
 
+    cloudName: Information Mapping Cloud
+
     # Enter the full path to the dir where images are stored. Must end with a "/"
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
     security:
@@ -113,8 +115,18 @@ jhipster:
             # security key (this key should be unique for your application, and kept secret)
             key: aee1b8c0456d55e87bb20919adf47ae0d519a41f
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: imicloud@localhost
-        baseUrl: http://127.0.0.1:8080
+        from: wouter.samaey@storefront.be
+        host: smtp.gmail.com
+        port: 587
+        username: wouter.samaey@storefront.be
+        password: uxUnn25rwga2
+        protocol: smtp
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
+
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:

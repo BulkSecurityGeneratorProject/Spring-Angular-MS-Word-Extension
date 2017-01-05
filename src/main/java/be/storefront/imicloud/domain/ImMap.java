@@ -41,7 +41,7 @@ public class ImMap extends AbstractAuditingEntity implements Serializable {
     @ManyToOne
     private ImDocument imDocument;
 
-    @OneToMany(mappedBy = "imMap")
+    @OneToMany(mappedBy = "imMap", cascade=CascadeType.REMOVE)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<ImBlock> blocks = new HashSet<>();

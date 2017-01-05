@@ -71,6 +71,8 @@ imcloud:
     # The base URL of the app. Must end with a "/"
     baseUrl: http://localhost:8080/
 
+    cloudName: Information Mapping Cloud
+
     # Enter the full path to the dir where images are stored. Must end with a "/"
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
     security:
@@ -106,6 +108,7 @@ jhipster:
         #max-age: 1800
     mail:
         from: imicloud@localhost
+
     swagger:
         title: imicloud API
         description: imicloud API documentation

@@ -56,7 +56,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @ManyToOne
     private Folder folder;
 
-    @OneToMany(mappedBy = "imDocument")
+    @OneToMany(mappedBy = "imDocument", cascade=CascadeType.REMOVE)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<ImMap> maps = new HashSet<>();
