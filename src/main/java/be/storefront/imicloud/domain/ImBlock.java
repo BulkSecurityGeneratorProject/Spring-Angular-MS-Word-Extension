@@ -41,8 +41,8 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
     @Column(name = "guid")
     private String guid;
 
-    @Column(name = "label_image_souce")
-    private String labelImageSouce;
+    @Column(name = "label_image_source")
+    private String labelImageSource;
 
     @ManyToOne
     private ImMap imMap;
@@ -115,17 +115,17 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
         this.guid = guid;
     }
 
-    public String getLabelImageSouce() {
-        return labelImageSouce;
+    public String getLabelImageSource() {
+        return labelImageSource;
     }
 
-    public ImBlock labelImageSouce(String labelImageSouce) {
-        this.labelImageSouce = labelImageSouce;
+    public ImBlock labelImageSource(String labelImageSource) {
+        this.labelImageSource = labelImageSource;
         return this;
     }
 
-    public void setLabelImageSouce(String labelImageSouce) {
-        this.labelImageSouce = labelImageSouce;
+    public void setLabelImageSource(String labelImageSource) {
+        this.labelImageSource = labelImageSource;
     }
 
     public ImMap getImMap() {
@@ -207,7 +207,7 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
             ", content='" + content + "'" +
             ", position='" + position + "'" +
             ", guid='" + guid + "'" +
-            ", labelImageSouce='" + labelImageSouce + "'" +
+            ", labelImageSource='" + labelImageSource + "'" +
             '}';
     }
 }

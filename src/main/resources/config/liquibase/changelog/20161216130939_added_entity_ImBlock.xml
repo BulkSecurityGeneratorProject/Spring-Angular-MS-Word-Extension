@@ -40,7 +40,7 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="label_image_souce" type="varchar(255)">
+            <column name="label_image_source" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             

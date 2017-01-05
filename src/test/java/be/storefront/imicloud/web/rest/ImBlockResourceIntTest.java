@@ -54,8 +54,8 @@ public class ImBlockResourceIntTest {
     private static final String DEFAULT_GUID = "AAAAAAAAAA";
     private static final String UPDATED_GUID = "BBBBBBBBBB";
 
-    private static final String DEFAULT_LABEL_IMAGE_SOUCE = "AAAAAAAAAA";
-    private static final String UPDATED_LABEL_IMAGE_SOUCE = "BBBBBBBBBB";
+    private static final String DEFAULT_LABEL_IMAGE_SOURCE = "AAAAAAAAAA";
+    private static final String UPDATED_LABEL_IMAGE_SOURCE = "BBBBBBBBBB";
 
     @Inject
     private ImBlockRepository imBlockRepository;
@@ -104,7 +104,7 @@ public class ImBlockResourceIntTest {
                 .content(DEFAULT_CONTENT)
                 .position(DEFAULT_POSITION)
                 .guid(DEFAULT_GUID)
-                .labelImageSouce(DEFAULT_LABEL_IMAGE_SOUCE);
+                .labelImageSource(DEFAULT_LABEL_IMAGE_SOURCE);
         return imBlock;
     }
 
@@ -135,7 +135,7 @@ public class ImBlockResourceIntTest {
         assertThat(testImBlock.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testImBlock.getPosition()).isEqualTo(DEFAULT_POSITION);
         assertThat(testImBlock.getGuid()).isEqualTo(DEFAULT_GUID);
-        assertThat(testImBlock.getLabelImageSouce()).isEqualTo(DEFAULT_LABEL_IMAGE_SOUCE);
+        assertThat(testImBlock.getLabelImageSource()).isEqualTo(DEFAULT_LABEL_IMAGE_SOURCE);
 
         // Validate the ImBlock in ElasticSearch
         ImBlock imBlockEs = imBlockSearchRepository.findOne(testImBlock.getId());
@@ -197,7 +197,7 @@ public class ImBlockResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())))
             .andExpect(jsonPath("$.[*].guid").value(hasItem(DEFAULT_GUID.toString())))
-            .andExpect(jsonPath("$.[*].labelImageSouce").value(hasItem(DEFAULT_LABEL_IMAGE_SOUCE.toString())));
+            .andExpect(jsonPath("$.[*].labelImageSource").value(hasItem(DEFAULT_LABEL_IMAGE_SOURCE.toString())));
     }
 
     @Test
@@ -215,7 +215,7 @@ public class ImBlockResourceIntTest {
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.position").value(DEFAULT_POSITION.doubleValue()))
             .andExpect(jsonPath("$.guid").value(DEFAULT_GUID.toString()))
-            .andExpect(jsonPath("$.labelImageSouce").value(DEFAULT_LABEL_IMAGE_SOUCE.toString()));
+            .andExpect(jsonPath("$.labelImageSource").value(DEFAULT_LABEL_IMAGE_SOURCE.toString()));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class ImBlockResourceIntTest {
                 .content(UPDATED_CONTENT)
                 .position(UPDATED_POSITION)
                 .guid(UPDATED_GUID)
-                .labelImageSouce(UPDATED_LABEL_IMAGE_SOUCE);
+                .labelImageSource(UPDATED_LABEL_IMAGE_SOURCE);
         ImBlockDTO imBlockDTO = imBlockMapper.imBlockToImBlockDTO(updatedImBlock);
 
         restImBlockMockMvc.perform(put("/api/im-blocks")
@@ -257,7 +257,7 @@ public class ImBlockResourceIntTest {
         assertThat(testImBlock.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testImBlock.getPosition()).isEqualTo(UPDATED_POSITION);
         assertThat(testImBlock.getGuid()).isEqualTo(UPDATED_GUID);
-        assertThat(testImBlock.getLabelImageSouce()).isEqualTo(UPDATED_LABEL_IMAGE_SOUCE);
+        assertThat(testImBlock.getLabelImageSource()).isEqualTo(UPDATED_LABEL_IMAGE_SOURCE);
 
         // Validate the ImBlock in ElasticSearch
         ImBlock imBlockEs = imBlockSearchRepository.findOne(testImBlock.getId());
@@ -321,6 +321,6 @@ public class ImBlockResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.doubleValue())))
             .andExpect(jsonPath("$.[*].guid").value(hasItem(DEFAULT_GUID.toString())))
-            .andExpect(jsonPath("$.[*].labelImageSouce").value(hasItem(DEFAULT_LABEL_IMAGE_SOUCE.toString())));
+            .andExpect(jsonPath("$.[*].labelImageSource").value(hasItem(DEFAULT_LABEL_IMAGE_SOURCE.toString())));
     }
 }
