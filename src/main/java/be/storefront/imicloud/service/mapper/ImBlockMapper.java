@@ -13,12 +13,14 @@ import java.util.List;
 public interface ImBlockMapper {
 
     @Mapping(source = "imMap.id", target = "imMapId")
+    @Mapping(source = "labelImage.id", target = "labelImageId")
     ImBlockDTO imBlockToImBlockDTO(ImBlock imBlock);
 
     List<ImBlockDTO> imBlocksToImBlockDTOs(List<ImBlock> imBlocks);
 
     @Mapping(source = "imMapId", target = "imMap")
     @Mapping(target = "images", ignore = true)
+    @Mapping(source = "labelImageId", target = "labelImage")
     ImBlock imBlockDTOToImBlock(ImBlockDTO imBlockDTO);
 
     List<ImBlock> imBlockDTOsToImBlocks(List<ImBlockDTO> imBlockDTOs);
@@ -30,5 +32,14 @@ public interface ImBlockMapper {
         ImMap imMap = new ImMap();
         imMap.setId(id);
         return imMap;
+    }
+
+    default Image imageFromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        Image image = new Image();
+        image.setId(id);
+        return image;
     }
 }

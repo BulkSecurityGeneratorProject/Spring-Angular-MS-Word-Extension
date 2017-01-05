@@ -40,7 +40,9 @@
                     <th><span data-translate="imicloudApp.imBlock.content">Content</span></th>
                     <th><span data-translate="imicloudApp.imBlock.position">Position</span></th>
                     <th><span data-translate="imicloudApp.imBlock.guid">Guid</span></th>
+                    <th><span data-translate="imicloudApp.imBlock.labelImageSouce">Label Image Souce</span></th>
                     <th><span data-translate="imicloudApp.imBlock.imMap">Im Map</span></th>
+                    <th><span data-translate="imicloudApp.imBlock.labelImage">Label Image</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -51,8 +53,12 @@
                     <td>{{imBlock.content}}</td>
                     <td>{{imBlock.position}}</td>
                     <td>{{imBlock.guid}}</td>
+                    <td>{{imBlock.labelImageSouce}}</td>
                     <td>
                         <a ui-sref="im-maproute-detail({id:imBlock.imMapId})">{{imBlock.imMapId}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="imageroute-detail({id:imBlock.labelImageId})">{{imBlock.labelImageId}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

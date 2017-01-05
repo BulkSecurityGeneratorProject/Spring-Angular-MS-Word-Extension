@@ -20,9 +20,17 @@
         <dd>
             <span>{{vm.imBlock.guid}}</span>
         </dd>
+        <dt><span data-translate="imicloudApp.imBlock.labelImageSouce">Label Image Souce</span></dt>
+        <dd>
+            <span>{{vm.imBlock.labelImageSouce}}</span>
+        </dd>
         <dt><span data-translate="imicloudApp.imBlock.imMap">Im Map</span></dt>
         <dd>
             <a ui-sref="im-maproute-detail({id:vm.imBlock.imMapId})">{{vm.imBlock.imMapId}}</a>
+        </dd>
+        <dt><span data-translate="imicloudApp.imBlock.labelImage">Label Image</span></dt>
+        <dd>
+            <a ui-sref="imageroute-detail({id:vm.imBlock.labelImageId})">{{vm.imBlock.labelImageId}}</a>
         </dd>
     </dl>
 

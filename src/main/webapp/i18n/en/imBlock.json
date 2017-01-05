@@ -20,8 +20,10 @@
             "content": "Content",
             "position": "Position",
             "guid": "Guid",
+            "labelImageSouce": "Label Image Souce",
             "imMap": "Im Map",
-            "image": "Image"
+            "image": "Image",
+            "labelImage": "Label Image"
         }
     }
 }

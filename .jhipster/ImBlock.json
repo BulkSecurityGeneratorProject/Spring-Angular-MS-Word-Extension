@@ -14,6 +14,12 @@
             "otherEntityRelationshipName": "imBlock",
             "otherEntityField": "id",
             "ownerSide": false
+        },
+        {
+            "relationshipName": "labelImage",
+            "otherEntityName": "image",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
         }
     ],
     "fields": [
@@ -35,6 +41,10 @@
         },
         {
             "fieldName": "guid",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "labelImageSource",
             "fieldType": "String"
         }
     ],

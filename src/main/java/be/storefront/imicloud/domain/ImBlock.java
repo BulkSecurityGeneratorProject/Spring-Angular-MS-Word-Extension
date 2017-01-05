@@ -41,6 +41,9 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
     @Column(name = "guid")
     private String guid;
 
+    @Column(name = "label_image_souce")
+    private String labelImageSouce;
+
     @ManyToOne
     private ImMap imMap;
 
@@ -48,6 +51,9 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Image> images = new HashSet<>();
+
+    @ManyToOne
+    private Image labelImage;
 
     public Long getId() {
         return id;
@@ -109,6 +115,19 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
         this.guid = guid;
     }
 
+    public String getLabelImageSouce() {
+        return labelImageSouce;
+    }
+
+    public ImBlock labelImageSouce(String labelImageSouce) {
+        this.labelImageSouce = labelImageSouce;
+        return this;
+    }
+
+    public void setLabelImageSouce(String labelImageSouce) {
+        this.labelImageSouce = labelImageSouce;
+    }
+
     public ImMap getImMap() {
         return imMap;
     }
@@ -147,6 +166,19 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
         this.images = images;
     }
 
+    public Image getLabelImage() {
+        return labelImage;
+    }
+
+    public ImBlock labelImage(Image image) {
+        this.labelImage = image;
+        return this;
+    }
+
+    public void setLabelImage(Image image) {
+        this.labelImage = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -175,6 +207,7 @@ public class ImBlock extends AbstractAuditingEntity implements Serializable {
             ", content='" + content + "'" +
             ", position='" + position + "'" +
             ", guid='" + guid + "'" +
+            ", labelImageSouce='" + labelImageSouce + "'" +
             '}';
     }
 }

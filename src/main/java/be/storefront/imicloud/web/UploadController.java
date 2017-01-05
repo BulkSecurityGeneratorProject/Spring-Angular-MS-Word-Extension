@@ -230,6 +230,7 @@ public class UploadController {
 
                         String blockGuid = oneBlockElement.getAttribute("guid");
                         String blockLabel = getText(oneBlock, "label");
+                        String blockImageSource = getAttributeFromNode(oneBlock, "image", "source");
 
                         String contentText = null;
 
@@ -249,6 +250,7 @@ public class UploadController {
                         newBlockDto.setGuid(blockGuid);
                         newBlockDto.setPosition((float) j);
                         newBlockDto.setContent(contentText);
+                        newBlockDto.setLabelImageSouce(blockImageSource);
 
                         newBlockDto = imBlockService.save(newBlockDto);
                     }
@@ -412,6 +414,18 @@ public class UploadController {
         return null;
     }
 
+    protected String getAttributeFromNode(Node node, String childNodeName, String attrName) {
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() == Node.ELEMENT_NODE && childNodeName.equals(childNode.getNodeName())) {
+                return childNode.getAttributes().getNamedItem(attrName).getNodeValue();
+            }
+        }
+        return null;
+    }
+
     @PostMapping("/image/")
     @Timed
     public ResponseEntity<ImageDTO> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, @RequestParam("access_token") String accessToken, @RequestParam("source") String source, @RequestParam("document_id") Long documentId, RedirectAttributes redirectAttributes) {
@@ -515,6 +529,14 @@ public class UploadController {
         for (ImMap map : document.getMaps()) {
             for (ImBlock block : map.getBlocks()) {
 
+                // Check block image label
+                if(source.equals(block.getLabelImageSouce())){
+                    block.setLabelImage(image);
+                    block.setLabelImageSouce(null);
+                }
+
+
+                // Check images in content
                 boolean imageIsUsedInBlock = false;
 
                 String blockContent = block.getContent();

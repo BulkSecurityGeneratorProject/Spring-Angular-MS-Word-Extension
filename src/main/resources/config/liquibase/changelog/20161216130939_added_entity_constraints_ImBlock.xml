@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="im_map"/>
 
+        <addForeignKeyConstraint baseColumnNames="label_image_id"
+                                 baseTableName="im_block"
+                                 constraintName="fk_im_block_label_image_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="image"/>
+
     </changeSet>
 </databaseChangeLog>

@@ -108,6 +108,7 @@
                                 content: null,
                                 position: null,
                                 guid: null,
+                                labelImageSouce: null,
                                 id: null
                             };
                         }

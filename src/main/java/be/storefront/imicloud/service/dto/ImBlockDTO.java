@@ -28,10 +28,15 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
     private String guid;
 
-    @JsonIgnore
-    private Set<Image> images = new HashSet<>();
+    private String labelImageSouce;
+
 
     private Long imMapId;
+
+    private Long labelImageId;
+
+    @JsonIgnore
+    private Set<Image> images = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -40,6 +45,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getLabel() {
         return label;
     }
@@ -47,6 +53,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     public void setLabel(String label) {
         this.label = label;
     }
+
     public String getContent() {
         return content;
     }
@@ -54,6 +61,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
+
     public Float getPosition() {
         return position;
     }
@@ -61,12 +69,21 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     public void setPosition(Float position) {
         this.position = position;
     }
+
     public String getGuid() {
         return guid;
     }
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public String getLabelImageSouce() {
+        return labelImageSouce;
+    }
+
+    public void setLabelImageSouce(String labelImageSouce) {
+        this.labelImageSouce = labelImageSouce;
     }
 
     public Long getImMapId() {
@@ -77,14 +94,13 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
         this.imMapId = imMapId;
     }
 
-    public Set<Image> getImages() {
-        return images;
+    public Long getLabelImageId() {
+        return labelImageId;
     }
 
-    public void setImages(Set<Image> images) {
-        this.images = images;
+    public void setLabelImageId(Long imageId) {
+        this.labelImageId = imageId;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -97,7 +113,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
         ImBlockDTO imBlockDTO = (ImBlockDTO) o;
 
-        if ( ! Objects.equals(id, imBlockDTO.id)) return false;
+        if (!Objects.equals(id, imBlockDTO.id)) return false;
 
         return true;
     }
@@ -105,6 +121,15 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     @Override
@@ -115,6 +140,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
             ", content='" + content + "'" +
             ", position='" + position + "'" +
             ", guid='" + guid + "'" +
+            ", labelImageSouce='" + labelImageSouce + "'" +
             '}';
     }
 }

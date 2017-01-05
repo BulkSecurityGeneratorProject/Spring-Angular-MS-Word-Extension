@@ -40,7 +40,15 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="label_image_souce" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="im_map_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="label_image_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

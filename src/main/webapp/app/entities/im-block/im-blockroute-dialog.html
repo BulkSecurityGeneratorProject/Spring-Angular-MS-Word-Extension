@@ -46,10 +46,22 @@
                     ng-model="vm.imBlock.guid"
                      />
         </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imBlock.labelImageSouce" for="field_labelImageSouce">Label Image Souce</label>
+            <input type="text" class="form-control" name="labelImageSouce" id="field_labelImageSouce"
+                    ng-model="vm.imBlock.labelImageSouce"
+                     />
+        </div>
 
         <div class="form-group">
             <label data-translate="imicloudApp.imBlock.imMap" for="field_imMap">Im Map</label>
             <select class="form-control" id="field_imMap" name="imMap" ng-model="vm.imBlock.imMapId" ng-options="imMap.id as imMap.id for imMap in vm.immaps"            >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="imicloudApp.imBlock.labelImage" for="field_labelImage">Label Image</label>
+            <select class="form-control" id="field_labelImage" name="labelImage" ng-model="vm.imBlock.labelImageId" ng-options="image.id as image.id for image in vm.images"            >
                 <option value=""></option>
             </select>
         </div>
