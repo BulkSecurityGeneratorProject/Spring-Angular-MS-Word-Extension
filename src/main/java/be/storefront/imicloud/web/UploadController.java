@@ -510,7 +510,7 @@ public class UploadController {
     }
 
 
-    @PostMapping("/xml/complete")
+    @PostMapping("/complete")
     @Timed
     public ResponseEntity<ImDocumentDTO> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId, @RequestParam(value = "send_email", required = false) Boolean sendEmail) {
         log.debug("Document complete request: {}", documentId);

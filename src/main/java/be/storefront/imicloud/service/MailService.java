@@ -37,6 +37,8 @@ public class MailService {
 
     private static final String CLOUD_NAME = "cloudName";
 
+    private static final String DOCUMENT = "document";
+
     @Inject
     private JHipsterProperties jHipsterProperties;
 
@@ -117,6 +119,7 @@ public class MailService {
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, imCloudProperties.getBaseUrl());
         context.setVariable(CLOUD_NAME, imCloudProperties.getCloudName());
+        context.setVariable(DOCUMENT, imDocument);
 
         String content = templateEngine.process("documentUploadedEmail", context);
         String subject = messageSource.getMessage("email.documentUploaded.title", null, locale);
