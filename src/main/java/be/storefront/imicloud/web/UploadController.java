@@ -163,8 +163,12 @@ public class UploadController {
 
     @Transactional
     private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, String templateCode, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        // DELETE ALL PREVIOUS DOCUMENTS
+        List<ImDocument> existingDocs = imDocumentRepository.findByUserAndDocumentName(user.getId(),documentName);
 
-        // TODO overwrite existing documents
+        for(ImDocument existingDoc : existingDocs){
+            imDocumentRepository.delete(existingDoc);
+        }
 
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
         String xmlString = IOUtils.toString(stream, "UTF-8");
@@ -500,7 +504,31 @@ public class UploadController {
 
     }
 
-    @Transactional
+
+    @PostMapping("/xml/complete")
+    @Timed
+    public ResponseEntity<ImDocumentDTO> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId) {
+        log.debug("Document complete request: {}", documentId);
+
+        User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
+
+        if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
+            ImDocument doc = imDocumentRepository.findOne(documentId);
+
+            doc.setUploadComplete(true);
+
+            doc = imDocumentRepository.save(doc);
+
+            return ResponseEntity.ok().body(imDocumentMapper.imDocumentToImDocumentDTO(doc));
+
+        } else {
+            return accessDeniedResponse();
+        }
+
+    }
+
+
+        @Transactional
     private Image processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType, int width, int height, User uploadingUser) throws IOException, NoSuchAlgorithmException {
         String filename = fileStorageService.saveFileAndGetPath(file);
 
