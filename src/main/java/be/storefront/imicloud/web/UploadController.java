@@ -13,7 +13,9 @@ import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImBlockMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
+import be.storefront.imicloud.web.exception.AccessDeniedException;
 import be.storefront.imicloud.web.exception.NotFoundException;
+import be.storefront.imicloud.web.exception.OKDocumentExists;
 import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -40,6 +42,7 @@ import static org.joox.JOOX.*;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,7 +56,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
+import java.util.List;
 
 @Controller
 @RequestMapping("/upload")
@@ -110,14 +113,27 @@ public class UploadController {
     @Timed
     public @ResponseBody String checkFileExists(@RequestParam(value = "document_name") String documentName,
                                         @RequestParam("access_token") String accessToken,
-                                        HttpServletRequest request) {
+                                        HttpServletResponse response) {
 
-        //return "Document already exists";
+        User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
-        // TODO API for determining if a document already exists. Returns 200 or 404
+        if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
+            //return "Document already exists";
+            List<ImDocument> docs = imDocumentRepository.findByUserAndDocumentName(uploadingUser.getId(), documentName);
 
-        throw new NotFoundException();
+            if(docs.size() > 0){
+                response.setStatus(200);
+                return "A document already exists with this name";
 
+            }else{
+                response.setStatus(404);
+                return "No document with this name yet";
+            }
+
+        }else{
+            response.setStatus(403);
+            return "Access denied";
+        }
     }
 
 

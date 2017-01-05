@@ -7,6 +7,26 @@
 </head>
 <body>
 
+
+<form enctype="multipart/form-data" th:action="@{/upload/xml/}" method="get">
+    <h3>Check if document already exists</h3>
+    <p>
+        <label>
+            Document name
+            <input type="text" name="document_name" value="Test document 1"/>
+        </label>
+    </p>
+    <p>
+        <label>
+            Access token
+            <input type="text" name="access_token" value="TestKey13038" />
+        </label>
+    </p>
+    <input type="submit"/>
+</form>
+
+<hr/>
+
 <form enctype="multipart/form-data" th:action="@{/upload/xml/}" method="post">
 
     <h3>Upload XML</h3>
@@ -47,7 +67,8 @@
     <input type="submit"/>
 
 </form>
-    <hr/>
+
+<hr/>
 
 <form enctype="multipart/form-data" th:action="@{/upload/image/}" method="post">
     <h3>Upload Image</h3>
@@ -81,6 +102,24 @@
     <input type="submit"/>
 </form>
 
+<hr/>
+
+<form enctype="multipart/form-data" th:action="@{/upload/complete/}" method="post">
+    <h3>Mark document as upload complete</h3>
+    <p>
+        <label>
+            Document ID
+            <input type="text" name="document_id"/>
+        </label>
+    </p>
+    <p>
+        <label>
+            Access token
+            <input type="text" name="access_token" value="TestKey13038" />
+        </label>
+    </p>
+    <input type="submit"/>
+</form>
 
 
 </body>

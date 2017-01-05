@@ -65,8 +65,12 @@ public class ImCloudSecurity {
 
 
     public boolean canUserUploadDocuments(User uploadingUser) {
-        // The user was originally defined by an access token from FS Pro Cloud, meaning he already has FS Pro, and should be allowed.
-        // More security checks can be added in the future.
-        return true;
+        if(uploadingUser != null) {
+            // The user was originally defined by an access token from FS Pro Cloud, meaning he already has FS Pro, and should be allowed.
+            // More security checks can be added in the future.
+            return true;
+        }else{
+            return false;
+        }
     }
 }
