@@ -23,7 +23,7 @@ public class ImDocumentUploaded {
 
     public String getLoginAndGotoUrl(){
         // https://publishing.informationmapping.com/loginAndGoto/document/12345678/?access_token=
-        return baseUrl+"goto/document/"+imDocument.getId()+"?access_token=";
+        return baseUrl+"loginAndRedirect/document/"+imDocument.getId()+"?access_token=";
     }
 
     public String getPublicShareUrl(){
