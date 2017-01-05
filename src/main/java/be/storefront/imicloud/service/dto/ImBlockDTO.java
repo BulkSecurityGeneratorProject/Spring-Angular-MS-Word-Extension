@@ -28,7 +28,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
     private String guid;
 
-    private String labelImageSouce;
+    private String labelImageSource;
 
 
     private Long imMapId;
@@ -78,12 +78,12 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
         this.guid = guid;
     }
 
-    public String getLabelImageSouce() {
-        return labelImageSouce;
+    public String getLabelImageSource() {
+        return labelImageSource;
     }
 
-    public void setLabelImageSouce(String labelImageSouce) {
-        this.labelImageSouce = labelImageSouce;
+    public void setLabelImageSource(String labelImageSource) {
+        this.labelImageSource = labelImageSource;
     }
 
     public Long getImMapId() {
@@ -140,7 +140,7 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
             ", content='" + content + "'" +
             ", position='" + position + "'" +
             ", guid='" + guid + "'" +
-            ", labelImageSouce='" + labelImageSouce + "'" +
+            ", labelImageSource='" + labelImageSource + "'" +
             '}';
     }
 }

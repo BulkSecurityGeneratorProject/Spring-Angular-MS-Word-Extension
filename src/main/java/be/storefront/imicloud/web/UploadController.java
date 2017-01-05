@@ -13,9 +13,6 @@ import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImBlockMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
-import be.storefront.imicloud.web.exception.AccessDeniedException;
-import be.storefront.imicloud.web.exception.NotFoundException;
-import be.storefront.imicloud.web.exception.OKDocumentExists;
 import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -250,7 +247,7 @@ public class UploadController {
                         newBlockDto.setGuid(blockGuid);
                         newBlockDto.setPosition((float) j);
                         newBlockDto.setContent(contentText);
-                        newBlockDto.setLabelImageSouce(blockImageSource);
+                        newBlockDto.setLabelImageSource(blockImageSource);
 
                         newBlockDto = imBlockService.save(newBlockDto);
                     }
@@ -530,9 +527,9 @@ public class UploadController {
             for (ImBlock block : map.getBlocks()) {
 
                 // Check block image label
-                if(source.equals(block.getLabelImageSouce())){
+                if(source.equals(block.getLabelImageSource())){
                     block.setLabelImage(image);
-                    block.setLabelImageSouce(null);
+                    block.setLabelImageSource(null);
                 }
 
 
