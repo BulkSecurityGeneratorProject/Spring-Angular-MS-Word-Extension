@@ -1,0 +1,22 @@
+{
+    "imicloudApp": {
+        "imageSourcePath" : {
+            "home": {
+                "title": "Image Source Paths",
+                "createLabel": "Create a new Image Source Path",
+                "createOrEditLabel": "Create or edit a Image Source Path",
+                "search": "Search for Image Source Path"
+            },
+            "created": "A new Image Source Path is created with identifier {{ param }}",
+            "updated": "A Image Source Path is updated with identifier {{ param }}",
+            "deleted": "A Image Source Path is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Image Source Path {{ id }}?"
+            },
+            "detail": {
+                "title": "Image Source Path"
+            },
+            "source": "Source"
+        }
+    }
+}

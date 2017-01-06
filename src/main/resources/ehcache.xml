@@ -46,5 +46,7 @@
 
     <cache alias="be.storefront.imicloud.domain.Branding" uses-template="simple"/>
 
+    <cache alias="be.storefront.imicloud.domain.ImageSourcePath" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

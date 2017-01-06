@@ -1,0 +1,19 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "source",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170106125306",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "image_source_path",
+    "pagination": "pager",
+    "enableEntityAudit": true
+}
