@@ -67,7 +67,7 @@ class BrandingGatlingTest extends Simulation {
             .exec(http("Create new branding")
             .post("/api/brandings")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "primaryColor":"SAMPLE_TEXT", "secundaryColor":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "primaryColor":"SAMPLE_TEXT", "secundaryColor":"SAMPLE_TEXT", "pageBackgroundColor":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_branding_url"))).exitHereIfFailed
             .pause(10)

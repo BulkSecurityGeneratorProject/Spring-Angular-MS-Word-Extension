@@ -31,6 +31,10 @@
             <column name="secundary_color" type="varchar(6)">
                 <constraints nullable="true" />
             </column>
+            
+            <column name="page_background_color" type="varchar(6)">
+                <constraints nullable="true" />
+            </column>
                         <column name="logo_image_id" type="bigint">
                 <constraints unique="true" nullable="true" />
             </column>            <column name="organization_id" type="bigint">

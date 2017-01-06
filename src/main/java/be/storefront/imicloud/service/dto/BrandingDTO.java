@@ -20,6 +20,9 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     @Size(max = 6)
     private String secundaryColor;
 
+    @Size(max = 6)
+    private String pageBackgroundColor;
+
 
     private Long logoImageId;
     
@@ -51,6 +54,13 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setSecundaryColor(String secundaryColor) {
         this.secundaryColor = secundaryColor;
+    }
+    public String getPageBackgroundColor() {
+        return pageBackgroundColor;
+    }
+
+    public void setPageBackgroundColor(String pageBackgroundColor) {
+        this.pageBackgroundColor = pageBackgroundColor;
     }
 
     public Long getLogoImageId() {
@@ -114,6 +124,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
             "id=" + id +
             ", primaryColor='" + primaryColor + "'" +
             ", secundaryColor='" + secundaryColor + "'" +
+            ", pageBackgroundColor='" + pageBackgroundColor + "'" +
             '}';
     }
 }

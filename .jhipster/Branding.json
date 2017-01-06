@@ -34,6 +34,14 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": "6"
+        },
+        {
+            "fieldName": "pageBackgroundColor",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "6"
         }
     ],
     "changelogDate": "20170106071301",

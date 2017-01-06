@@ -47,6 +47,9 @@ public class BrandingResourceIntTest {
     private static final String DEFAULT_SECUNDARY_COLOR = "AAAAAA";
     private static final String UPDATED_SECUNDARY_COLOR = "BBBBBB";
 
+    private static final String DEFAULT_PAGE_BACKGROUND_COLOR = "AAAAAA";
+    private static final String UPDATED_PAGE_BACKGROUND_COLOR = "BBBBBB";
+
     @Inject
     private BrandingRepository brandingRepository;
 
@@ -91,7 +94,8 @@ public class BrandingResourceIntTest {
     public static Branding createEntity(EntityManager em) {
         Branding branding = new Branding()
                 .primaryColor(DEFAULT_PRIMARY_COLOR)
-                .secundaryColor(DEFAULT_SECUNDARY_COLOR);
+                .secundaryColor(DEFAULT_SECUNDARY_COLOR)
+                .pageBackgroundColor(DEFAULT_PAGE_BACKGROUND_COLOR);
         return branding;
     }
 
@@ -120,6 +124,7 @@ public class BrandingResourceIntTest {
         Branding testBranding = brandingList.get(brandingList.size() - 1);
         assertThat(testBranding.getPrimaryColor()).isEqualTo(DEFAULT_PRIMARY_COLOR);
         assertThat(testBranding.getSecundaryColor()).isEqualTo(DEFAULT_SECUNDARY_COLOR);
+        assertThat(testBranding.getPageBackgroundColor()).isEqualTo(DEFAULT_PAGE_BACKGROUND_COLOR);
 
         // Validate the Branding in ElasticSearch
         Branding brandingEs = brandingSearchRepository.findOne(testBranding.getId());
@@ -159,7 +164,8 @@ public class BrandingResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(branding.getId().intValue())))
             .andExpect(jsonPath("$.[*].primaryColor").value(hasItem(DEFAULT_PRIMARY_COLOR.toString())))
-            .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())));
+            .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())))
+            .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())));
     }
 
     @Test
@@ -174,7 +180,8 @@ public class BrandingResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(branding.getId().intValue()))
             .andExpect(jsonPath("$.primaryColor").value(DEFAULT_PRIMARY_COLOR.toString()))
-            .andExpect(jsonPath("$.secundaryColor").value(DEFAULT_SECUNDARY_COLOR.toString()));
+            .andExpect(jsonPath("$.secundaryColor").value(DEFAULT_SECUNDARY_COLOR.toString()))
+            .andExpect(jsonPath("$.pageBackgroundColor").value(DEFAULT_PAGE_BACKGROUND_COLOR.toString()));
     }
 
     @Test
@@ -197,7 +204,8 @@ public class BrandingResourceIntTest {
         Branding updatedBranding = brandingRepository.findOne(branding.getId());
         updatedBranding
                 .primaryColor(UPDATED_PRIMARY_COLOR)
-                .secundaryColor(UPDATED_SECUNDARY_COLOR);
+                .secundaryColor(UPDATED_SECUNDARY_COLOR)
+                .pageBackgroundColor(UPDATED_PAGE_BACKGROUND_COLOR);
         BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(updatedBranding);
 
         restBrandingMockMvc.perform(put("/api/brandings")
@@ -211,6 +219,7 @@ public class BrandingResourceIntTest {
         Branding testBranding = brandingList.get(brandingList.size() - 1);
         assertThat(testBranding.getPrimaryColor()).isEqualTo(UPDATED_PRIMARY_COLOR);
         assertThat(testBranding.getSecundaryColor()).isEqualTo(UPDATED_SECUNDARY_COLOR);
+        assertThat(testBranding.getPageBackgroundColor()).isEqualTo(UPDATED_PAGE_BACKGROUND_COLOR);
 
         // Validate the Branding in ElasticSearch
         Branding brandingEs = brandingSearchRepository.findOne(testBranding.getId());
@@ -271,6 +280,7 @@ public class BrandingResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(branding.getId().intValue())))
             .andExpect(jsonPath("$.[*].primaryColor").value(hasItem(DEFAULT_PRIMARY_COLOR.toString())))
-            .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())));
+            .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())))
+            .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())));
     }
 }

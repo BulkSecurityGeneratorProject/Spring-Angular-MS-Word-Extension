@@ -106,6 +106,7 @@
                             return {
                                 primaryColor: null,
                                 secundaryColor: null,
+                                pageBackgroundColor: null,
                                 id: null
                             };
                         }

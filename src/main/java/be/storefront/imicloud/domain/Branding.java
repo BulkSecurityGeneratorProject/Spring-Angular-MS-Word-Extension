@@ -32,6 +32,10 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
     @Column(name = "secundary_color", length = 6)
     private String secundaryColor;
 
+    @Size(max = 6)
+    @Column(name = "page_background_color", length = 6)
+    private String pageBackgroundColor;
+
     @OneToOne
     @JoinColumn(unique = true)
     private Image logoImage;
@@ -72,6 +76,19 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
 
     public void setSecundaryColor(String secundaryColor) {
         this.secundaryColor = secundaryColor;
+    }
+
+    public String getPageBackgroundColor() {
+        return pageBackgroundColor;
+    }
+
+    public Branding pageBackgroundColor(String pageBackgroundColor) {
+        this.pageBackgroundColor = pageBackgroundColor;
+        return this;
+    }
+
+    public void setPageBackgroundColor(String pageBackgroundColor) {
+        this.pageBackgroundColor = pageBackgroundColor;
     }
 
     public Image getLogoImage() {
@@ -126,6 +143,7 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
             "id=" + id +
             ", primaryColor='" + primaryColor + "'" +
             ", secundaryColor='" + secundaryColor + "'" +
+            ", pageBackgroundColor='" + pageBackgroundColor + "'" +
             '}';
     }
 }

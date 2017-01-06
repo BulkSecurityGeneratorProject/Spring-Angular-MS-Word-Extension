@@ -37,6 +37,18 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.branding.pageBackgroundColor" for="field_pageBackgroundColor">Page Background Color</label>
+            <input type="text" class="form-control" name="pageBackgroundColor" id="field_pageBackgroundColor"
+                    ng-model="vm.branding.pageBackgroundColor"
+                    ng-maxlength="6" />
+            <div ng-show="editForm.pageBackgroundColor.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.pageBackgroundColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="6">
+                    This field cannot be longer than 6 characters.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label data-translate="imicloudApp.branding.logoImage" for="field_logoImage">Logo Image</label>
