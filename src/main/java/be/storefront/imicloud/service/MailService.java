@@ -122,7 +122,7 @@ public class MailService {
         context.setVariable(DOCUMENT, imDocument);
 
         String content = templateEngine.process("documentUploadedEmail", context);
-        String subject = messageSource.getMessage("email.documentUploaded.title", null, locale);
+        String subject = messageSource.getMessage("email.document_uploaded.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 }
