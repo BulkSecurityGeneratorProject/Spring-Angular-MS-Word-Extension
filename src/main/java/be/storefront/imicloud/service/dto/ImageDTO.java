@@ -29,6 +29,9 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private Long contentLength;
 
+    @NotNull
+    private String secret;
+
 
     private Set<ImBlockDTO> imBlocks = new HashSet<>();
 
@@ -78,6 +81,13 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setContentLength(Long contentLength) {
         this.contentLength = contentLength;
+    }
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public Set<ImBlockDTO> getImBlocks() {
@@ -135,6 +145,7 @@ public class ImageDTO extends AbstractAuditingDTO implements Serializable {
             ", imageWidth='" + imageWidth + "'" +
             ", imageHeight='" + imageHeight + "'" +
             ", contentLength='" + contentLength + "'" +
+            ", secret='" + secret + "'" +
             '}';
     }
 }

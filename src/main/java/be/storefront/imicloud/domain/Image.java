@@ -46,6 +46,10 @@ public class Image extends AbstractAuditingEntity implements Serializable {
     @Column(name = "content_length", nullable = false)
     private Long contentLength;
 
+    @NotNull
+    @Column(name = "secret", nullable = false)
+    private String secret;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "image_im_block",
@@ -130,6 +134,19 @@ public class Image extends AbstractAuditingEntity implements Serializable {
         this.contentLength = contentLength;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public Image secret(String secret) {
+        this.secret = secret;
+        return this;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     public Set<ImBlock> getImBlocks() {
         return imBlocks;
     }
@@ -195,6 +212,7 @@ public class Image extends AbstractAuditingEntity implements Serializable {
             ", imageWidth='" + imageWidth + "'" +
             ", imageHeight='" + imageHeight + "'" +
             ", contentLength='" + contentLength + "'" +
+            ", secret='" + secret + "'" +
             '}';
     }
 }

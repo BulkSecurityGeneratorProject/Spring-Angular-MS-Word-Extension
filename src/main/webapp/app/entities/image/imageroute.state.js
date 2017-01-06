@@ -109,6 +109,7 @@
                                 imageWidth: null,
                                 imageHeight: null,
                                 contentLength: null,
+                                secret: null,
                                 id: null
                             };
                         }
