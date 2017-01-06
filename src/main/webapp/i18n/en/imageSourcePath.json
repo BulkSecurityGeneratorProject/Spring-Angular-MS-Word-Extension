@@ -16,7 +16,9 @@
             "detail": {
                 "title": "Image Source Path"
             },
-            "source": "Source"
+            "source": "Source",
+            "image": "Image",
+            "imDocument": "Im Document"
         }
     }
 }

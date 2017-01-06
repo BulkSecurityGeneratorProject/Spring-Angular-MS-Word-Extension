@@ -2,6 +2,8 @@ package be.storefront.imicloud.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 
@@ -16,6 +18,10 @@ public class ImageSourcePathDTO extends AbstractAuditingDTO implements Serializa
     private String source;
 
 
+    private Long imageId;
+    
+    private Long imDocumentId;
+    
     public Long getId() {
         return id;
     }
@@ -29,6 +35,22 @@ public class ImageSourcePathDTO extends AbstractAuditingDTO implements Serializa
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
+    public Long getImDocumentId() {
+        return imDocumentId;
+    }
+
+    public void setImDocumentId(Long imDocumentId) {
+        this.imDocumentId = imDocumentId;
     }
 
     @Override

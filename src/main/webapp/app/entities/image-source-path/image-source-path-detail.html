@@ -8,6 +8,14 @@
         <dd>
             <span>{{vm.imageSourcePath.source}}</span>
         </dd>
+        <dt><span data-translate="imicloudApp.imageSourcePath.image">Image</span></dt>
+        <dd>
+            <a ui-sref="image-detail({id:vm.imageSourcePath.imageId})">{{vm.imageSourcePath.imageId}}</a>
+        </dd>
+        <dt><span data-translate="imicloudApp.imageSourcePath.imDocument">Im Document</span></dt>
+        <dd>
+            <a ui-sref="im-document-detail({id:vm.imageSourcePath.imDocumentId})">{{vm.imageSourcePath.imDocumentId}}</a>
+        </dd>
     </dl>
 
     <button type="submit"

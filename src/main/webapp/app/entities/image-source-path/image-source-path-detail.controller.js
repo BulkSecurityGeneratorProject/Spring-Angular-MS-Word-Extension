@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('ImageSourcePathDetailController', ImageSourcePathDetailController);
 
-    ImageSourcePathDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'ImageSourcePath'];
+    ImageSourcePathDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'ImageSourcePath', 'Image', 'ImDocument'];
 
-    function ImageSourcePathDetailController($scope, $rootScope, $stateParams, previousState, entity, ImageSourcePath) {
+    function ImageSourcePathDetailController($scope, $rootScope, $stateParams, previousState, entity, ImageSourcePath, Image, ImDocument) {
         var vm = this;
 
         vm.imageSourcePath = entity;

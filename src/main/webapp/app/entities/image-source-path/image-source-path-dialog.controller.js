@@ -5,14 +5,16 @@
         .module('imicloudApp')
         .controller('ImageSourcePathDialogController', ImageSourcePathDialogController);
 
-    ImageSourcePathDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'ImageSourcePath'];
+    ImageSourcePathDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'ImageSourcePath', 'Image', 'ImDocument'];
 
-    function ImageSourcePathDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, ImageSourcePath) {
+    function ImageSourcePathDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, ImageSourcePath, Image, ImDocument) {
         var vm = this;
 
         vm.imageSourcePath = entity;
         vm.clear = clear;
         vm.save = save;
+        vm.images = Image.query();
+        vm.imdocuments = ImDocument.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

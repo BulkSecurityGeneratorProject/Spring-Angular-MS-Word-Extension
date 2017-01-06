@@ -28,6 +28,14 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="image_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="im_document_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

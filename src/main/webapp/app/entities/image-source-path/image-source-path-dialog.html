@@ -26,6 +26,18 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label data-translate="imicloudApp.imageSourcePath.image" for="field_image">Image</label>
+            <select class="form-control" id="field_image" name="image" ng-model="vm.imageSourcePath.imageId" ng-options="image.id as image.id for image in vm.images"            >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="imicloudApp.imageSourcePath.imDocument" for="field_imDocument">Im Document</label>
+            <select class="form-control" id="field_imDocument" name="imDocument" ng-model="vm.imageSourcePath.imDocumentId" ng-options="imDocument.id as imDocument.id for imDocument in vm.imdocuments"            >
+                <option value=""></option>
+            </select>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">

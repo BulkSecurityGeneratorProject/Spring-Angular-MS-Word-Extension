@@ -28,6 +28,12 @@ public class ImageSourcePath extends AbstractAuditingEntity implements Serializa
     @Column(name = "source", nullable = false)
     private String source;
 
+    @ManyToOne
+    private Image image;
+
+    @ManyToOne
+    private ImDocument imDocument;
+
     public Long getId() {
         return id;
     }
@@ -47,6 +53,32 @@ public class ImageSourcePath extends AbstractAuditingEntity implements Serializa
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public ImageSourcePath image(Image image) {
+        this.image = image;
+        return this;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public ImDocument getImDocument() {
+        return imDocument;
+    }
+
+    public ImageSourcePath imDocument(ImDocument imDocument) {
+        this.imDocument = imDocument;
+        return this;
+    }
+
+    public void setImDocument(ImDocument imDocument) {
+        this.imDocument = imDocument;
     }
 
     @Override
