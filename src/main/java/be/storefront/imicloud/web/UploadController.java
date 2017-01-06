@@ -110,6 +110,9 @@ public class UploadController {
     @Inject
     private ImageSourcePathRepository imageSourcePathRepository;
 
+    @Inject
+    private UrlHelperService urlHelperService;
+
     @GetMapping("/")
     public String index() {
         return "upload";
@@ -614,7 +617,7 @@ public class UploadController {
             }
 
             String baseUrl = imCloudProperties.getBaseUrl();
-            return ResponseEntity.ok().body(new ImDocumentCompletelyUploaded(doc, baseUrl));
+            return ResponseEntity.ok().body(new ImDocumentCompletelyUploaded(doc, urlHelperService));
 
         } else {
             return accessDeniedResponse();

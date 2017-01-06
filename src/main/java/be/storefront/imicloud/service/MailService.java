@@ -39,6 +39,8 @@ public class MailService {
 
     private static final String DOCUMENT = "document";
 
+    private static final String DOCUMENT_LINK = "documentLink";
+
     @Inject
     private JHipsterProperties jHipsterProperties;
 
@@ -53,6 +55,9 @@ public class MailService {
 
     @Inject
     private ImCloudProperties imCloudProperties;
+
+    @Inject
+    private UrlHelperService urlHelperService;
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
@@ -120,6 +125,7 @@ public class MailService {
         context.setVariable(BASE_URL, imCloudProperties.getBaseUrl());
         context.setVariable(CLOUD_NAME, imCloudProperties.getCloudName());
         context.setVariable(DOCUMENT, imDocument);
+        context.setVariable(DOCUMENT_LINK, urlHelperService.getDocumentPublicUrl(imDocument));
 
         String content = templateEngine.process("documentUploadedEmail", context);
         String subject = messageSource.getMessage("email.document_uploaded.title", null, locale);

@@ -62,7 +62,7 @@ spring:
         host: smtp.gmail.com
         port: 587
         username: wouter.samaey@storefront.be
-        password: XXX
+        password: uxUnn25rwga2
         protocol: smtp
         tls: true
         properties.mail.smtp:

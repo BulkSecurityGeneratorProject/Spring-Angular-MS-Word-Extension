@@ -5,16 +5,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p th:text="#{email.document_uploaded.greeting(${user.login})}">
-    Dear
+<p th:text="#{email.document_uploaded.greeting(${user.firstName})}">
+    Dear XXX,
 </p>
-<p th:text="#{email.document_uploaded.text1(document.documentName, cloudName)}">
-    Your document {0} has been uploaded to {1}. Please click on the URL below to access it:
+<p th:text="#{email.document_uploaded.text1(${document.documentName}, ${cloudName})}">
+    Your document {0} has been uploaded to the {1}. Please click on the URL below to access it:
 </p>
 <p>
     <a th:href="@{|${baseUrl}document/${document.id}/${document.secret}|}"
        th:text="#{email.document_uploaded.view_button}">View document</a>
 </p>
+
+<p th:text="#{email.document_uploaded.text2(${documentLink})}">
+    You can also share this document with anybody by sending them the link: {0}
+</p>
+
+<p th:text="#{email.document_uploaded.text3(${baseUrl})}">
+    To login and manage your document, please goto XXX
+</p>
+
+<p th:text="#{email.document_uploaded.have_a_nice_day}">Have a nice day</p>
+
+<p th:text="${cloudName}">Cloud name</p>
 
 </body>
 </html>
