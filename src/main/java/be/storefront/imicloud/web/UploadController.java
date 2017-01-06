@@ -242,10 +242,7 @@ public class UploadController {
 
         // Add missing random secret
         if(doc.getSecret() == null || "".equals(doc.getSecret())) {
-            SecureRandom random = new SecureRandom();
-            String newSecret = new BigInteger(130, random).toString(32);
-            newSecret = newSecret.substring(0, 10);
-            doc.setSecret(newSecret);
+            doc.setSecret(generateSecret());
         }
 
         doc = imDocumentRepository.save(doc);
@@ -253,6 +250,13 @@ public class UploadController {
         doc = processXmlSavedInDocument(doc);
 
         return imDocumentMapper.imDocumentToImDocumentDTO(doc);
+    }
+
+    private String generateSecret(){
+        SecureRandom random = new SecureRandom();
+        String r = new BigInteger(130, random).toString(32);
+        r = r.substring(0, 10);
+        return r;
     }
 
     private Document getXmlDocumentFromString(String xml) throws IOException, SAXException, ParserConfigurationException {
@@ -639,6 +643,7 @@ public class UploadController {
             image.setImageWidth(width);
             image.setImageHeight(height);
             image.setUploadedByUser(uploadingUser);
+            image.setSecret(generateSecret());
 
             image = imageRepository.save(image);
         }
