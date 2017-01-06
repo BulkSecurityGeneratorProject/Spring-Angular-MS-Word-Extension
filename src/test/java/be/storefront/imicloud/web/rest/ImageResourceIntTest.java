@@ -57,6 +57,9 @@ public class ImageResourceIntTest {
     private static final Long DEFAULT_CONTENT_LENGTH = 1L;
     private static final Long UPDATED_CONTENT_LENGTH = 2L;
 
+    private static final String DEFAULT_ORIGINAL_SOURCE = "AAAAAAAAAA";
+    private static final String UPDATED_ORIGINAL_SOURCE = "BBBBBBBBBB";
+
     @Inject
     private ImageRepository imageRepository;
 
@@ -104,7 +107,8 @@ public class ImageResourceIntTest {
                 .contentType(DEFAULT_CONTENT_TYPE)
                 .imageWidth(DEFAULT_IMAGE_WIDTH)
                 .imageHeight(DEFAULT_IMAGE_HEIGHT)
-                .contentLength(DEFAULT_CONTENT_LENGTH);
+                .contentLength(DEFAULT_CONTENT_LENGTH)
+                .originalSource(DEFAULT_ORIGINAL_SOURCE);
         // Add required entity
         User uploadedByUser = UserResourceIntTest.createEntity(em);
         em.persist(uploadedByUser);
@@ -141,6 +145,7 @@ public class ImageResourceIntTest {
         assertThat(testImage.getImageWidth()).isEqualTo(DEFAULT_IMAGE_WIDTH);
         assertThat(testImage.getImageHeight()).isEqualTo(DEFAULT_IMAGE_HEIGHT);
         assertThat(testImage.getContentLength()).isEqualTo(DEFAULT_CONTENT_LENGTH);
+        assertThat(testImage.getOriginalSource()).isEqualTo(DEFAULT_ORIGINAL_SOURCE);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -278,7 +283,8 @@ public class ImageResourceIntTest {
             .andExpect(jsonPath("$.[*].contentType").value(hasItem(DEFAULT_CONTENT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].imageWidth").value(hasItem(DEFAULT_IMAGE_WIDTH)))
             .andExpect(jsonPath("$.[*].imageHeight").value(hasItem(DEFAULT_IMAGE_HEIGHT)))
-            .andExpect(jsonPath("$.[*].contentLength").value(hasItem(DEFAULT_CONTENT_LENGTH.intValue())));
+            .andExpect(jsonPath("$.[*].contentLength").value(hasItem(DEFAULT_CONTENT_LENGTH.intValue())))
+            .andExpect(jsonPath("$.[*].originalSource").value(hasItem(DEFAULT_ORIGINAL_SOURCE.toString())));
     }
 
     @Test
@@ -296,7 +302,8 @@ public class ImageResourceIntTest {
             .andExpect(jsonPath("$.contentType").value(DEFAULT_CONTENT_TYPE.toString()))
             .andExpect(jsonPath("$.imageWidth").value(DEFAULT_IMAGE_WIDTH))
             .andExpect(jsonPath("$.imageHeight").value(DEFAULT_IMAGE_HEIGHT))
-            .andExpect(jsonPath("$.contentLength").value(DEFAULT_CONTENT_LENGTH.intValue()));
+            .andExpect(jsonPath("$.contentLength").value(DEFAULT_CONTENT_LENGTH.intValue()))
+            .andExpect(jsonPath("$.originalSource").value(DEFAULT_ORIGINAL_SOURCE.toString()));
     }
 
     @Test
@@ -322,7 +329,8 @@ public class ImageResourceIntTest {
                 .contentType(UPDATED_CONTENT_TYPE)
                 .imageWidth(UPDATED_IMAGE_WIDTH)
                 .imageHeight(UPDATED_IMAGE_HEIGHT)
-                .contentLength(UPDATED_CONTENT_LENGTH);
+                .contentLength(UPDATED_CONTENT_LENGTH)
+                .originalSource(UPDATED_ORIGINAL_SOURCE);
         ImageDTO imageDTO = imageMapper.imageToImageDTO(updatedImage);
 
         restImageMockMvc.perform(put("/api/images")
@@ -339,6 +347,7 @@ public class ImageResourceIntTest {
         assertThat(testImage.getImageWidth()).isEqualTo(UPDATED_IMAGE_WIDTH);
         assertThat(testImage.getImageHeight()).isEqualTo(UPDATED_IMAGE_HEIGHT);
         assertThat(testImage.getContentLength()).isEqualTo(UPDATED_CONTENT_LENGTH);
+        assertThat(testImage.getOriginalSource()).isEqualTo(UPDATED_ORIGINAL_SOURCE);
 
         // Validate the Image in ElasticSearch
         Image imageEs = imageSearchRepository.findOne(testImage.getId());
@@ -402,6 +411,7 @@ public class ImageResourceIntTest {
             .andExpect(jsonPath("$.[*].contentType").value(hasItem(DEFAULT_CONTENT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].imageWidth").value(hasItem(DEFAULT_IMAGE_WIDTH)))
             .andExpect(jsonPath("$.[*].imageHeight").value(hasItem(DEFAULT_IMAGE_HEIGHT)))
-            .andExpect(jsonPath("$.[*].contentLength").value(hasItem(DEFAULT_CONTENT_LENGTH.intValue())));
+            .andExpect(jsonPath("$.[*].contentLength").value(hasItem(DEFAULT_CONTENT_LENGTH.intValue())))
+            .andExpect(jsonPath("$.[*].originalSource").value(hasItem(DEFAULT_ORIGINAL_SOURCE.toString())));
     }
 }
