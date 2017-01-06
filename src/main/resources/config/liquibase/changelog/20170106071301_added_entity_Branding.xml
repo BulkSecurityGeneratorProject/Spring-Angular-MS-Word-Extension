@@ -37,8 +37,6 @@
             </column>
                         <column name="logo_image_id" type="bigint">
                 <constraints unique="true" nullable="true" />
-            </column>            <column name="organization_id" type="bigint">
-                <constraints unique="true" nullable="true" />
             </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>

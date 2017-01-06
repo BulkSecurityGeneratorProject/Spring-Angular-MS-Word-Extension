@@ -40,7 +40,6 @@
                     <th><span data-translate="imicloudApp.branding.secundaryColor">Secundary Color</span></th>
                     <th><span data-translate="imicloudApp.branding.pageBackgroundColor">Page Background Color</span></th>
                     <th><span data-translate="imicloudApp.branding.logoImage">Logo Image</span></th>
-                    <th><span data-translate="imicloudApp.branding.organization">Organization</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -52,9 +51,6 @@
                     <td>{{branding.pageBackgroundColor}}</td>
                     <td>
                         <a ui-sref="image-detail({id:branding.logoImageId})">{{branding.logoImageFilename}}</a>
-                    </td>
-                    <td>
-                        <a ui-sref="organization-detail({id:branding.organizationId})">{{branding.organizationName}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

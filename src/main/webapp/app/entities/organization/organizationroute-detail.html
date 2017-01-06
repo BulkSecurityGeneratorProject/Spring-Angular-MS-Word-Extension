@@ -12,6 +12,14 @@
         <dd>
             <span>{{vm.organization.magentoCustomerId}}</span>
         </dd>
+        <dt><span data-translate="imicloudApp.organization.user">User</span></dt>
+        <dd>
+            {{vm.organization.userEmail}}
+        </dd>
+        <dt><span data-translate="imicloudApp.organization.branding">Branding</span></dt>
+        <dd>
+            <a ui-sref="brandingroute-detail({id:vm.organization.brandingId})">{{vm.organization.brandingId}}</a>
+        </dd>
     </dl>
 
     <button type="submit"

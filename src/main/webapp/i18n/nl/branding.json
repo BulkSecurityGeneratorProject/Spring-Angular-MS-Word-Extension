@@ -19,8 +19,7 @@
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",
             "pageBackgroundColor": "Page Background Color",
-            "logoImage": "Logo Image",
-            "organization": "Organization"
+            "logoImage": "Logo Image"
         }
     }
 }

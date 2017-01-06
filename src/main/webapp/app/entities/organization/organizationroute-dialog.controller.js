@@ -5,15 +5,25 @@
         .module('imicloudApp')
         .controller('OrganizationRouteDialogController', OrganizationRouteDialogController);
 
-    OrganizationRouteDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Organization', 'Folder'];
+    OrganizationRouteDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Organization', 'Folder', 'User', 'Branding'];
 
-    function OrganizationRouteDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Organization, Folder) {
+    function OrganizationRouteDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Organization, Folder, User, Branding) {
         var vm = this;
 
         vm.organization = entity;
         vm.clear = clear;
         vm.save = save;
         vm.folders = Folder.query();
+        vm.users = User.query();
+        vm.brandings = Branding.query({filter: 'organization-is-null'});
+        $q.all([vm.organization.$promise, vm.brandings.$promise]).then(function() {
+            if (!vm.organization.brandingId) {
+                return $q.reject();
+            }
+            return Branding.get({id : vm.organization.brandingId}).$promise;
+        }).then(function(branding) {
+            vm.brandings.push(branding);
+        });
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

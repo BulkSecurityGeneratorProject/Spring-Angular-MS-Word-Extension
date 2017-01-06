@@ -32,6 +32,12 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="branding_id" type="bigint">
+                <constraints unique="true" nullable="true" />
+            </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>

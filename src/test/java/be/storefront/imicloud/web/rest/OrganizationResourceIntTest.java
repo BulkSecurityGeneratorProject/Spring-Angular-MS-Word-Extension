@@ -3,6 +3,7 @@ package be.storefront.imicloud.web.rest;
 import be.storefront.imicloud.ImicloudApp;
 
 import be.storefront.imicloud.domain.Organization;
+import be.storefront.imicloud.domain.User;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.service.OrganizationService;
 import be.storefront.imicloud.repository.search.OrganizationSearchRepository;
@@ -92,6 +93,11 @@ public class OrganizationResourceIntTest {
         Organization organization = new Organization()
                 .name(DEFAULT_NAME)
                 .magentoCustomerId(DEFAULT_MAGENTO_CUSTOMER_ID);
+        // Add required entity
+        User user = UserResourceIntTest.createEntity(em);
+        em.persist(user);
+        em.flush();
+        organization.setUser(user);
         return organization;
     }
 

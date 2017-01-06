@@ -18,7 +18,9 @@
             },
             "name": "Name",
             "magentoCustomerId": "Magento Customer Id",
-            "folder": "Folder"
+            "folder": "Folder",
+            "user": "User",
+            "branding": "Branding"
         }
     }
 }

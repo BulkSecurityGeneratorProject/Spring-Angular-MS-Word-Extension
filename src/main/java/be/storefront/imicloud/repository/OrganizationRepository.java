@@ -12,4 +12,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface OrganizationRepository extends JpaRepository<Organization,Long> {
 
+    @Query("select organization from Organization organization where organization.user.login = ?#{principal.username}")
+    List<Organization> findByUserIsCurrentUser();
+
 }

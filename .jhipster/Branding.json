@@ -8,14 +8,6 @@
             "otherEntityField": "filename",
             "ownerSide": true,
             "otherEntityRelationshipName": "branding"
-        },
-        {
-            "relationshipName": "organization",
-            "otherEntityName": "organization",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "name",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "branding"
         }
     ],
     "fields": [
