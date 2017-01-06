@@ -137,5 +137,8 @@ Desktop.ini
 ######################
 .eslintcache
 /data
+
+######################
+# Application specific
+######################
 /uploads/
-src/main/resources/config/application-dev.yml

@@ -68,7 +68,8 @@ spring:
         properties.mail.smtp:
             auth: true
             starttls.enable: true
-            ssl.trust: smtp.gmail.com
+# Don't add this, or it will break Gmail SMTP
+#            ssl.trust: smtp.gmail.com
     messages:
         cache-seconds: 1
     thymeleaf:
