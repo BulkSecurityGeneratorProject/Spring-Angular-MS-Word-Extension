@@ -52,12 +52,8 @@
             "fieldName": "secret",
             "fieldType": "String",
             "fieldValidateRules": [
-                "required",
-                "minlength",
-                "maxlength"
-            ],
-            "fieldValidateRulesMinlength": "10",
-            "fieldValidateRulesMaxlength": "10"
+                "required"
+            ]
         },
         {
             "fieldName": "defaultTemplate",

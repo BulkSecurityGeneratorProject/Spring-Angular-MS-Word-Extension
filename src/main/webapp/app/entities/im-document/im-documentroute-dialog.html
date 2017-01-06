@@ -52,19 +52,11 @@
             <label class="control-label" data-translate="imicloudApp.imDocument.secret" for="field_secret">Secret</label>
             <input type="text" class="form-control" name="secret" id="field_secret"
                     ng-model="vm.imDocument.secret"
-                    required ng-minlength="10" ng-maxlength="10" />
+                    required />
             <div ng-show="editForm.secret.$invalid">
                 <p class="help-block"
                     ng-show="editForm.secret.$error.required" data-translate="entity.validation.required">
                     This field is required.
-                </p>
-                <p class="help-block"
-                    ng-show="editForm.secret.$error.minlength" data-translate="entity.validation.minlength" translate-value-min="10">
-                    This field is required to be at least 10 characters.
-                </p>
-                <p class="help-block"
-                    ng-show="editForm.secret.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="10">
-                    This field cannot be longer than 10 characters.
                 </p>
             </div>
         </div>

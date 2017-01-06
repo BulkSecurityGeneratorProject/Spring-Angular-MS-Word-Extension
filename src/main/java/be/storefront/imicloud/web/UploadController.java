@@ -255,7 +255,6 @@ public class UploadController {
     private String generateSecret(){
         SecureRandom random = new SecureRandom();
         String r = new BigInteger(130, random).toString(32);
-        r = r.substring(0, 10);
         return r;
     }
 

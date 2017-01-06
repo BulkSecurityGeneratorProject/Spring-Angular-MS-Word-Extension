@@ -43,8 +43,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     private String originalXml;
 
     @NotNull
-    @Size(min = 10, max = 10)
-    @Column(name = "secret", length = 10, nullable = false)
+    @Column(name = "secret", nullable = false)
     private String secret;
 
     @Column(name = "default_template")

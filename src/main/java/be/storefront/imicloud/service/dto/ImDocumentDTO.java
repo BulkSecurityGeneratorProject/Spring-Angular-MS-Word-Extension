@@ -27,7 +27,6 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     private String originalXml;
 
     @NotNull
-    @Size(min = 10, max = 10)
     private String secret;
 
     private String defaultTemplate;
