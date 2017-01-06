@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('BrandingDialogController', BrandingDialogController);
 
-    BrandingDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Branding', 'Image'];
+    BrandingDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Branding', 'Image', 'Organization'];
 
-    function BrandingDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Branding, Image) {
+    function BrandingDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Branding, Image, Organization) {
         var vm = this;
 
         vm.branding = entity;
@@ -21,6 +21,15 @@
             return Image.get({id : vm.branding.logoImageId}).$promise;
         }).then(function(logoImage) {
             vm.logoimages.push(logoImage);
+        });
+        vm.organizations = Organization.query({filter: 'branding-is-null'});
+        $q.all([vm.branding.$promise, vm.organizations.$promise]).then(function() {
+            if (!vm.branding.organizationId) {
+                return $q.reject();
+            }
+            return Organization.get({id : vm.branding.organizationId}).$promise;
+        }).then(function(organization) {
+            vm.organizations.push(organization);
         });
 
         $timeout(function (){

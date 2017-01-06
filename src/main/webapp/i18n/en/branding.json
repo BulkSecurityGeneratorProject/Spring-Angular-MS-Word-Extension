@@ -18,7 +18,8 @@
             },
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",
-            "logoImage": "Logo Image"
+            "logoImage": "Logo Image",
+            "organization": "Organization"
         }
     }
 }
