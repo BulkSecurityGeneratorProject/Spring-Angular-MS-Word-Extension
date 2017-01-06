@@ -13,7 +13,9 @@ import java.util.Objects;
  * A ImageSourcePath.
  */
 @Entity
-@Table(name = "image_source_path")
+@Table(name = "image_source_path", uniqueConstraints={
+    @UniqueConstraint(columnNames = {"source", "im_document_id"})
+})
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "imagesourcepath")
 public class ImageSourcePath extends AbstractAuditingEntity implements Serializable {

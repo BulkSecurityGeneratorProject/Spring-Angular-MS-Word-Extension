@@ -50,15 +50,6 @@ public class ImDocumentServiceImpl implements ImDocumentService{
     public ImDocumentDTO save(ImDocumentDTO imDocumentDTO) {
         log.debug("Request to save ImDocument : {}", imDocumentDTO);
         ImDocument imDocument = imDocumentMapper.imDocumentDTOToImDocument(imDocumentDTO);
-
-        if(imDocument.getSecret() == null) {
-            // Add missing random secret
-            SecureRandom random = new SecureRandom();
-            String newSecret = new BigInteger(130, random).toString(32);
-            newSecret = newSecret.substring(0, 10);
-            imDocument.setSecret(newSecret);
-        }
-
         imDocument = imDocumentRepository.save(imDocument);
         ImDocumentDTO result = imDocumentMapper.imDocumentToImDocumentDTO(imDocument);
         imDocumentSearchRepository.save(imDocument);

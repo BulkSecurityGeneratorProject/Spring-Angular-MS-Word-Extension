@@ -5,12 +5,12 @@ import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.repository.ImBlockRepository;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.repository.ImageRepository;
+import be.storefront.imicloud.repository.ImageSourcePathRepository;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.*;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.dto.ImMapDTO;
-import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImBlockMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
@@ -53,8 +53,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
 
 @Controller
@@ -104,6 +106,9 @@ public class UploadController {
 
     @Inject
     private MailService mailService;
+
+    @Inject
+    private ImageSourcePathRepository imageSourcePathRepository;
 
     @GetMapping("/")
     public String index() {
@@ -235,6 +240,14 @@ public class UploadController {
         doc.setPassword(hashedPassword);
         doc.setDefaultTemplate(templateCode);
 
+        // Add missing random secret
+        if(doc.getSecret() == null || "".equals(doc.getSecret())) {
+            SecureRandom random = new SecureRandom();
+            String newSecret = new BigInteger(130, random).toString(32);
+            newSecret = newSecret.substring(0, 10);
+            doc.setSecret(newSecret);
+        }
+
         doc = imDocumentRepository.save(doc);
 
         doc = processXmlSavedInDocument(doc);
@@ -334,6 +347,8 @@ public class UploadController {
         }
 
         doc = imDocumentRepository.save(doc);
+
+        processImagesInDocument(doc);
 
         return doc;
     }
@@ -628,7 +643,41 @@ public class UploadController {
             image = imageRepository.save(image);
         }
 
-        for (ImMap map : document.getMaps()) {
+        // Prevent double data
+        List<ImageSourcePath> existingSourcePaths = imageSourcePathRepository.findByDocumentIdAndSource(document.getId(), source);
+
+        if(existingSourcePaths.size() == 0) {
+            // Remember the "source" for this image, so we can later reprocess the XML
+            ImageSourcePath isp = new ImageSourcePath();
+            isp.setImage(image);
+            isp.setImDocument(document);
+            isp.setSource(source);
+
+            isp = imageSourcePathRepository.save(isp);
+        }
+
+        processImageInDocument(document, source, image);
+
+        return image;
+    }
+
+    private void processImagesInDocument(ImDocument doc){
+        List<ImageSourcePath> sourcePaths = imageSourcePathRepository.findByDocumentId(doc.getId());
+        for(ImageSourcePath sourcePath : sourcePaths){
+            Image image = sourcePath.getImage();
+            String source = sourcePath.getSource();
+            processImageInDocument(doc, source, image);
+        }
+    }
+
+    private void processImageInDocument(ImDocument doc, String source,Image image){
+
+        if(doc.getMaps() == null){
+            // Reload before processing image, because the "maps" can be null due to earlier processing
+            doc = imDocumentRepository.findOne(doc.getId());
+        }
+
+        for (ImMap map : doc.getMaps()) {
             for (ImBlock block : map.getBlocks()) {
 
                 // Check block image label
@@ -636,7 +685,6 @@ public class UploadController {
                     block.setLabelImage(image);
                     block.setLabelImageSource(null);
                 }
-
 
                 // Check images in content
                 boolean imageIsUsedInBlock = false;
@@ -666,8 +714,6 @@ public class UploadController {
                 }
             }
         }
-
-        return image;
     }
 
     private ResponseEntity accessDeniedResponse() {

@@ -3,6 +3,7 @@ package be.storefront.imicloud.repository;
 import be.storefront.imicloud.domain.ImageSourcePath;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -12,4 +13,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface ImageSourcePathRepository extends JpaRepository<ImageSourcePath,Long> {
 
+    @Query("select imageSourcePath from ImageSourcePath imageSourcePath where imageSourcePath.imDocument.id = :documentId and imageSourcePath.source = :source")
+    List<ImageSourcePath> findByDocumentIdAndSource(@Param("documentId") Long documentId, @Param("source") String source);
+
+    @Query("select imageSourcePath from ImageSourcePath imageSourcePath where imageSourcePath.imDocument.id = :documentId")
+    List<ImageSourcePath> findByDocumentId(@Param("documentId") Long id);
 }
