@@ -455,9 +455,13 @@ public class UploadController {
     }
 
     private Match renameAttr(Match m, String oldName, String newName) {
-        String src = m.attr(oldName);
-        m.attr(newName, src);
-        m.removeAttr(oldName);
+        if(m.size() > 0){
+            for(Match item : m.each()){
+                String src = item.attr(oldName);
+                item.attr(newName, src);
+                item.removeAttr(oldName);
+            }
+        }
         return m;
     }
 
