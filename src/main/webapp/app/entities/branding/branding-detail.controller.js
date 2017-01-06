@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('BrandingDetailController', BrandingDetailController);
 
-    BrandingDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Branding'];
+    BrandingDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Branding', 'Image'];
 
-    function BrandingDetailController($scope, $rootScope, $stateParams, previousState, entity, Branding) {
+    function BrandingDetailController($scope, $rootScope, $stateParams, previousState, entity, Branding, Image) {
         var vm = this;
 
         vm.branding = entity;

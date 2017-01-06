@@ -32,6 +32,10 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
     @Column(name = "secundary_color", length = 6)
     private String secundaryColor;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Image logoImage;
+
     public Long getId() {
         return id;
     }
@@ -64,6 +68,19 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
 
     public void setSecundaryColor(String secundaryColor) {
         this.secundaryColor = secundaryColor;
+    }
+
+    public Image getLogoImage() {
+        return logoImage;
+    }
+
+    public Branding logoImage(Image image) {
+        this.logoImage = image;
+        return this;
+    }
+
+    public void setLogoImage(Image image) {
+        this.logoImage = image;
     }
 
     @Override

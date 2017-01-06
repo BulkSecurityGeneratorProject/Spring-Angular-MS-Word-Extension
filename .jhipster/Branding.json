@@ -1,6 +1,15 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "logoImage",
+            "otherEntityName": "image",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "filename",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "branding"
+        }
+    ],
     "fields": [
         {
             "fieldName": "primaryColor",

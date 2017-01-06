@@ -17,7 +17,8 @@
                 "title": "Branding"
             },
             "primaryColor": "Primary Color",
-            "secundaryColor": "Secundary Color"
+            "secundaryColor": "Secundary Color",
+            "logoImage": "Logo Image"
         }
     }
 }

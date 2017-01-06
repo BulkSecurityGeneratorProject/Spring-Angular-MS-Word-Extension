@@ -2,6 +2,8 @@ package be.storefront.imicloud.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 
@@ -18,6 +20,11 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     @Size(max = 6)
     private String secundaryColor;
 
+
+    private Long logoImageId;
+    
+
+    private String logoImageFilename;
 
     public Long getId() {
         return id;
@@ -39,6 +46,23 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setSecundaryColor(String secundaryColor) {
         this.secundaryColor = secundaryColor;
+    }
+
+    public Long getLogoImageId() {
+        return logoImageId;
+    }
+
+    public void setLogoImageId(Long imageId) {
+        this.logoImageId = imageId;
+    }
+
+
+    public String getLogoImageFilename() {
+        return logoImageFilename;
+    }
+
+    public void setLogoImageFilename(String imageFilename) {
+        this.logoImageFilename = imageFilename;
     }
 
     @Override
