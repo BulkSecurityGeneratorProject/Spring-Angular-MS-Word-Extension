@@ -4,6 +4,7 @@ import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.service.FileStorageService;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.service.dto.ImageDTO;
+import be.storefront.imicloud.web.exception.NotFoundException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,25 +32,29 @@ public class ImageController {
     private FileStorageService fileStorageService;
 
 
-    @GetMapping("/image/{imageId}")
-    public ResponseEntity<InputStreamResource> image(@PathVariable(value = "imageId") Long imageId) throws IOException {
+    @GetMapping("/image/{imageId}/{secret}")
+    public ResponseEntity<InputStreamResource> image(@PathVariable(value = "imageId") Long imageId, @PathVariable(value = "secret") String secret) throws IOException {
 
         ImageDTO imageDTO = imageService.findOne(imageId);
-        File file = fileStorageService.loadFile(imageDTO.getFilename());
+        if (secret != null && secret.equals(imageDTO.getSecret())) {
+            File file = fileStorageService.loadFile(imageDTO.getFilename());
 
-        InputStream in = new FileInputStream(file);
+            InputStream in = new FileInputStream(file);
 
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
 
-        long contentLength =imageDTO.getContentLength();
-        MediaType contentType = MediaType.parseMediaType(imageDTO.getContentType());
+            long contentLength = imageDTO.getContentLength();
+            MediaType contentType = MediaType.parseMediaType(imageDTO.getContentType());
 
 
-        return ResponseEntity.ok()
-            .contentLength(contentLength)
-            .contentType(contentType)
-            .body(new InputStreamResource(in));
+            return ResponseEntity.ok()
+                .contentLength(contentLength)
+                .contentType(contentType)
+                .body(new InputStreamResource(in));
+        }else{
+            throw new NotFoundException();
+        }
 
     }
 }

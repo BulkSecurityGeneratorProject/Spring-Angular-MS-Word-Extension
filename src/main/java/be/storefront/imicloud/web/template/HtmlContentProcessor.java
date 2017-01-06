@@ -32,7 +32,7 @@ public class HtmlContentProcessor {
                 imageId = Long.parseLong(imageIdString);
                 Image image = imageRepository.findOne(imageId);
                 if (image != null) {
-                    String imgSrc = imCloudProperties.getBaseUrl() + "image/" + image.getId();
+                    String imgSrc = imCloudProperties.getBaseUrl() + "image/" + image.getId()+"/"+image.getSecret();
                     img.attr("src", imgSrc);
                 }
 
