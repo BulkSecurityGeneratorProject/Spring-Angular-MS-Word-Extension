@@ -1,7 +1,11 @@
 package be.storefront.imicloud.service;
 
 import be.storefront.imicloud.config.ImCloudProperties;
+import be.storefront.imicloud.domain.Branding;
+import be.storefront.imicloud.domain.Organization;
 import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.repository.BrandingRepository;
+import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.restclient.SimpleRestClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,10 +33,15 @@ public class MagentoCustomerService {
     @Inject
     private PasswordEncoder passwordEncoder;
 
+    @Inject
+    private OrganizationRepository organizationRepository;
+    @Inject
+    private BrandingRepository brandingRepository;
+
     private final Logger log = LoggerFactory.getLogger(MagentoCustomerService.class);
 
     public User getUserByMagentoCustomerId(int customerId) throws IOException, JSONException {
-        String url = imCloudProperties.getSecurity().getMagento().getApi().getUrl() + "fspro/accounts/?id="+ URLEncoder.encode(""+customerId, "UTF-8");
+        String url = imCloudProperties.getSecurity().getMagento().getApi().getUrl() + "fspro/accounts/?id=" + URLEncoder.encode("" + customerId, "UTF-8");
 
         SimpleRestClient client = getHttpClient();
         JSONObject jsonObj = client.getAndReadJson(url);
@@ -48,7 +58,7 @@ public class MagentoCustomerService {
 
         User r = null;
 
-        if(optionalExistingUser.isPresent()){
+        if (optionalExistingUser.isPresent()) {
             // Update existing user with data from Magento
 
             User existingUser = optionalExistingUser.get();
@@ -60,24 +70,44 @@ public class MagentoCustomerService {
 
             r = userService.saveUser(existingUser);
 
-        }else{
+        } else {
             // Create new user that resembles the Magento customer
             String tempPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
 
-            r = userService.createUser( email,  tempPassword,  firstName,  lastName,  email, langKey);
+            r = userService.createUser(email, tempPassword, firstName, lastName, email, langKey);
             r.setActivated(isActive);
             r.setCreatedBy("magento");
             r = userService.saveUser(r);
         }
 
-        
+        List<Organization> organizationList = organizationRepository.findByUserId(r.getId());
+
+        if (organizationList.size() == 0) {
+
+            // Create default branding
+            Branding b = new Branding();
+            b.setPageBackgroundColor("#FFFFFF");
+            b.setTextColor("#222222");
+            b.setPrimaryColor("#009edf");
+            b.setSecundaryColor("#d5155b");
+            b = brandingRepository.save(b);
+
+
+            // Create default organization
+            Organization o = new Organization();
+            o.setName(r.getFirstName() + "'s organization");
+            o.setMagentoCustomerId(customerId);
+            o.setBranding(b);
+            o.setUser(r);
+            o = organizationRepository.save(o);
+        }
 
         return r;
     }
 
     public User getUserByMagentoLogin(String email, String password) throws JSONException, IOException {
         String url = imCloudProperties.getSecurity().getMagento().getApi().getUrl() + "fspro/authentication";
-        String body = "{\"email\":\""+email+"\",\"password\":\""+password+"\"}";
+        String body = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
 
         SimpleRestClient client = getHttpClient();
         JSONObject jsonObj = client.postAndReadJson(url, body);
@@ -92,7 +122,7 @@ public class MagentoCustomerService {
         return userService.saveUser(u);
     }
 
-    protected SimpleRestClient getHttpClient(){
+    protected SimpleRestClient getHttpClient() {
         SimpleRestClient client = new SimpleRestClient();
 
         client.setHttpUsername(imCloudProperties.getSecurity().getMagento().getApi().getUser());

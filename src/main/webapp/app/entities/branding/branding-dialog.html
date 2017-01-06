@@ -17,11 +17,11 @@
             <label class="control-label" data-translate="imicloudApp.branding.primaryColor" for="field_primaryColor">Primary Color</label>
             <input type="text" class="form-control" name="primaryColor" id="field_primaryColor"
                     ng-model="vm.branding.primaryColor"
-                    ng-maxlength="6" />
+                    ng-maxlength="7" />
             <div ng-show="editForm.primaryColor.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.primaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="6">
-                    This field cannot be longer than 6 characters.
+                    ng-show="editForm.primaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                    This field cannot be longer than 7 characters.
                 </p>
             </div>
         </div>
@@ -29,11 +29,11 @@
             <label class="control-label" data-translate="imicloudApp.branding.secundaryColor" for="field_secundaryColor">Secundary Color</label>
             <input type="text" class="form-control" name="secundaryColor" id="field_secundaryColor"
                     ng-model="vm.branding.secundaryColor"
-                    ng-maxlength="6" />
+                    ng-maxlength="7" />
             <div ng-show="editForm.secundaryColor.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.secundaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="6">
-                    This field cannot be longer than 6 characters.
+                    ng-show="editForm.secundaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                    This field cannot be longer than 7 characters.
                 </p>
             </div>
         </div>
@@ -41,11 +41,23 @@
             <label class="control-label" data-translate="imicloudApp.branding.pageBackgroundColor" for="field_pageBackgroundColor">Page Background Color</label>
             <input type="text" class="form-control" name="pageBackgroundColor" id="field_pageBackgroundColor"
                     ng-model="vm.branding.pageBackgroundColor"
-                    ng-maxlength="6" />
+                    ng-maxlength="7" />
             <div ng-show="editForm.pageBackgroundColor.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.pageBackgroundColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="6">
-                    This field cannot be longer than 6 characters.
+                    ng-show="editForm.pageBackgroundColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                    This field cannot be longer than 7 characters.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.branding.textColor" for="field_textColor">Text Color</label>
+            <input type="text" class="form-control" name="textColor" id="field_textColor"
+                    ng-model="vm.branding.textColor"
+                    ng-maxlength="7" />
+            <div ng-show="editForm.textColor.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.textColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                    This field cannot be longer than 7 characters.
                 </p>
             </div>
         </div>

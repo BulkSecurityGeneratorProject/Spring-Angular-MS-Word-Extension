@@ -3,6 +3,7 @@ package be.storefront.imicloud.web.template;
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.Image;
 import be.storefront.imicloud.repository.ImageRepository;
+import be.storefront.imicloud.web.dom.DomHelper;
 import org.joox.Match;
 import org.springframework.stereotype.Service;
 
@@ -19,25 +20,32 @@ public class HtmlContentProcessor {
     @Inject
     private ImageRepository imageRepository;
 
-    public String process(String html){
+    public String process(String html) {
 
         // Resolve URLs to images
-        Match root = $("<root>"+html+"</root>");
+        Match root = DomHelper.getDomRoot(html);
 
-        for(Match img : root.find("img").each()){
-            String source = img.attr("data-source");
-            Image image = imageRepository.findByFilename(source);
-            if(image != null) {
-                String imgSrc = imCloudProperties.getBaseUrl() + "image/" + image.getId();
-                img.attr("src", imgSrc);
+        for (Match img : root.find("img").each()) {
+            String imageIdString = img.attr("data-id");
+            Long imageId = null;
+            try {
+                imageId = Long.parseLong(imageIdString);
+                Image image = imageRepository.findOne(imageId);
+                if (image != null) {
+                    String imgSrc = imCloudProperties.getBaseUrl() + "image/" + image.getId();
+                    img.attr("src", imgSrc);
+                }
+
+            } catch (NumberFormatException ex) {
             }
+
+
         }
 
+        String r = DomHelper.domToString(root);
 
 
-        html = root.find("root").toString();
-
-        return html;
+        return r;
     }
 
 }

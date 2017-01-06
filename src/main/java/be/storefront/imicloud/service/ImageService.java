@@ -46,4 +46,7 @@ public interface ImageService {
      *  @return the list of entities
      */
     List<ImageDTO> search(String query);
+
+
+    boolean isImageInUse(Long imageId);
 }

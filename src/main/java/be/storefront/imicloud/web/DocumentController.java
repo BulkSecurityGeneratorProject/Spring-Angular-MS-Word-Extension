@@ -10,7 +10,9 @@ import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.web.exception.AccessDeniedException;
 import be.storefront.imicloud.web.exception.NotFoundException;
+import be.storefront.imicloud.web.exception.UploadIncompleteException;
 import be.storefront.imicloud.web.template.HtmlContentProcessor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,32 +61,49 @@ public class DocumentController {
         if (imDocumentDto != null) {
             if (secret != null && secret.equals(imDocumentDto.getSecret())) {
 
-                ImDocument imDocument = imDocumentRepository.getOne(documentId);
+                if (imDocumentDto.getUploadComplete() != null && imDocumentDto.getUploadComplete()) {
+                    ImDocument imDocument = imDocumentRepository.getOne(documentId);
 
-                String template;
-                if (templateCode != null) {
-                    template = templateCode;
+                    String template;
+                    if (templateCode != null) {
+                        template = templateCode;
+                    } else {
+                        template = imDocumentDto.getDefaultTemplate();
+                    }
+
+                    HashMap<String, Object> viewMap = new HashMap<>();
+                    viewMap.put("ImDocumentDTO", imDocumentDto);
+                    viewMap.put("ImDocument", imDocument);
+                    viewMap.put("HtmlContentProcessor", htmlContentProcessor);
+
+                    return new ModelAndView(template + "/index", viewMap);
+
                 } else {
-                    template = imDocumentDto.getDefaultTemplate();
+                    // Upload was not completed - remove it
+                    //imDocumentRepository.delete(documentId);
+
+                    return error("Document not found.", 404);
                 }
 
-                HashMap<String, Object> viewMap = new HashMap<>();
-                viewMap.put("ImDocumentDTO", imDocumentDto);
-                viewMap.put("ImDocument", imDocument);
-                viewMap.put("HtmlContentProcessor", htmlContentProcessor);
-
-                return new ModelAndView(template + "/index", viewMap);
-
             } else {
-                throw new AccessDeniedException();
+                return error("Access denied.", 403);
             }
 
         } else {
-            throw new NotFoundException();
+            return error("Document not found.", 404);
         }
     }
 
+    private ModelAndView error(String message, int status) {
+        HashMap<String, Object> viewMap = new HashMap<>();
+        viewMap.put("message", message);
+        viewMap.put("status", status);
 
+        ModelAndView errorModelAndView = new ModelAndView("error", viewMap);
+        errorModelAndView.setStatus(HttpStatus.valueOf(status));
+
+        return errorModelAndView;
+    }
 }
 
 

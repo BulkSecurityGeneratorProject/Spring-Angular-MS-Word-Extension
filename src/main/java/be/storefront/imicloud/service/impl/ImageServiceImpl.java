@@ -27,7 +27,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImageServiceImpl implements ImageService{
 
     private final Logger log = LoggerFactory.getLogger(ImageServiceImpl.class);
-    
+
     @Inject
     private ImageRepository imageRepository;
 
@@ -54,10 +54,10 @@ public class ImageServiceImpl implements ImageService{
 
     /**
      *  Get all the images.
-     *  
+     *
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<ImageDTO> findAll() {
         log.debug("Request to get all Images");
         List<ImageDTO> result = imageRepository.findAllWithEagerRelationships().stream()
@@ -73,7 +73,7 @@ public class ImageServiceImpl implements ImageService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public ImageDTO findOne(Long id) {
         log.debug("Request to get Image : {}", id);
         Image image = imageRepository.findOneWithEagerRelationships(id);
@@ -105,5 +105,15 @@ public class ImageServiceImpl implements ImageService{
             .stream(imageSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .map(imageMapper::imageToImageDTO)
             .collect(Collectors.toList());
+    }
+
+    public boolean isImageInUse(Long imageId){
+        // Check use in block content
+
+        // Check use in block label (background)
+
+        // Check use as logo in branding
+
+        return true;
     }
 }

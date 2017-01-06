@@ -1,19 +1,17 @@
 package be.storefront.imicloud.web.rest.response;
 
-import be.storefront.imicloud.service.dto.ImDocumentDTO;
-
-import javax.servlet.http.HttpServletRequest;
+import be.storefront.imicloud.domain.ImDocument;
 
 /**
- * Created by wouter on 20/12/2016.
+ * Created by wouter on 06/01/2017.
  */
-public class ImDocumentUploaded {
+public class ImDocumentCompletelyUploaded {
 
-    private ImDocumentDTO imDocument;
+    private ImDocument imDocument;
     private String baseUrl;
 
-    public ImDocumentUploaded(ImDocumentDTO imDocumentDTO, String baseUrl){
-        this.imDocument = imDocumentDTO;
+    public ImDocumentCompletelyUploaded(ImDocument imDocument, String baseUrl){
+        this.imDocument = imDocument;
         this.baseUrl = baseUrl;
     }
 

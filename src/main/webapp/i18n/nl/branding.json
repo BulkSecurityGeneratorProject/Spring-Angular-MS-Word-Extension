@@ -19,6 +19,7 @@
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",
             "pageBackgroundColor": "Page Background Color",
+            "textColor": "Text Color",
             "logoImage": "Logo Image"
         }
     }

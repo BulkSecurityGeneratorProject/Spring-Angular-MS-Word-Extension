@@ -43,7 +43,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
     @NotNull
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.REMOVE)
     @JoinColumn(unique = true)
     private Branding branding;
 

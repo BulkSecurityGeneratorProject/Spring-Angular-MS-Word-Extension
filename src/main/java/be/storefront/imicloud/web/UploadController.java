@@ -2,6 +2,7 @@ package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.repository.ImBlockRepository;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.security.ImCloudSecurity;
@@ -13,7 +14,8 @@ import be.storefront.imicloud.service.dto.ImageDTO;
 import be.storefront.imicloud.service.mapper.ImBlockMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.service.mapper.ImageMapper;
-import be.storefront.imicloud.web.rest.response.ImDocumentUploaded;
+import be.storefront.imicloud.web.dom.DomHelper;
+import be.storefront.imicloud.web.rest.response.*;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.io.IOUtils;
@@ -89,6 +91,9 @@ public class UploadController {
     private ImBlockService imBlockService;
 
     @Inject
+    private ImBlockRepository imBlockRepository;
+
+    @Inject
     private ImDocumentMapper imDocumentMapper;
 
     @Inject
@@ -138,42 +143,64 @@ public class UploadController {
         }
     }
 
+    @GetMapping("/xml/reprocess")
+    @Timed
+    public
+    @ResponseBody
+    String reprocessSavedXmls(HttpServletResponse response) {
+        String r = "";
+
+        List<ImDocument> docs = imDocumentRepository.findAll();
+        for (ImDocument doc : docs) {
+            try {
+                doc = processXmlSavedInDocument(doc);
+                r += "Document " + doc.getId() + ": OK\n";
+            } catch (Exception e) {
+                r += "Document " + doc.getId() + ": ERROR: " + e.toString() + "\n";
+            }
+        }
+
+        return r;
+    }
+
 
     @PostMapping("/xml/")
     @Timed
     public
     @ResponseBody
-    ResponseEntity<ImDocumentUploaded> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam(value = "document_name") String documentName, @RequestParam("xml_file") MultipartFile file,
+    ResponseEntity<ImDocumentResponse> handleXmlFileUpload(@RequestParam(value = "password", required = false) String password, @RequestParam(value = "document_name") String documentName, @RequestParam("xml_file") MultipartFile file,
                                                            @RequestParam("template_code") String templateCode, @RequestParam("access_token") String accessToken,
                                                            RedirectAttributes redirectAttributes, HttpServletRequest request) throws ParserConfigurationException, TransformerException, SAXException, IOException {
 
         log.debug("XML upload request: {}", file.getOriginalFilename());
 
-        User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
+        try {
+            User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
-        if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
+            if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
+                if (imCloudSecurity.hasUserAvailableStorage(uploadingUser)) {
 
-            ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, templateCode, uploadingUser);
+                    ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, templateCode, uploadingUser);
 
-            String baseUrl = imCloudProperties.getBaseUrl();
-            ImDocumentUploaded imDocumentUploaded = new ImDocumentUploaded(newDocument, baseUrl);
+                    ImDocumentCreated imDocumentUploaded = new ImDocumentCreated(newDocument);
 
-            return ResponseEntity.ok().body(imDocumentUploaded);
+                    return ResponseEntity.ok().body(imDocumentUploaded);
 
+                } else {
+                    return ResponseEntity.status(400).body(new ImDocumentUploadError(ImDocumentUploadError.ERROR_STORAGE_FULL, "Storage full"));
+                }
+            } else {
+                return ResponseEntity.status(403).body(new ImDocumentUploadError(ImDocumentUploadError.ERROR_ACCESS_DENIED, "Access denied"));
 
-        } else {
-            return accessDeniedResponse();
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(new ImDocumentUploadError(ImDocumentUploadError.ERROR_OTHER, ex.getMessage()));
         }
     }
 
     @Transactional
     private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, String templateCode, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        // DELETE ALL PREVIOUS DOCUMENTS
-        List<ImDocument> existingDocs = imDocumentRepository.findByUserAndDocumentName(user.getId(), documentName);
 
-        for (ImDocument existingDoc : existingDocs) {
-            imDocumentRepository.delete(existingDoc.getId());
-        }
 
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
         String xmlString = IOUtils.toString(stream, "UTF-8");
@@ -187,27 +214,57 @@ public class UploadController {
             hashedPassword = passwordEncoder.encode(password);
         }
 
-        ImDocumentDTO newDocument = new ImDocumentDTO();
-        newDocument.setDocumentName(documentName);
-        newDocument.setOriginalXml(xmlString);
-        newDocument.setPassword(hashedPassword);
-        newDocument.setUserId(user.getId());
-        newDocument.setDefaultTemplate(templateCode);
+        // Test XML document
+        Document xmlDoc = getXmlDocumentFromString(xmlString);
 
+        // Look for existing document
+        List<ImDocument> existingDocs = imDocumentRepository.findByUserAndDocumentName(user.getId(), documentName);
+
+        ImDocument doc;
+
+        if (existingDocs.size() > 0) {
+            doc = existingDocs.get(0);
+
+        } else {
+            doc = new ImDocument();
+            doc.setDocumentName(documentName);
+            doc.setUser(user);
+        }
+
+        doc.setOriginalXml(xmlString);
+        doc.setPassword(hashedPassword);
+        doc.setDefaultTemplate(templateCode);
+
+        doc = imDocumentRepository.save(doc);
+
+        doc = processXmlSavedInDocument(doc);
+
+        return imDocumentMapper.imDocumentToImDocumentDTO(doc);
+    }
+
+    private Document getXmlDocumentFromString(String xml) throws IOException, SAXException, ParserConfigurationException {
+        // Check the XML
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        InputSource is = new InputSource(new StringReader(xmlString));
-        Document doc = dBuilder.parse(is);
-
+        InputSource is = new InputSource(new StringReader(xml));
+        Document xmlDoc = dBuilder.parse(is);
         //optional, but recommended, read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-        doc.getDocumentElement().normalize();
+        xmlDoc.getDocumentElement().normalize();
 
+        return xmlDoc;
+    }
 
-        newDocument = imDocumentService.save(newDocument);
+    private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
-        //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        // Delete old maps - if any
+        for (ImMap m : doc.getMaps()) {
+            imMapService.delete(m.getId());
+        }
+        doc.setMaps(null);
 
-        NodeList mapList = doc.getElementsByTagName("map");
+        // Process what's in the XML
+        Document xmlDoc = getXmlDocumentFromString(doc.getOriginalXml());
+        NodeList mapList = xmlDoc.getElementsByTagName("map");
 
         for (int i = 0; i < mapList.getLength(); i++) {
 
@@ -221,7 +278,7 @@ public class UploadController {
                 // Save all maps
                 ImMapDTO newMapDto = new ImMapDTO();
                 newMapDto.setGuid(mapGuid);
-                newMapDto.setImDocumentId(newDocument.getId());
+                newMapDto.setImDocumentId(doc.getId());
                 newMapDto.setLabel(mapLabel);
                 newMapDto.setPosition((float) i);
                 newMapDto = imMapService.save(newMapDto);
@@ -275,7 +332,10 @@ public class UploadController {
 //
 //                    }
         }
-        return newDocument;
+
+        doc = imDocumentRepository.save(doc);
+
+        return doc;
     }
 
 
@@ -339,6 +399,9 @@ public class UploadController {
         root.find("ol > ol").wrap("li");
         root.find("ol > ul").wrap("li");
         root.find("ul > ol").wrap("li");
+
+        // Unwrap nested <p><p>
+        root.find("p > p").rename("span");
 
         contentText = root.toString();
 
@@ -434,7 +497,7 @@ public class UploadController {
 
     @PostMapping("/image/")
     @Timed
-    public ResponseEntity<ImageDTO> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, @RequestParam("access_token") String accessToken, @RequestParam("source") String source, @RequestParam("document_id") Long documentId, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<ImageCreated> handleImageFileUpload(@RequestParam("image_file") MultipartFile file, @RequestParam("access_token") String accessToken, @RequestParam("source") String source, @RequestParam("document_id") Long documentId, RedirectAttributes redirectAttributes) {
 
         log.debug("Image upload request: {}", file.getOriginalFilename());
 
@@ -477,7 +540,7 @@ public class UploadController {
                             Image savedImage = processUploadedImage(file, source, document, contentType, width, height, uploadingUser);
 
                             return ResponseEntity.ok()
-                                .body(imageMapper.imageToImageDTO(savedImage));
+                                .body(new ImageCreated(savedImage));
 
                         } else {
                             // Invalid image dimensions
@@ -512,7 +575,7 @@ public class UploadController {
 
     @PostMapping("/complete")
     @Timed
-    public ResponseEntity<ImDocumentDTO> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId, @RequestParam(value = "send_email", required = false) Boolean sendEmail) {
+    public ResponseEntity<ImDocumentCompletelyUploaded> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId, @RequestParam(value = "send_email", required = false) Boolean sendEmail) {
         log.debug("Document complete request: {}", documentId);
 
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
@@ -528,7 +591,8 @@ public class UploadController {
                 mailService.sendDocumentUploadedEmail(uploadingUser, doc);
             }
 
-            return ResponseEntity.ok().body(imDocumentMapper.imDocumentToImDocumentDTO(doc));
+            String baseUrl = imCloudProperties.getBaseUrl();
+            return ResponseEntity.ok().body(new ImDocumentCompletelyUploaded(doc, baseUrl));
 
         } else {
             return accessDeniedResponse();
@@ -575,9 +639,7 @@ public class UploadController {
 
                 String blockContent = block.getContent();
 
-                blockContent = "<root>" + blockContent + "</root>";
-
-                Match root = $(blockContent);
+                Match root = DomHelper.getDomRoot(blockContent);
                 for (Match img : root.find("img[data-source]").each()) {
 
                     String imgSource = img.attr("data-source");
@@ -592,12 +654,11 @@ public class UploadController {
 
                 if (imageIsUsedInBlock) {
                     block.addImage(image);
-                    block.setContent(root.find("root").toString());
 
-                    // Save the block
-                    ImBlockDTO blockDto = imBlockMapper.imBlockToImBlockDTO(block);
+                    blockContent = DomHelper.domToString(root);
+                    block.setContent(blockContent);
 
-                    imBlockService.save(blockDto);
+                    block = imBlockRepository.save(block);
                 }
             }
         }

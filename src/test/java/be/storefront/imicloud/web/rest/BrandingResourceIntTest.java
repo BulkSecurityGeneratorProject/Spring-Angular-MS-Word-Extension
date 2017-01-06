@@ -41,14 +41,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = ImicloudApp.class)
 public class BrandingResourceIntTest {
 
-    private static final String DEFAULT_PRIMARY_COLOR = "AAAAAA";
-    private static final String UPDATED_PRIMARY_COLOR = "BBBBBB";
+    private static final String DEFAULT_PRIMARY_COLOR = "AAAAAAA";
+    private static final String UPDATED_PRIMARY_COLOR = "BBBBBBB";
 
-    private static final String DEFAULT_SECUNDARY_COLOR = "AAAAAA";
-    private static final String UPDATED_SECUNDARY_COLOR = "BBBBBB";
+    private static final String DEFAULT_SECUNDARY_COLOR = "AAAAAAA";
+    private static final String UPDATED_SECUNDARY_COLOR = "BBBBBBB";
 
-    private static final String DEFAULT_PAGE_BACKGROUND_COLOR = "AAAAAA";
-    private static final String UPDATED_PAGE_BACKGROUND_COLOR = "BBBBBB";
+    private static final String DEFAULT_PAGE_BACKGROUND_COLOR = "AAAAAAA";
+    private static final String UPDATED_PAGE_BACKGROUND_COLOR = "BBBBBBB";
+
+    private static final String DEFAULT_TEXT_COLOR = "AAAAAAA";
+    private static final String UPDATED_TEXT_COLOR = "BBBBBBB";
 
     @Inject
     private BrandingRepository brandingRepository;
@@ -95,7 +98,8 @@ public class BrandingResourceIntTest {
         Branding branding = new Branding()
                 .primaryColor(DEFAULT_PRIMARY_COLOR)
                 .secundaryColor(DEFAULT_SECUNDARY_COLOR)
-                .pageBackgroundColor(DEFAULT_PAGE_BACKGROUND_COLOR);
+                .pageBackgroundColor(DEFAULT_PAGE_BACKGROUND_COLOR)
+                .textColor(DEFAULT_TEXT_COLOR);
         return branding;
     }
 
@@ -125,6 +129,7 @@ public class BrandingResourceIntTest {
         assertThat(testBranding.getPrimaryColor()).isEqualTo(DEFAULT_PRIMARY_COLOR);
         assertThat(testBranding.getSecundaryColor()).isEqualTo(DEFAULT_SECUNDARY_COLOR);
         assertThat(testBranding.getPageBackgroundColor()).isEqualTo(DEFAULT_PAGE_BACKGROUND_COLOR);
+        assertThat(testBranding.getTextColor()).isEqualTo(DEFAULT_TEXT_COLOR);
 
         // Validate the Branding in ElasticSearch
         Branding brandingEs = brandingSearchRepository.findOne(testBranding.getId());
@@ -165,7 +170,8 @@ public class BrandingResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(branding.getId().intValue())))
             .andExpect(jsonPath("$.[*].primaryColor").value(hasItem(DEFAULT_PRIMARY_COLOR.toString())))
             .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())))
-            .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())));
+            .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())))
+            .andExpect(jsonPath("$.[*].textColor").value(hasItem(DEFAULT_TEXT_COLOR.toString())));
     }
 
     @Test
@@ -181,7 +187,8 @@ public class BrandingResourceIntTest {
             .andExpect(jsonPath("$.id").value(branding.getId().intValue()))
             .andExpect(jsonPath("$.primaryColor").value(DEFAULT_PRIMARY_COLOR.toString()))
             .andExpect(jsonPath("$.secundaryColor").value(DEFAULT_SECUNDARY_COLOR.toString()))
-            .andExpect(jsonPath("$.pageBackgroundColor").value(DEFAULT_PAGE_BACKGROUND_COLOR.toString()));
+            .andExpect(jsonPath("$.pageBackgroundColor").value(DEFAULT_PAGE_BACKGROUND_COLOR.toString()))
+            .andExpect(jsonPath("$.textColor").value(DEFAULT_TEXT_COLOR.toString()));
     }
 
     @Test
@@ -205,7 +212,8 @@ public class BrandingResourceIntTest {
         updatedBranding
                 .primaryColor(UPDATED_PRIMARY_COLOR)
                 .secundaryColor(UPDATED_SECUNDARY_COLOR)
-                .pageBackgroundColor(UPDATED_PAGE_BACKGROUND_COLOR);
+                .pageBackgroundColor(UPDATED_PAGE_BACKGROUND_COLOR)
+                .textColor(UPDATED_TEXT_COLOR);
         BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(updatedBranding);
 
         restBrandingMockMvc.perform(put("/api/brandings")
@@ -220,6 +228,7 @@ public class BrandingResourceIntTest {
         assertThat(testBranding.getPrimaryColor()).isEqualTo(UPDATED_PRIMARY_COLOR);
         assertThat(testBranding.getSecundaryColor()).isEqualTo(UPDATED_SECUNDARY_COLOR);
         assertThat(testBranding.getPageBackgroundColor()).isEqualTo(UPDATED_PAGE_BACKGROUND_COLOR);
+        assertThat(testBranding.getTextColor()).isEqualTo(UPDATED_TEXT_COLOR);
 
         // Validate the Branding in ElasticSearch
         Branding brandingEs = brandingSearchRepository.findOne(testBranding.getId());
@@ -281,6 +290,7 @@ public class BrandingResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(branding.getId().intValue())))
             .andExpect(jsonPath("$.[*].primaryColor").value(hasItem(DEFAULT_PRIMARY_COLOR.toString())))
             .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())))
-            .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())));
+            .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())))
+            .andExpect(jsonPath("$.[*].textColor").value(hasItem(DEFAULT_TEXT_COLOR.toString())));
     }
 }

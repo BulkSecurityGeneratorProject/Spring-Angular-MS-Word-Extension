@@ -8,18 +8,17 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.inject.Inject;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Created by wouter on 03/01/2017.
  */
+@Controller
 public class ImageController {
 
     @Inject
@@ -34,8 +33,6 @@ public class ImageController {
 
     @GetMapping("/image/{imageId}")
     public ResponseEntity<InputStreamResource> image(@PathVariable(value = "imageId") Long imageId) throws IOException {
-
-        // TODO check if user is allowed to see this image
 
         ImageDTO imageDTO = imageService.findOne(imageId);
         File file = fileStorageService.loadFile(imageDTO.getFilename());

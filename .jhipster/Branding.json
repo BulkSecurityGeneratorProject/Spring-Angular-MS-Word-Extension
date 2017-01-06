@@ -17,7 +17,7 @@
             "fieldValidateRules": [
                 "maxlength"
             ],
-            "fieldValidateRulesMaxlength": "6"
+            "fieldValidateRulesMaxlength": "7"
         },
         {
             "fieldName": "secundaryColor",
@@ -25,7 +25,7 @@
             "fieldValidateRules": [
                 "maxlength"
             ],
-            "fieldValidateRulesMaxlength": "6"
+            "fieldValidateRulesMaxlength": "7"
         },
         {
             "fieldName": "pageBackgroundColor",
@@ -33,7 +33,15 @@
             "fieldValidateRules": [
                 "maxlength"
             ],
-            "fieldValidateRulesMaxlength": "6"
+            "fieldValidateRulesMaxlength": "7"
+        },
+        {
+            "fieldName": "textColor",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "7"
         }
     ],
     "changelogDate": "20170106071301",

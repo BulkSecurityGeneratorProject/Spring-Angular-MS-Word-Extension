@@ -73,4 +73,13 @@ public class ImCloudSecurity {
             return false;
         }
     }
+
+    public boolean hasUserAvailableStorage(User uploadingUser) {
+        if(uploadingUser != null) {
+            // No limits in phase 1
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
