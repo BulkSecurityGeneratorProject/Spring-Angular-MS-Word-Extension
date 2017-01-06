@@ -21,7 +21,6 @@
             "imageWidth": "Image Width",
             "imageHeight": "Image Height",
             "contentLength": "Content Length",
-            "originalSource": "Original Source",
             "imBlock": "Im Block",
             "uploadedByUser": "Uploaded By User"
         }

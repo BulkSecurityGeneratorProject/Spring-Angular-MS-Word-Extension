@@ -54,10 +54,6 @@
             "fieldValidateRules": [
                 "required"
             ]
-        },
-        {
-            "fieldName": "originalSource",
-            "fieldType": "String"
         }
     ],
     "changelogDate": "20161216130940",

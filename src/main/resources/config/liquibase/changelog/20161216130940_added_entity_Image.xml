@@ -44,10 +44,6 @@
                 <constraints nullable="false" />
             </column>
             
-            <column name="original_source" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            
             <column name="uploaded_by_user_id" type="bigint">
                 <constraints nullable="false" />
             </column>

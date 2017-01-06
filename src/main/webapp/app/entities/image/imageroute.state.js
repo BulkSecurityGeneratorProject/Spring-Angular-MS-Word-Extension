@@ -109,7 +109,6 @@
                                 imageWidth: null,
                                 imageHeight: null,
                                 contentLength: null,
-                                originalSource: null,
                                 id: null
                             };
                         }
