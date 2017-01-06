@@ -1,0 +1,23 @@
+{
+    "imicloudApp": {
+        "branding" : {
+            "home": {
+                "title": "Brandings",
+                "createLabel": "Maak een nieuwe Branding",
+                "createOrEditLabel": "Maak of wijzig een Branding",
+                "search": "Search for Branding"
+            },
+            "created": "A new Branding is created with identifier {{ param }}",
+            "updated": "A Branding is updated with identifier {{ param }}",
+            "deleted": "A Branding is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u Branding {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "Branding"
+            },
+            "primaryColor": "Primary Color",
+            "secundaryColor": "Secundary Color"
+        }
+    }
+}

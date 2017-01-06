@@ -1,0 +1,28 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "primaryColor",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "6"
+        },
+        {
+            "fieldName": "secundaryColor",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "6"
+        }
+    ],
+    "changelogDate": "20170106071301",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "branding",
+    "pagination": "no",
+    "enableEntityAudit": true
+}

@@ -6,8 +6,19 @@
             "relationshipName": "folder",
             "otherEntityName": "folder",
             "otherEntityRelationshipName": "organization"
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "email",
+            "ownerSide": true
         }
     ],
+
     "fields": [
         {
             "fieldName": "name",
