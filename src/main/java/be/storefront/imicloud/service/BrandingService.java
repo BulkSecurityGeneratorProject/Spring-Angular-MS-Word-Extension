@@ -1,5 +1,6 @@
 package be.storefront.imicloud.service;
 
+import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.service.dto.BrandingDTO;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface BrandingService {
 
     /**
      *  Get all the brandings.
-     *  
+     *
      *  @return the list of entities
      */
     List<BrandingDTO> findAll();
@@ -42,8 +43,10 @@ public interface BrandingService {
      * Search for the branding corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @return the list of entities
      */
     List<BrandingDTO> search(String query);
+
+    Object findByDocument(ImDocument imDocument);
 }

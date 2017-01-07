@@ -6,6 +6,7 @@ import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
+import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.service.UrlHelperService;
@@ -14,6 +15,7 @@ import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.web.exception.AccessDeniedException;
 import be.storefront.imicloud.web.exception.NotFoundException;
 import be.storefront.imicloud.web.exception.UploadIncompleteException;
+import be.storefront.imicloud.web.helper.CssHelper;
 import be.storefront.imicloud.web.session.DocumentAccess;
 import be.storefront.imicloud.web.template.HtmlContentProcessor;
 import org.springframework.http.HttpStatus;
@@ -61,6 +63,8 @@ public class DocumentController {
     @Inject private UrlHelperService urlHelperService;
 
     @Inject private ImCloudProperties imCloudProperties;
+
+    @Inject private BrandingService brandingService;
 
     private PasswordEncoder documentPasswordEncoder = new DocumentPasswordEncoder();
 
@@ -128,6 +132,9 @@ public class DocumentController {
                     HashMap<String, Object> viewMap = new HashMap<>();
                     viewMap.put("baseUrl", imCloudProperties.getBaseUrl());
                     viewMap.put("logoUrl", urlHelperService.getLogoUrl(imDocument.getUser()));
+                    viewMap.put("branding", brandingService.findByDocument(imDocument));
+                    viewMap.put("cssHelper", new CssHelper());
+                    viewMap.put("urlHelperService", urlHelperService);
 
                     if (accessGranted) {
 

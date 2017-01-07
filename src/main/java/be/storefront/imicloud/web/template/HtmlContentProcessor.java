@@ -36,7 +36,7 @@ public class HtmlContentProcessor {
                 imageId = Long.parseLong(imageIdString);
                 Image image = imageRepository.findOne(imageId);
                 if (image != null) {
-                    String imgSrc = urlHelperService.getImagePublicUrl(image);
+                    String imgSrc = urlHelperService.getImageUrl(image);
                     img.attr("src", imgSrc);
                 }
 

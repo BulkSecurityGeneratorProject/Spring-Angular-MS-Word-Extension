@@ -1,9 +1,13 @@
 package be.storefront.imicloud.service.impl;
 
+import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.UserInfo;
+import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.domain.Branding;
 import be.storefront.imicloud.repository.BrandingRepository;
 import be.storefront.imicloud.repository.search.BrandingSearchRepository;
+import be.storefront.imicloud.service.UserInfoService;
 import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.mapper.BrandingMapper;
 import org.slf4j.Logger;
@@ -27,7 +31,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class BrandingServiceImpl implements BrandingService{
 
     private final Logger log = LoggerFactory.getLogger(BrandingServiceImpl.class);
-    
+
     @Inject
     private BrandingRepository brandingRepository;
 
@@ -36,6 +40,8 @@ public class BrandingServiceImpl implements BrandingService{
 
     @Inject
     private BrandingSearchRepository brandingSearchRepository;
+
+    @Inject private UserInfoRepository userInfoRepository;
 
     /**
      * Save a branding.
@@ -54,10 +60,10 @@ public class BrandingServiceImpl implements BrandingService{
 
     /**
      *  Get all the brandings.
-     *  
+     *
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<BrandingDTO> findAll() {
         log.debug("Request to get all Brandings");
         List<BrandingDTO> result = brandingRepository.findAll().stream()
@@ -73,7 +79,7 @@ public class BrandingServiceImpl implements BrandingService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public BrandingDTO findOne(Long id) {
         log.debug("Request to get Branding : {}", id);
         Branding branding = brandingRepository.findOne(id);
@@ -105,5 +111,16 @@ public class BrandingServiceImpl implements BrandingService{
             .stream(brandingSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .map(brandingMapper::brandingToBrandingDTO)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public Object findByDocument(ImDocument imDocument) {
+        if(imDocument != null){
+            UserInfo ui = userInfoRepository.findByUserId(imDocument.getUser().getId());
+            return ui.getOrganization().getBranding();
+        }else{
+            return null;
+        }
+
     }
 }

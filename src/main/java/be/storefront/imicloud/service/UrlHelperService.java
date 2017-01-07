@@ -29,7 +29,10 @@ public class UrlHelperService {
         return getDocumentPublicUrl(imDocument) + templateCode;
     }
 
-    public String getImagePublicUrl(Image image) {
+    public String getImageUrl(Image image) {
+        if(image == null){
+            return "";
+        }
         return imCloudProperties.getBaseUrl() + "image/" + image.getId() + "/" + image.getSecret() + "/";
     }
 
@@ -49,9 +52,9 @@ public class UrlHelperService {
         Branding branding = organization.getBranding();
 
         if(branding.getLogoImage() == null){
-            return null;
+            return "";
         }else {
-            return getImagePublicUrl(branding.getLogoImage());
+            return getImageUrl(branding.getLogoImage());
         }
 
     }

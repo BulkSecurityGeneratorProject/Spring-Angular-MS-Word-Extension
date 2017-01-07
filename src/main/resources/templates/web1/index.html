@@ -18,6 +18,73 @@
 
     <!--Custom styles-->
     <link rel="stylesheet" th:href="@{/content/templates/web1/styles/css/style.css}" href="content/templates/web1/styles/css/style.css" />
+    <style th:inline="text">
+        body{
+            color: [[${branding.textColor}]];
+        }
+        body, #right-side{
+            background: [[${branding.pageBackgroundColor}]];
+        }
+        #left-side,
+        .mobile-nav{
+            background: [[${cssHelper.darken(branding.pageBackgroundColor, 0.06)}]];
+            border-right-color: [[${cssHelper.darken(branding.pageBackgroundColor, 0.1)}]];
+        }
+        nav ul li .sub-nav li a{
+            color: [[${branding.textColor}]];
+        }
+        nav ul li .sub-nav li a.active, nav ul li .sub-nav li a.active i, nav ul li .sub-nav li a:hover, nav ul li .sub-nav li a:hover i{
+            color: [[${branding.primaryColor}]];
+        }
+
+        /* Title in left column */
+        ol li span, ul li span{
+            color: [[${branding.textColor}]];
+        }
+
+        .hamburger:hover{
+            background: [[${branding.primaryColor}]];
+        }
+
+        #right-side .part{
+            background-color: [[${branding.textColor}]];
+        }
+
+        #right-side .part .more, #right-side .part:hover:after{
+            background-color: [[${branding.primaryColor}]];
+        }
+
+        ol li, ul li{
+            color: [[${branding.textColor}]];
+        }
+
+        #right-side .view-content-slider.owl-carousel .owl-stage-outer{
+            border-top-color: [[${branding.primaryColor}]];
+        }
+
+        a.button,
+        #right-side .view-content-slider.owl-carousel .owl-controls .owl-nav .owl-next, #right-side .view-content-slider.owl-carousel .owl-controls .owl-nav .owl-prev{
+            color: [[${branding.primaryColor}]];
+            border-color: [[${branding.primaryColor}]];
+        }
+
+        a.button:hover,
+        #right-side .view-content-slider.owl-carousel .owl-controls .owl-nav .owl-next:hover, #right-side .view-content-slider.owl-carousel .owl-controls .owl-nav .owl-prev:hover{
+            background-color: [[${branding.primaryColor}]];
+            border-color: [[${branding.primaryColor}]];
+        }
+
+        #right-side table thead tr{
+            background: [[${branding.primaryColor}]];
+        }
+
+        .mobile-nav .close-mobile-nav{
+            color: [[${branding.textColor}]];
+        }
+        .mobile-nav .close-mobile-nav:hover{
+            color: [[${branding.primaryColor}]];
+        }
+    </style>
 
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -160,7 +227,9 @@ END INTRO: FULL SCREEN OVERLAY-->
                            href="..."
                            th:href="${'#'+mapIter.index + '|'+ blockIter.index}"
                            data-th-attr="data-viewid=${mapIter.index + '-content'}"
-                           class="part">
+                           class="part"
+                           th:style="|background-image: url('${urlHelperService.getImageUrl(block.labelImage)}')|"
+                       >
                             <span th:text="${block.label}">Block label</span>
                         </a>
 
