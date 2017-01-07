@@ -12,6 +12,8 @@
 
 
 spring:
+    application:
+        name: Information Mapping Cloud (LIVE)
     devtools:
         restart:
             enabled: false

@@ -14,15 +14,24 @@ public class UrlHelperService {
     private ImCloudProperties imCloudProperties;
 
     public String getDocumentPublicUrl(ImDocument imDocument) {
-        return imCloudProperties.getBaseUrl() + "document/" + imDocument.getId() + "/" + imDocument.getSecret()+"/";
+        return imCloudProperties.getBaseUrl() + "document/" + imDocument.getId() + "/" + imDocument.getSecret() + "/";
+    }
+
+    public Object getDocumentPublicUrl(ImDocument imDocument, String templateCode) {
+        return getDocumentPublicUrl(imDocument) + templateCode;
     }
 
     public String getImagePublicUrl(Image image) {
-        return imCloudProperties.getBaseUrl() + "image/" + image.getId() + "/" + image.getSecret()+"/";
+        return imCloudProperties.getBaseUrl() + "image/" + image.getId() + "/" + image.getSecret() + "/";
     }
 
 
     public String getLoginAndGotoDocumentUrl(ImDocument imDocument) {
-        return imCloudProperties.getBaseUrl()+"loginAndRedirect/document/"+imDocument.getId()+"?access_token=";
+        return imCloudProperties.getBaseUrl() + "loginAndRedirect/document/" + imDocument.getId() + "?access_token=";
+    }
+
+
+    public Object getDocumentPasswordSubmitUrl() {
+        return imCloudProperties.getBaseUrl() + "document/password/";
     }
 }
