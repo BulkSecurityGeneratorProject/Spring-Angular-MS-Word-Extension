@@ -30,6 +30,9 @@
             background: [[${cssHelper.darken(branding.pageBackgroundColor, 0.06)}]];
             border-right-color: [[${cssHelper.darken(branding.pageBackgroundColor, 0.1)}]];
         }
+        a{
+            color: [[${branding.primaryColor}]];
+        }
         nav ul li .sub-nav li a{
             color: [[${branding.textColor}]];
         }
@@ -139,6 +142,10 @@
                 </ul>
             </li>
         </ul>
+
+        <p>
+            <a href="#" th:href="${baseUrl}">&larr; <span th:text="#{document_view.back_to_home}">Back to home</span></a>
+        </p>
     </nav>
 </div>
 
@@ -202,6 +209,9 @@ END INTRO: FULL SCREEN OVERLAY-->
                     </ul>
                 </li>
             </ul>
+            <p>
+                <a href="#" th:href="${baseUrl}">&larr; <span th:text="#{document_view.back_to_home}">Back to home</span></a>
+            </p>
         </nav>
     </div>
 </section>
