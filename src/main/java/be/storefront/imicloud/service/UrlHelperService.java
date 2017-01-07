@@ -1,8 +1,8 @@
 package be.storefront.imicloud.service;
 
 import be.storefront.imicloud.config.ImCloudProperties;
-import be.storefront.imicloud.domain.ImDocument;
-import be.storefront.imicloud.domain.Image;
+import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.repository.OrganizationRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -12,6 +12,10 @@ public class UrlHelperService {
 
     @Inject
     private ImCloudProperties imCloudProperties;
+
+    @Inject
+    private OrganizationRepository organizationRepository;
+    private Branding branding;
 
     public String getDocumentPublicUrl(ImDocument imDocument) {
         return imCloudProperties.getBaseUrl() + "document/" + imDocument.getId() + "/" + imDocument.getSecret() + "/";
@@ -33,5 +37,13 @@ public class UrlHelperService {
 
     public Object getDocumentPasswordSubmitUrl() {
         return imCloudProperties.getBaseUrl() + "document/password/";
+    }
+
+    public Object getLogoUrl(User user) {
+
+        Organization organization = organizationRepository.findByUserId(user.getId());
+        Branding branding = organization.getBranding();
+
+
     }
 }

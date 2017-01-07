@@ -125,8 +125,12 @@ public class DocumentController {
                         template = imDocumentDto.getDefaultTemplate();
                     }
 
+                    HashMap<String, Object> viewMap = new HashMap<>();
+                    viewMap.put("baseUrl", imCloudProperties.getBaseUrl());
+                    viewMap.put("logoUrl", urlHelperService.getLogoUrl(imDocument.getUser()));
+
                     if (accessGranted) {
-                        HashMap<String, Object> viewMap = new HashMap<>();
+
                         viewMap.put("ImDocumentDTO", imDocumentDto);
                         viewMap.put("ImDocument", imDocument);
                         viewMap.put("HtmlContentProcessor", htmlContentProcessor);
@@ -135,9 +139,7 @@ public class DocumentController {
 
                     } else {
                         // Access denied due to wrong password
-                        HashMap<String, Object> viewMap = new HashMap<>();
                         viewMap.put("passwordSubmitUrl", urlHelperService.getDocumentPasswordSubmitUrl());
-                        viewMap.put("baseUrl", imCloudProperties.getBaseUrl());
                         viewMap.put("documentId", imDocument.getId());
                         viewMap.put("templateCode", templateCode);
 
