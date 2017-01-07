@@ -53,10 +53,16 @@
     <nav>
         <ul>
             <li>
+                <!--
                 <a href="#">
-                    <span th:text="${ImDocument.documentName}">Map name</span>
+                -->
+                    <span th:text="${ImDocument.documentName}">Document name</span>
+                    <!--
                     <i class="icon-plus"></i>
+                    -->
+                <!--
                 </a>
+                -->
                 <ul class="sub-nav">
                     <li th:each="map,iterStat : ${ImDocument.getMaps()}">
                         <a href="#" data-th-attr="data-viewid=${iterStat.index}" data-viewid="001" th:text="${map.label}">
@@ -110,10 +116,16 @@ END INTRO: FULL SCREEN OVERLAY-->
         <nav>
             <ul>
                 <li>
+                    <!--
                     <a href="#">
-                        <span th:text="${ImDocument.documentName}">Map name</span>
+                    -->
+                        <span th:text="${ImDocument.documentName}">Document name</span>
+                        <!--
                         <i class="icon-plus"></i>
+                        -->
+                    <!--
                     </a>
+                    -->
                     <ul class="sub-nav">
                         <li th:each="map,iterStat : ${ImDocument.getMaps()}">
                             <a href="#" data-th-attr="data-viewid=${iterStat.index}" data-viewid="001" th:text="${map.label}">

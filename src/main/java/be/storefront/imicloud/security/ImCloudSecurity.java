@@ -1,7 +1,13 @@
 package be.storefront.imicloud.security;
 
 import be.storefront.imicloud.config.ImCloudProperties;
+import be.storefront.imicloud.domain.Branding;
+import be.storefront.imicloud.domain.Organization;
 import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.domain.UserInfo;
+import be.storefront.imicloud.repository.BrandingRepository;
+import be.storefront.imicloud.repository.OrganizationRepository;
+import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.restclient.SimpleRestClient;
 import be.storefront.imicloud.service.MagentoCustomerService;
 import be.storefront.imicloud.service.UserService;
@@ -21,6 +27,8 @@ public class ImCloudSecurity {
 
     @Inject
     private MagentoCustomerService magentoCustomerService;
+
+
 
     // This class handles security features connected to the Word plugin FS Pro.
 
@@ -44,7 +52,11 @@ public class ImCloudSecurity {
             if (magentoCustomerId != null && magentoCustomerId.length() > 0) {
                 int magentoCustomerIdInteger = Integer.parseInt(magentoCustomerId);
 
-                return magentoCustomerService.getUserByMagentoCustomerId(magentoCustomerIdInteger);
+                User r = magentoCustomerService.getUserByMagentoCustomerId(magentoCustomerIdInteger);
+
+                userService.checkUserInfoAndOrganization(r, magentoCustomerIdInteger);
+
+                return r;
             }
 
         } catch (Exception e) {

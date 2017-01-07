@@ -124,8 +124,6 @@ public class UploadController {
     }
 
 
-    // TODO call to mark an upload as "finished"!
-
 
     @GetMapping("/xml/")
     @Timed

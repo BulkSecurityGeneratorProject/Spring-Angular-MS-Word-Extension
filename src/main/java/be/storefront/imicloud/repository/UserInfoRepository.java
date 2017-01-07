@@ -12,4 +12,5 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface UserInfoRepository extends JpaRepository<UserInfo,Long> {
 
+    UserInfo findByUserId(Long id);
 }

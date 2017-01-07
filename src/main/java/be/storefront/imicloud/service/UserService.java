@@ -1,10 +1,7 @@
 package be.storefront.imicloud.service;
 
-import be.storefront.imicloud.domain.Authority;
-import be.storefront.imicloud.domain.User;
-import be.storefront.imicloud.repository.AuthorityRepository;
-import be.storefront.imicloud.repository.PersistentTokenRepository;
-import be.storefront.imicloud.repository.UserRepository;
+import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.repository.*;
 import be.storefront.imicloud.repository.search.UserSearchRepository;
 import be.storefront.imicloud.security.AuthoritiesConstants;
 import be.storefront.imicloud.security.SecurityUtils;
@@ -45,6 +42,16 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
+
+    @Inject
+    private OrganizationRepository organizationRepository;
+
+    @Inject
+    private UserInfoRepository userInfoRepository;
+
+
+    @Inject
+    private BrandingRepository brandingRepository;
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -253,6 +260,39 @@ public class UserService {
             log.debug("Deleting not activated user {}", user.getLogin());
             userRepository.delete(user);
             userSearchRepository.delete(user);
+        }
+    }
+
+    /**
+     * Check if the user has a UserInfo and Organization attached, and if not, create default ones.
+     * @param u
+     */
+    public void checkUserInfoAndOrganization(User u, Integer magentoCustomerId){
+        UserInfo ui = userInfoRepository.findByUserId(u.getId());
+
+        if(ui == null){
+            // Create default branding
+            Branding b = new Branding();
+            b.setPageBackgroundColor("#FFFFFF");
+            b.setTextColor("#222222");
+            b.setPrimaryColor("#009edf");
+            b.setSecundaryColor("#d5155b");
+            b = brandingRepository.save(b);
+
+
+            // Create default organization
+            Organization o = new Organization();
+            o.setName(u.getFirstName() + "'s organization");
+            o.setMagentoCustomerId(magentoCustomerId);
+            o.setBranding(b);
+            o = organizationRepository.save(o);
+
+            // Create a new UserInfo object
+            ui = new UserInfo();
+            ui.setUser(u);
+            ui.setOrganization(o);
+
+            ui = userInfoRepository.save(ui);
         }
     }
 }

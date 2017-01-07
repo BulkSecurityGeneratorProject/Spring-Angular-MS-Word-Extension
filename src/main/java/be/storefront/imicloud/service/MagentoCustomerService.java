@@ -4,8 +4,10 @@ import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.Branding;
 import be.storefront.imicloud.domain.Organization;
 import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.domain.UserInfo;
 import be.storefront.imicloud.repository.BrandingRepository;
 import be.storefront.imicloud.repository.OrganizationRepository;
+import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.restclient.SimpleRestClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +34,6 @@ public class MagentoCustomerService {
 
     @Inject
     private PasswordEncoder passwordEncoder;
-
-    @Inject
-    private OrganizationRepository organizationRepository;
-    @Inject
-    private BrandingRepository brandingRepository;
 
     private final Logger log = LoggerFactory.getLogger(MagentoCustomerService.class);
 
@@ -80,33 +77,6 @@ public class MagentoCustomerService {
             r = userService.saveUser(r);
         }
 
-        // TODO fix this
-        //Organization organization = organizationRepository.findByUserId(r.getId());
-
-        Organization organization = null;
-
-        if (organization != null) {
-
-            // Create default branding
-            Branding b = new Branding();
-            b.setPageBackgroundColor("#FFFFFF");
-            b.setTextColor("#222222");
-            b.setPrimaryColor("#009edf");
-            b.setSecundaryColor("#d5155b");
-            b = brandingRepository.save(b);
-
-
-            // Create default organization
-            Organization o = new Organization();
-            o.setName(r.getFirstName() + "'s organization");
-            o.setMagentoCustomerId(customerId);
-            o.setBranding(b);
-
-            // TODO fix this
-            //o.setUser(r);
-            o = organizationRepository.save(o);
-        }
-
         return r;
     }
 
@@ -117,14 +87,18 @@ public class MagentoCustomerService {
         SimpleRestClient client = getHttpClient();
         JSONObject jsonObj = client.postAndReadJson(url, body);
 
-        int id = Integer.parseInt(jsonObj.getString("id"));
+        int magentoCustomerId = Integer.parseInt(jsonObj.getString("id"));
 
-        User u = getUserByMagentoCustomerId(id);
+        User u = getUserByMagentoCustomerId(magentoCustomerId);
 
         String hashedPassword = passwordEncoder.encode(password);
         u.setPassword(hashedPassword);
 
-        return userService.saveUser(u);
+        u = userService.saveUser(u);
+
+        userService.checkUserInfoAndOrganization(u, magentoCustomerId);
+
+        return u;
     }
 
     protected SimpleRestClient getHttpClient() {
