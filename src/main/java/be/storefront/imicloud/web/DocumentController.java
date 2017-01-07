@@ -4,6 +4,7 @@ package be.storefront.imicloud.web;
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.repository.ImDocumentRepository;
+import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
@@ -61,7 +62,7 @@ public class DocumentController {
 
     @Inject private ImCloudProperties imCloudProperties;
 
-    @Inject private PasswordEncoder passwordEncoder;
+    private PasswordEncoder documentPasswordEncoder = new DocumentPasswordEncoder();
 
 
     @GetMapping("/document/{documentId}/{secret}")
@@ -108,7 +109,7 @@ public class DocumentController {
                             // Someone else wants to see the document
                             String rememberedPass = documentAccess.getRememberedDocumentPassword(imDocument.getId());
 
-                            if (passwordEncoder.matches(rememberedPass, imDocument.getPassword())) {
+                            if (documentPasswordEncoder.matches(rememberedPass, imDocument.getPassword())) {
                                 // Access allowed
                             } else {
                                 accessGranted = false;

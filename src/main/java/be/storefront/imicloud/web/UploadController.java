@@ -6,6 +6,7 @@ import be.storefront.imicloud.repository.ImBlockRepository;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.repository.ImageSourcePathRepository;
+import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.service.*;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
@@ -113,7 +114,9 @@ public class UploadController {
     @Inject
     private UrlHelperService urlHelperService;
 
-    @Inject private PasswordEncoder passwordEncoder;
+    //@Inject private PasswordEncoder passwordEncoder;
+
+    private PasswordEncoder documentPasswordEncoder = new DocumentPasswordEncoder();
 
     @GetMapping("/")
     public String index() {
@@ -220,7 +223,7 @@ public class UploadController {
 
         String hashedPassword = null;
         if (password != null && password.length() > 0) {
-            hashedPassword = passwordEncoder.encode(password);
+            hashedPassword = documentPasswordEncoder.encode(password);
         }
 
         // Test XML document
