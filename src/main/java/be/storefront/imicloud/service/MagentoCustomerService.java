@@ -80,9 +80,12 @@ public class MagentoCustomerService {
             r = userService.saveUser(r);
         }
 
-        List<Organization> organizationList = organizationRepository.findByUserId(r.getId());
+        // TODO fix this
+        //Organization organization = organizationRepository.findByUserId(r.getId());
 
-        if (organizationList.size() == 0) {
+        Organization organization = null;
+
+        if (organization != null) {
 
             // Create default branding
             Branding b = new Branding();
@@ -98,7 +101,9 @@ public class MagentoCustomerService {
             o.setName(r.getFirstName() + "'s organization");
             o.setMagentoCustomerId(customerId);
             o.setBranding(b);
-            o.setUser(r);
+
+            // TODO fix this
+            //o.setUser(r);
             o = organizationRepository.save(o);
         }
 

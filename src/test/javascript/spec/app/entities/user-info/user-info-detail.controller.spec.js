@@ -2,9 +2,9 @@
 
 describe('Controller Tests', function() {
 
-    describe('Organization Management Detail Controller', function() {
+    describe('UserInfo Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockPreviousState, MockOrganization, MockFolder, MockBranding;
+        var MockEntity, MockPreviousState, MockUserInfo, MockUser, MockOrganization;
         var createController;
 
         beforeEach(inject(function($injector) {
@@ -12,9 +12,9 @@ describe('Controller Tests', function() {
             $scope = $rootScope.$new();
             MockEntity = jasmine.createSpy('MockEntity');
             MockPreviousState = jasmine.createSpy('MockPreviousState');
+            MockUserInfo = jasmine.createSpy('MockUserInfo');
+            MockUser = jasmine.createSpy('MockUser');
             MockOrganization = jasmine.createSpy('MockOrganization');
-            MockFolder = jasmine.createSpy('MockFolder');
-            MockBranding = jasmine.createSpy('MockBranding');
             
 
             var locals = {
@@ -22,19 +22,19 @@ describe('Controller Tests', function() {
                 '$rootScope': $rootScope,
                 'entity': MockEntity,
                 'previousState': MockPreviousState,
-                'Organization': MockOrganization,
-                'Folder': MockFolder,
-                'Branding': MockBranding
+                'UserInfo': MockUserInfo,
+                'User': MockUser,
+                'Organization': MockOrganization
             };
             createController = function() {
-                $injector.get('$controller')("OrganizationRouteDetailController", locals);
+                $injector.get('$controller')("UserInfoDetailController", locals);
             };
         }));
 
 
         describe('Root Scope Listening', function() {
             it('Unregisters root scope listener upon scope destruction', function() {
-                var eventType = 'imicloudApp:organizationUpdate';
+                var eventType = 'imicloudApp:userInfoUpdate';
 
                 createController();
                 expect($rootScope.$$listenerCount[eventType]).toEqual(1);

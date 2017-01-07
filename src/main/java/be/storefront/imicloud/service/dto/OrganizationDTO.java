@@ -20,11 +20,6 @@ public class OrganizationDTO extends AbstractAuditingDTO implements Serializable
     private Integer magentoCustomerId;
 
 
-    private Long userId;
-    
-
-    private String userEmail;
-
     private Long brandingId;
     
     public Long getId() {
@@ -47,23 +42,6 @@ public class OrganizationDTO extends AbstractAuditingDTO implements Serializable
 
     public void setMagentoCustomerId(Integer magentoCustomerId) {
         this.magentoCustomerId = magentoCustomerId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
     }
 
     public Long getBrandingId() {

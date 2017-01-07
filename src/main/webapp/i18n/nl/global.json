@@ -15,6 +15,7 @@
                 "imageroute": "Image",
                 "branding": "Branding",
                 "imageSourcePath": "Image Source Path",
+                "userInfo": "User Info",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

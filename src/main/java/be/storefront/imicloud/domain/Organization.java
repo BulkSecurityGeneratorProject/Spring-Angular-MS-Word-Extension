@@ -39,11 +39,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Folder> folders = new HashSet<>();
 
-    @ManyToOne
-    @NotNull
-    private User user;
-
-    @OneToOne(cascade=CascadeType.REMOVE)
+    @OneToOne
     @JoinColumn(unique = true)
     private Branding branding;
 
@@ -104,19 +100,6 @@ public class Organization extends AbstractAuditingEntity implements Serializable
 
     public void setFolders(Set<Folder> folders) {
         this.folders = folders;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Organization user(User user) {
-        this.user = user;
-        return this;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Branding getBranding() {

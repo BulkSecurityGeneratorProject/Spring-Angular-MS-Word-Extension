@@ -9,18 +9,15 @@ import java.util.List;
 /**
  * Mapper for the entity Organization and its DTO OrganizationDTO.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, })
+@Mapper(componentModel = "spring", uses = {})
 public interface OrganizationMapper {
 
-    @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "user.email", target = "userEmail")
     @Mapping(source = "branding.id", target = "brandingId")
     OrganizationDTO organizationToOrganizationDTO(Organization organization);
 
     List<OrganizationDTO> organizationsToOrganizationDTOs(List<Organization> organizations);
 
     @Mapping(target = "folders", ignore = true)
-    @Mapping(source = "userId", target = "user")
     @Mapping(source = "brandingId", target = "branding")
     Organization organizationDTOToOrganization(OrganizationDTO organizationDTO);
 

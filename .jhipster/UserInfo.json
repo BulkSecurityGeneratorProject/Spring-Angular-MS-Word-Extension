@@ -1,0 +1,26 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "ownerSide": true,
+            "otherEntityField": "email"
+        },
+        {
+            "relationshipName": "organization",
+            "otherEntityName": "organization",
+            "relationshipType": "many-to-one",
+            "otherEntityRelationshipName": "userInfo",
+            "otherEntityField": "name"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170107182503",
+    "dto": "mapstruct",
+    "service": "serviceImpl",
+    "entityTableName": "user_info",
+    "pagination": "pager",
+    "enableEntityAudit": true
+}

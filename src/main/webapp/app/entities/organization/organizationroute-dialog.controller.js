@@ -5,16 +5,15 @@
         .module('imicloudApp')
         .controller('OrganizationRouteDialogController', OrganizationRouteDialogController);
 
-    OrganizationRouteDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Organization', 'Folder', 'User', 'Branding'];
+    OrganizationRouteDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Organization', 'Folder', 'Branding'];
 
-    function OrganizationRouteDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Organization, Folder, User, Branding) {
+    function OrganizationRouteDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Organization, Folder, Branding) {
         var vm = this;
 
         vm.organization = entity;
         vm.clear = clear;
         vm.save = save;
         vm.folders = Folder.query();
-        vm.users = User.query();
         vm.brandings = Branding.query({filter: 'organization-is-null'});
         $q.all([vm.organization.$promise, vm.brandings.$promise]).then(function() {
             if (!vm.organization.brandingId) {

@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('OrganizationRouteDetailController', OrganizationRouteDetailController);
 
-    OrganizationRouteDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Organization', 'Folder', 'User', 'Branding'];
+    OrganizationRouteDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Organization', 'Folder', 'Branding'];
 
-    function OrganizationRouteDetailController($scope, $rootScope, $stateParams, previousState, entity, Organization, Folder, User, Branding) {
+    function OrganizationRouteDetailController($scope, $rootScope, $stateParams, previousState, entity, Organization, Folder, Branding) {
         var vm = this;
 
         vm.organization = entity;

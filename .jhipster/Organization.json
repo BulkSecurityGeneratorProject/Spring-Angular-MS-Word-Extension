@@ -8,21 +8,12 @@
             "otherEntityRelationshipName": "organization"
         },
         {
-            "relationshipName": "user",
-            "otherEntityName": "user",
-            "relationshipType": "one-to-many",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "email",
-            "ownerSide": true
-        },
-        {
             "relationshipName": "branding",
             "otherEntityName": "branding",
             "relationshipType": "one-to-one",
             "ownerSide": true,
-            "otherEntityRelationshipName": "organization"
+            "otherEntityRelationshipName": "organization",
+            "otherEntityField": "id"
         }
     ],
     "fields": [

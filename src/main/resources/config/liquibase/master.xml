@@ -14,6 +14,7 @@
     <include file="classpath:config/liquibase/changelog/20161216131606_added_entity_EntityAuditEvent.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170106071301_added_entity_Branding.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170106125306_added_entity_ImageSourcePath.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170107182503_added_entity_UserInfo.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20161216130936_added_entity_constraints_Folder.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161216130937_added_entity_constraints_ImDocument.xml" relativeToChangelogFile="false"/>
@@ -23,5 +24,6 @@
     <include file="classpath:config/liquibase/changelog/20170106071301_added_entity_constraints_Branding.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161216130935_added_entity_constraints_Organization.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170106125306_added_entity_constraints_ImageSourcePath.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170107182503_added_entity_constraints_UserInfo.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

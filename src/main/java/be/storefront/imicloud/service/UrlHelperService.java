@@ -41,9 +41,9 @@ public class UrlHelperService {
 
     public Object getLogoUrl(User user) {
 
-        Organization organization = organizationRepository.findByUserId(user.getId());
-        Branding branding = organization.getBranding();
-
+        //Organization organization = organizationRepository.findByUserId(user.getId());
+        //Branding branding = organization.getBranding();
+return "";
 
     }
 }

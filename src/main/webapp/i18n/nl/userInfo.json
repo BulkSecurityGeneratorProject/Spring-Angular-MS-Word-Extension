@@ -1,0 +1,23 @@
+{
+    "imicloudApp": {
+        "userInfo" : {
+            "home": {
+                "title": "User Infos",
+                "createLabel": "Maak een nieuwe User Info",
+                "createOrEditLabel": "Maak of wijzig een User Info",
+                "search": "Search for User Info"
+            },
+            "created": "A new User Info is created with identifier {{ param }}",
+            "updated": "A User Info is updated with identifier {{ param }}",
+            "deleted": "A User Info is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Bent u zeker dat u User Info {{ id }} wilt verwijderen?"
+            },
+            "detail": {
+                "title": "User Info"
+            },
+            "user": "User",
+            "organization": "Organization"
+        }
+    }
+}
