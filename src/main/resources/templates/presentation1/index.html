@@ -103,9 +103,44 @@
 
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script th:src="@{/content/templates/presentation1/js/reveal.js}" src="js/reveal.js"></script>
 <script>
     Reveal.initialize();
+
+    Reveal.addEventListener( 'slidechanged', function( event ) {
+        // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+
+        fitBlockSlide();
+
+    } );
+
+    $(window).resize(fitBlockSlide);
+
+    function fitBlockSlide(){
+        var block = $('section > section.present .block');
+        if(block.length == 1){
+            var windowHeight = $(window).height();
+
+            var blockOffset = block.offset();
+            if(blockOffset){
+                var blockOffsetTop = blockOffset.top;
+                // Remove previous height
+                block.css('height', 'auto');
+                var blockHeight = block.outerHeight();
+
+                var blockEndY = blockOffsetTop + blockHeight;
+
+                if(blockEndY > windowHeight){
+                    // The block continues outside the page
+                    var availableHeight = windowHeight - blockOffsetTop;
+
+                    block.css('overflow', 'scroll');
+                    block.css('height', availableHeight);
+                }
+            }
+        }
+    }
 </script>
 
 
