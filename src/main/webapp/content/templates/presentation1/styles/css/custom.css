@@ -1,0 +1,9 @@
+#use-arrow-keys{
+    margin-top: 2em;
+    opacity: 0.5;
+    font-size: 80%;
+}
+
+.reveal .controls .enabled{
+    opacity: 1;
+}

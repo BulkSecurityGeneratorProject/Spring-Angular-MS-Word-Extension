@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org " lang="en">
+<head>
+    <!-- Global Metas
+============================================================================================================================================== -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title th:text="${ImDocument.documentName}">Document Name</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <!-- CSS
+    ============================================================================================================================================== -->
+
+    <!--Google font: Open Sans: light / regular / semi-bold / bold-->
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+
+    <!--Custom styles-->
+    <link rel="stylesheet" th:href="@{/content/templates/presentation1/styles/css/reveal.css}" href="content/templates/presentation1/styles/css/reveal.css" />
+    <link rel="stylesheet" th:href="@{/content/templates/presentation1/styles/css/theme/white.css}" href="content/templates/presentation1/styles/css/theme/white.css" />
+    <link rel="stylesheet" th:href="@{/content/templates/presentation1/styles/css/custom.css}" href="content/templates/presentation1/styles/css/custom.css" />
+    <style th:inline="text">
+        body{
+            color: [[${branding.textColor}]];
+            background: [[${branding.pageBackgroundColor}]];
+        }
+        section a{
+            color: [[${branding.primaryColor}]] !important;
+            text-decoration: underline !important;
+        }
+        h1{
+            color: [[${branding.primaryColor}]] !important;
+        }
+        h2{
+            color: [[${branding.primaryColor}]] !important;
+        }
+        .reveal .controls .navigate-right, .reveal .controls .navigate-right.enabled {
+            border-left-color: [[${branding.primaryColor}]] !important;
+        }
+        .reveal .controls .navigate-left, .reveal .controls .navigate-left.enabled{
+            border-right-color: [[${branding.primaryColor}]] !important;
+        }
+        .reveal .controls .navigate-down, .reveal .controls .navigate-down.enabled{
+            border-top-color: [[${branding.primaryColor}]] !important;
+        }
+        .reveal .controls .navigate-up, .reveal .controls .navigate-up.enabled{
+            border-bottom-color: [[${branding.primaryColor}]] !important;
+        }
+
+    </style>
+
+    <!-- Favicons
+    ==============================================================================================================================================
+    <link rel="shortcut icon" href="images/favicons/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/favicons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png" />
+    -->
+</head>
+<body>
+
+
+
+<div class="reveal">
+    <div class="slides">
+
+        <!-- First slide -->
+        <section data-transition="slide">
+            <h1 th:text="${ImDocument.documentName}">Document name</h1>
+            <p id="use-arrow-keys" th:text="#{document_view.press_space_to_navigate_slides}">Use the arrow keys to navigate</p>
+            <!--
+            <p>
+                <a href="#" th:href="${baseUrl}">&larr; <span th:text="#{document_view.back_to_home}">Back to home</span></a>
+            </p>
+            -->
+        </section>
+
+        <!-- Maps -->
+        <section data-transition="slide" th:each="map,iterStat : ${ImDocument.getMaps()}">
+            <section>
+                <h2 th:text="${map.label}">Map label</h2>
+            </section>
+
+            <!-- Loop all blocks -->
+            <section th:each="block,blockIter : ${map.getBlocks()}">
+                <h2 th:text="${block.label}">Block label</h2>
+                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent())}">
+                    Block content
+                </div>
+            </section>
+        </section>
+
+        <!-- Thanks for watching -->
+        <section data-transition="slide">
+            <h2 th:text="#{document_view.thanks_for_watching}">Thanks for watching</h2>
+            <p>
+                <a href="#" th:href="${baseUrl}"><span th:text="#{document_view.all_documents}">All documents</span></a>
+            </p>
+
+        </section>
+
+    </div>
+</div>
+<script th:src="@{/content/templates/presentation1/js/reveal.js}" src="js/reveal.js"></script>
+<script>
+    Reveal.initialize();
+</script>
+
+
+</body>
+</html>
