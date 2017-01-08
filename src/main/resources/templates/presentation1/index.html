@@ -111,11 +111,41 @@
     Reveal.addEventListener( 'slidechanged', function( event ) {
         // event.previousSlide, event.currentSlide, event.indexh, event.indexv
 
-        fitBlockSlide();
+        resetHeights();
+
+        setTimeout(fitBlockSlide, 1000);
+        //fitBlockSlide();
 
     } );
 
+    /*
+    setInterval(function(){
+        var block = $('section > section.present .block');
+        if(block.length > 0){
+            var blockOffsetTop = block.offset().top;
+            var windowHeight = $(window).height();
+
+            var scale = Reveal.getScale();
+            var availableHeight = (windowHeight - blockOffsetTop) / scale;
+
+            block.css('overflow', 'scroll');
+            block.css('height', availableHeight);
+
+            console.log('offset = '+blockOffsetTop+', window height = '+windowHeight+', block height = '+availableHeight);
+
+
+        }
+
+    }, 250);
+    */
+
     $(window).resize(fitBlockSlide);
+
+    function resetHeights(){
+        var blocks = $('section > section .block');
+        blocks.css('height', 'auto');
+        blocks.css('overflow', 'auto');
+    }
 
     function fitBlockSlide(){
         var block = $('section > section.present .block');
@@ -133,10 +163,16 @@
 
                 if(blockEndY > windowHeight){
                     // The block continues outside the page
-                    var availableHeight = windowHeight - blockOffsetTop;
 
-                    block.css('overflow', 'scroll');
-                    block.css('height', availableHeight);
+                    var scale = Reveal.getScale();
+                    var availableHeight = (windowHeight - blockOffsetTop) / scale;
+
+                    if(availableHeight > 0){
+                        console.log('SET availableHeight = '+availableHeight);
+
+                        block.css('overflow', 'scroll');
+                        block.css('height', availableHeight);
+                    }
                 }
             }
         }
