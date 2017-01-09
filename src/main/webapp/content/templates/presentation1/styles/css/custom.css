@@ -7,3 +7,41 @@
 .reveal .controls .enabled{
     opacity: 1;
 }
+
+.scroll-for-more{
+    overflow: scroll;
+}
+
+.scroll-for-more .spacer{
+    display: block !important;
+}
+
+.scroll-for-more .scroll-bottom{
+    display: block;
+}
+
+.scroll-bottom{
+    display: none;
+    position: relative;
+    top: -1.5em;
+    height: 2em;
+    z-index: 100;
+    padding-top: 0.5em;
+}
+
+.scroll-bottom .text{
+    opacity: 0.5;
+    font-size: 55% !important;
+}
+
+.scroll-for-more .block-content{
+    padding-bottom: 2em;
+}
+
+section .block{
+    -webkit-transition: height 1s;
+    -moz-transition: height 1s;
+    -ms-transition: height 1s;
+    -o-transition: height 1s;
+    transition: height 1s;
+}

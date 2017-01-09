@@ -47,6 +47,9 @@
         .reveal .controls .navigate-up, .reveal .controls .navigate-up.enabled{
             border-bottom-color: [[${branding.primaryColor}]] !important;
         }
+        .scroll-bottom{
+            background: [[${branding.pageBackgroundColor}]];
+        }
 
     </style>
 
@@ -69,7 +72,11 @@
         <section data-transition="slide">
             <img th:src="${logoUrl}" src="..." />
             <h1 th:text="${ImDocument.documentName}">Document name</h1>
-            <p id="use-arrow-keys" th:text="#{document_view.press_space_to_navigate_slides}">Use the arrow keys to navigate</p>
+            <p id="use-arrow-keys">
+                <span th:text="#{document_view.press_space_to_navigate_slides}">Use the arrow keys to navigate</span>
+                <br/>
+                <span th:text="#{document_view.scroll_in_large_text_and_tables}">You can scroll in large text and tables.</span>
+            </p>
             <!--
             <p>
                 <a href="#" th:href="${baseUrl}">&larr; <span th:text="#{document_view.back_to_home}">Back to home</span></a>
@@ -86,8 +93,23 @@
             <!-- Loop all blocks -->
             <section th:each="block,blockIter : ${map.getBlocks()}">
                 <h2 th:text="${block.label}">Block label</h2>
-                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent())}">
-                    Block content
+                <div class="block-wrapper">
+                    <div class="block" >
+                        <div class="block-content" th:utext="${HtmlContentProcessor.process(block.getContent())}">
+                            Block content
+                        </div>
+                        <p class="spacer" style="display: none;">&nbsp;</p>
+                    </div>
+                    <!--
+                    <div class="scroll-bottom">
+                        <div class="text">
+                            <span>&darr;</span>
+                            <span th:text="#{document_view.scroll_to_see_more}">
+                                Scroll to see more
+                            </span>
+                        </div>
+                    </div>
+                    -->
                 </div>
             </section>
         </section>
@@ -142,20 +164,23 @@
     $(window).resize(fitBlockSlide);
 
     function resetHeights(){
+        $('section .block-wrapper').removeClass('scroll-for-more');
+
         var blocks = $('section > section .block');
         blocks.css('height', 'auto');
-        blocks.css('overflow', 'auto');
     }
 
     function fitBlockSlide(){
         var block = $('section > section.present .block');
         if(block.length == 1){
+            var blockWrapper = block.closest('.block-wrapper');
             var windowHeight = $(window).height();
 
             var blockOffset = block.offset();
             if(blockOffset){
                 var blockOffsetTop = blockOffset.top;
                 // Remove previous height
+                blockWrapper.removeClass('scroll-for-more');
                 block.css('height', 'auto');
                 var blockHeight = block.outerHeight();
 
@@ -168,9 +193,7 @@
                     var availableHeight = (windowHeight - blockOffsetTop) / scale;
 
                     if(availableHeight > 0){
-                        console.log('SET availableHeight = '+availableHeight);
-
-                        block.css('overflow', 'scroll');
+                        blockWrapper.addClass('scroll-for-more');
                         block.css('height', availableHeight);
                     }
                 }
