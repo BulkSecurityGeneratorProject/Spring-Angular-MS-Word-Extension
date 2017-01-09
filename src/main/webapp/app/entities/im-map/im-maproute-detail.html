@@ -1,0 +1,35 @@
+
+<div>
+    <h2><span data-translate="imicloudApp.imMap.detail.title">Im Map</span> {{vm.imMap.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="imicloudApp.imMap.guid">Guid</span></dt>
+        <dd>
+            <span>{{vm.imMap.guid}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.imMap.label">Label</span></dt>
+        <dd>
+            <span>{{vm.imMap.label}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.imMap.position">Position</span></dt>
+        <dd>
+            <span>{{vm.imMap.position}}</span>
+        </dd>
+        <dt><span data-translate="imicloudApp.imMap.imDocument">Im Document</span></dt>
+        <dd>
+            <a ui-sref="im-documentroute-detail({id:vm.imMap.imDocumentId})">{{vm.imMap.imDocumentId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="im-maproute-detail.edit({id:vm.imMap.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>
