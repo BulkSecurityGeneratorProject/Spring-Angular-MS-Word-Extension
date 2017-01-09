@@ -4,44 +4,50 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
+        <!--
         <dt><span data-translate="imicloudApp.imDocument.language">Language</span></dt>
         <dd>
             <span>{{vm.imDocument.language}}</span>
         </dd>
+        -->
         <dt><span data-translate="imicloudApp.imDocument.password">Password</span></dt>
         <dd>
             <span>{{vm.imDocument.password}}</span>
         </dd>
-        <dt><span data-translate="imicloudApp.imDocument.documentName">Document Name</span></dt>
+        <dt><span data-translate="imicloudApp.imDocument.documentName">Publication Name</span></dt>
         <dd>
             <span>{{vm.imDocument.documentName}}</span>
         </dd>
+        <!--
         <dt><span data-translate="imicloudApp.imDocument.originalXml">Original Xml</span></dt>
         <dd>
             <span>{{vm.imDocument.originalXml}}</span>
         </dd>
+
         <dt><span data-translate="imicloudApp.imDocument.secret">Secret</span></dt>
         <dd>
             <span>{{vm.imDocument.secret}}</span>
         </dd>
-        <dt><span data-translate="imicloudApp.imDocument.defaultTemplate">Default Template</span></dt>
+
+        <dt><span data-translate="imicloudApp.imDocument.defaultTemplate">Template</span></dt>
         <dd>
             <span>{{vm.imDocument.defaultTemplate}}</span>
         </dd>
-        <dt><span data-translate="imicloudApp.imDocument.uploadComplete">Upload Complete</span></dt>
-        <dd>
-            <span>{{vm.imDocument.uploadComplete}}</span>
-        </dd>
-        <dt><span data-translate="imicloudApp.imDocument.folder">Folder</span></dt>
-        <!--
-        <dd>
-            <a ui-sref="folderroute-detail({id:vm.imDocument.folderId})">{{vm.imDocument.folderId}}</a>
-        </dd>
-        <dt><span data-translate="imicloudApp.imDocument.user">User</span></dt>
-        <dd>
-            {{vm.imDocument.userEmail}}
-        </dd>
-        -->
+
+       <dt><span data-translate="imicloudApp.imDocument.uploadComplete">Upload Complete</span></dt>
+       <dd>
+           <span>{{vm.imDocument.uploadComplete}}</span>
+       </dd>
+
+       <dt><span data-translate="imicloudApp.imDocument.folder">Folder</span></dt>
+       <dd>
+           <a ui-sref="folderroute-detail({id:vm.imDocument.folderId})">{{vm.imDocument.folderId}}</a>
+       </dd>
+       <dt><span data-translate="imicloudApp.imDocument.user">User</span></dt>
+       <dd>
+           {{vm.imDocument.userEmail}}
+       </dd>
+       -->
     </dl>
 
     <button type="submit"

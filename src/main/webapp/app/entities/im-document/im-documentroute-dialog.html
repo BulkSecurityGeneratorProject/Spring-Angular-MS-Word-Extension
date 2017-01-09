@@ -8,35 +8,42 @@
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
+        <!--
         <div class="form-group" ng-show="vm.imDocument.id">
             <label for="id" data-translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.imDocument.id" readonly />
         </div>
+        -->
         <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.imDocument.language" for="field_language">Language</label>
-            <input type="text" class="form-control" name="language" id="field_language"
-                    ng-model="vm.imDocument.language"
-                     />
+            <label class="control-label" data-translate="imicloudApp.imDocument.documentName" for="field_documentName">Document Name</label>
+            <input type="text" class="form-control" name="documentName" id="field_documentName"
+                   ng-model="vm.imDocument.documentName"
+                   required />
+            <div ng-show="editForm.documentName.$invalid">
+                <p class="help-block"
+                   ng-show="editForm.documentName.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
         </div>
+
         <div class="form-group">
             <label class="control-label" data-translate="imicloudApp.imDocument.password" for="field_password">Password</label>
             <input type="text" class="form-control" name="password" id="field_password"
                     ng-model="vm.imDocument.password"
                      />
         </div>
+
+
+        <!--
         <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.imDocument.documentName" for="field_documentName">Document Name</label>
-            <input type="text" class="form-control" name="documentName" id="field_documentName"
-                    ng-model="vm.imDocument.documentName"
-                    required />
-            <div ng-show="editForm.documentName.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.documentName.$error.required" data-translate="entity.validation.required">
-                    This field is required.
-                </p>
-            </div>
+            <label class="control-label" data-translate="imicloudApp.imDocument.language" for="field_language">Language</label>
+            <input type="text" class="form-control" name="language" id="field_language"
+                    ng-model="vm.imDocument.language"
+                     />
         </div>
+
         <div class="form-group">
             <label class="control-label" data-translate="imicloudApp.imDocument.originalXml" for="field_originalXml">Original Xml</label>
                 <textarea class="form-control" name="originalXml" id="field_originalXml"
@@ -73,7 +80,7 @@
                      />
         </div>
 
-        <!--
+
         <div class="form-group">
             <label data-translate="imicloudApp.imDocument.folder" for="field_folder">Folder</label>
             <select class="form-control" id="field_folder" name="folder" ng-model="vm.imDocument.folderId" ng-options="folder.id as folder.id for folder in vm.folders"            >

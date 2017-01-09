@@ -18,7 +18,7 @@
             },
             "language": "Language",
             "password": "Password",
-            "documentName": "Document Name",
+            "documentName": "Publication Name",
             "originalXml": "Original Xml",
             "secret": "Secret",
             "defaultTemplate": "Template",
