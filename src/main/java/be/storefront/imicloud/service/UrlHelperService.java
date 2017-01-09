@@ -4,6 +4,8 @@ import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.UserInfoRepository;
+import be.storefront.imicloud.service.dto.ImDocumentDTO;
+import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -21,8 +23,16 @@ public class UrlHelperService {
     @Inject
     private UserInfoRepository userInfoRepository;
 
+    @Inject
+    private ImDocumentMapper imDocumentMapper;
+
     public String getDocumentPublicUrl(ImDocument imDocument) {
         return imCloudProperties.getBaseUrl() + "document/" + imDocument.getId() + "/" + imDocument.getSecret() + "/";
+    }
+
+    public String getDocumentPublicUrl(ImDocumentDTO imDocumentDto) {
+        ImDocument imDocument = imDocumentMapper.imDocumentDTOToImDocument(imDocumentDto);
+        return getDocumentPublicUrl(imDocument);
     }
 
     public Object getDocumentPublicUrl(ImDocument imDocument, String templateCode) {

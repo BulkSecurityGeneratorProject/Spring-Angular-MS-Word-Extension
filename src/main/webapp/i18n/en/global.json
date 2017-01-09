@@ -1,6 +1,6 @@
 {
     "global": {
-        "title": "Imicloud",
+        "title": "Information Mapping Cloud",
         "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
         "menu": {
             "home": "Home",
@@ -9,14 +9,14 @@
                 "main": "Entities",
                 "organizationroute": "Organization",
                 "folderroute": "Folder",
-                "imDocumentroute": "Im Document",
+                "imDocumentroute": "My Publications",
                 "imMaproute": "Im Map",
                 "imBlockroute": "Im Block",
                 "imageroute": "Image",
                 "branding": "Branding",
                 "imageSourcePath": "Image Source Path",
                 "userInfo": "User Info",
-                "imDocument": "Im Document",
+                "imDocument": "Publications",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

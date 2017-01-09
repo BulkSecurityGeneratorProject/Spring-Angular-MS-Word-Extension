@@ -1,5 +1,7 @@
 package be.storefront.imicloud.service.dto;
 
+import be.storefront.imicloud.service.UrlHelperService;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -35,11 +37,17 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
 
     private Long folderId;
-    
+
     private Long userId;
-    
+
 
     private String userEmail;
+
+    private UrlHelperService urlHelperService;
+
+    public void setUrlHelperService(UrlHelperService urlHelperService){
+this.urlHelperService = urlHelperService;
+    }
 
     public Long getId() {
         return id;
@@ -121,6 +129,14 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getPublicViewUrl(){
+        if(urlHelperService == null){
+            return null;
+        }else {
+            return urlHelperService.getDocumentPublicUrl(this);
+        }
     }
 
     @Override

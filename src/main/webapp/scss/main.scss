@@ -1,6 +1,10 @@
+$brand-primary: #009edf;
+$btn-primary-bg: $brand-primary;
+$btn-primary-border: $brand-primary;
+
 body {
     background: #fafafa;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
 }
 
@@ -15,6 +19,7 @@ Hide ng-cloak on page load, https://docs.angularjs.org/api/ng/directive/ngCloak
 Development Ribbon
 ========================================================================== */
 .ribbon {
+    display: none;
     background-color: #a00;
     box-shadow: 0 0 10px #888;
     left: -3.5em;
@@ -47,14 +52,6 @@ Development Ribbon
 }
 
 /* ==========================================================================
-Version number in navbar
-========================================================================== */
-.navbar-version {
-    font-size: 10px;
-    color: #ccc
-}
-
-/* ==========================================================================
 Browser Upgrade Prompt
 ========================================================================== */
 .browserupgrade {
@@ -65,7 +62,7 @@ Browser Upgrade Prompt
 }
 
 /* ==========================================================================
-Logo styles
+Logo & Navbar styles
 ========================================================================== */
 .navbar-brand {
     &.logo {
@@ -76,51 +73,43 @@ Logo styles
         }
     }
 }
+.navbar-primary{
+    background: $brand-primary;
+
+
+    .navbar-header{
+        a{
+            color: #FFF;
+        }
+    }
+
+
+    .navbar-nav > li > a {
+        text-transform: uppercase;
+        color: #FFF;
+        background-color: $brand-primary;
+    }
+
+    .navbar-nav > li > a:hover,
+    .navbar-nav > li.open > a {
+        background-color: darken($brand-primary, 5%) !important;
+    }
+}
+
 
 /* ==========================================================================
 Main page styles
 ========================================================================== */
-.hero-unit {
-    margin: 50px auto 0 auto;
-    width: 300px;
-    font-size: 18px;
-    font-weight: 200;
-    line-height: 30px;
-    background-color: #eee;
-    border-radius: 6px;
-    padding: 60px;
-    h1 {
-        font-size: 60px;
-        line-height: 1;
-        letter-spacing: -1px;
-    }
-}
 
-.hipster {
-    display: inline-block;
-    width: 347px;
-    height: 497px;
-    background: url("../images/hipster.png") no-repeat center top;
-    background-size: contain;
-}
-
-/* wait autoprefixer update to allow simple generation of high pixel density media query */
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (     -o-min-device-pixel-ratio: 2/1),
-only screen and (        min-device-pixel-ratio: 2),
-only screen and (                min-resolution: 192dpi),
-only screen and (                min-resolution: 2dppx) {
-    .hipster {
-        background: url("../images/hipster2x.png") no-repeat center top;
-        background-size: contain;
-    }
-}
 
 /* ==========================================================================
 Generic styles
 ========================================================================== */
+.btn-primary{
+    background: $brand-primary;
+    border-color: $brand-primary;
+}
+
 .error {
     color: white;
     background-color: red;

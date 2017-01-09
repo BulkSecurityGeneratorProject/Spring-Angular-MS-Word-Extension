@@ -16,12 +16,12 @@
                     <div class="input-group pull-right" >
                         <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'imicloudApp.imDocument.home.search' | translate }}">
                         <span  class="input-group-btn width-min" >
-                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                            <button class="btn btn-primary" ng-click="vm.search(vm.searchQuery)">
                                 <span class="glyphicon glyphicon-search"></span>
                             </button>
                         </span>
                         <span class="input-group-btn width-min" ng-if="vm.currentSearch">
-                            <button class="btn btn-info" ng-click="vm.clear()">
+                            <button class="btn btn-primary" ng-click="vm.clear()">
                                 <span class="glyphicon glyphicon-trash"></span>
                             </button>
                         </span>
@@ -35,29 +35,29 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
-                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="language"><span data-translate="imicloudApp.imDocument.language">Language</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="password"><span data-translate="imicloudApp.imDocument.password">Password</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="documentName"><span data-translate="imicloudApp.imDocument.documentName">Document Name</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="originalXml"><span data-translate="imicloudApp.imDocument.originalXml">Original Xml</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="secret"><span data-translate="imicloudApp.imDocument.secret">Secret</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <!--
+                    <th jh-sort-by="language"><span data-translate="imicloudApp.imDocument.language">Language</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
+                    <th jh-sort-by="password"><span data-translate="imicloudApp.imDocument.password">Password</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="defaultTemplate"><span data-translate="imicloudApp.imDocument.defaultTemplate">Default Template</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="uploadComplete"><span data-translate="imicloudApp.imDocument.uploadComplete">Upload Complete</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <!--
                     <th jh-sort-by="folderId"><span data-translate="imicloudApp.imDocument.folder">Folder</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="userEmail"><span data-translate="imicloudApp.imDocument.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
                     <th></th>
                 </tr>
             </thead>
             <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="imDocument in vm.imDocuments track by imDocument.id">
-                    <td><a ui-sref="im-document-detail({id:imDocument.id})">{{imDocument.id}}</a></td>
+                    <td>
+                        <a target="_blank" ng-href="imDocument.publicViewUrl">{{imDocument.documentName}}</a>
+                    </td>
+                    <!--
                     <td>{{imDocument.language}}</td>
+                    -->
                     <td>{{imDocument.password}}</td>
-                    <td>{{imDocument.documentName}}</td>
-                    <td>{{imDocument.originalXml}}</td>
-                    <td>{{imDocument.secret}}</td>
                     <td>{{imDocument.defaultTemplate}}</td>
-                    <td>{{imDocument.uploadComplete}}</td>
                     <td>
                         <a ui-sref="folder-detail({id:imDocument.folderId})">{{imDocument.folderId}}</a>
                     </td>
@@ -66,15 +66,13 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
-                            <button type="submit"
-                                    ui-sref="im-document-detail({id:imDocument.id})"
-                                    class="btn btn-info btn-sm">
+                            <a href="#" target="_blank" ng-href="imDocument.publicViewUrl" class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
-                            </button>
+                            </a>
                             <button type="submit"
                                     ui-sref="im-document.edit({id:imDocument.id})"
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-default btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
                             </button>

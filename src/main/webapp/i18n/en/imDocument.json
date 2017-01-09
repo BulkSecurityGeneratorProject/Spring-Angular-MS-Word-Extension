@@ -2,19 +2,19 @@
     "imicloudApp": {
         "imDocument" : {
             "home": {
-                "title": "Im Documents",
-                "createLabel": "Create a new Im Document",
-                "createOrEditLabel": "Create or edit a Im Document",
-                "search": "Search for Im Document"
+                "title": "Publications",
+                "createLabel": "Create a new publication",
+                "createOrEditLabel": "Create or edit a publication",
+                "search": "Search for a publication"
             },
-            "created": "A new Im Document is created with identifier {{ param }}",
-            "updated": "A Im Document is updated with identifier {{ param }}",
-            "deleted": "A Im Document is deleted with identifier {{ param }}",
+            "created": "A new publication is created with identifier {{ param }}",
+            "updated": "A publication is updated with identifier {{ param }}",
+            "deleted": "A publication is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Im Document {{ id }}?"
+                "question": "Are you sure you want to delete publication {{ id }}?"
             },
             "detail": {
-                "title": "Im Document"
+                "title": "Publication"
             },
             "language": "Language",
             "password": "Password",

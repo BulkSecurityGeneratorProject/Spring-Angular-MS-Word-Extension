@@ -1,6 +1,6 @@
 {
     "global": {
-        "title": "Imicloud",
+        "title": "Information Mapping Cloud",
         "browsehappy": "U gebruikt een <strong>verouderde</strong> browser. <a href=\"http://browsehappy.com/?locale=en\">upgrade uw browser</a> om de bruikbaarheid te verbeteren.",
         "menu": {
             "home": "Startpagina",
@@ -16,7 +16,7 @@
                 "branding": "Branding",
                 "imageSourcePath": "Image Source Path",
                 "userInfo": "User Info",
-                "imDocument": "Im Document",
+                "imDocument": "Publicaties",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

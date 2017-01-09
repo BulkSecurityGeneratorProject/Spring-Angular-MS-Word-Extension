@@ -1,5 +1,7 @@
 package be.storefront.imicloud.web.rest;
 
+import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.service.UrlHelperService;
 import com.codahale.metrics.annotation.Timed;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
@@ -36,29 +38,32 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImDocumentResource {
 
     private final Logger log = LoggerFactory.getLogger(ImDocumentResource.class);
-        
+
     @Inject
     private ImDocumentService imDocumentService;
 
-    /**
-     * POST  /im-documents : Create a new imDocument.
-     *
-     * @param imDocumentDTO the imDocumentDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new imDocumentDTO, or with status 400 (Bad Request) if the imDocument has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/im-documents")
-    @Timed
-    public ResponseEntity<ImDocumentDTO> createImDocument(@Valid @RequestBody ImDocumentDTO imDocumentDTO) throws URISyntaxException {
-        log.debug("REST request to save ImDocument : {}", imDocumentDTO);
-        if (imDocumentDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imDocument", "idexists", "A new imDocument cannot already have an ID")).body(null);
-        }
-        ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
-        return ResponseEntity.created(new URI("/api/im-documents/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("imDocument", result.getId().toString()))
-            .body(result);
-    }
+    @Inject
+    private UrlHelperService urlHelperService;
+
+//    /**
+//     * POST  /im-documents : Create a new imDocument.
+//     *
+//     * @param imDocumentDTO the imDocumentDTO to create
+//     * @return the ResponseEntity with status 201 (Created) and with body the new imDocumentDTO, or with status 400 (Bad Request) if the imDocument has already an ID
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PostMapping("/im-documents")
+//    @Timed
+//    public ResponseEntity<ImDocumentDTO> createImDocument(@Valid @RequestBody ImDocumentDTO imDocumentDTO) throws URISyntaxException {
+//        log.debug("REST request to save ImDocument : {}", imDocumentDTO);
+//        if (imDocumentDTO.getId() != null) {
+//            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imDocument", "idexists", "A new imDocument cannot already have an ID")).body(null);
+//        }
+//        ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
+//        return ResponseEntity.created(new URI("/api/im-documents/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert("imDocument", result.getId().toString()))
+//            .body(result);
+//    }
 
     /**
      * PUT  /im-documents : Updates an existing imDocument.
@@ -93,9 +98,15 @@ public class ImDocumentResource {
     @Timed
     public ResponseEntity<List<ImDocumentDTO>> getAllImDocuments(@ApiParam Pageable pageable)
         throws URISyntaxException {
+        // TODO limit to current user documents
         log.debug("REST request to get a page of ImDocuments");
         Page<ImDocumentDTO> page = imDocumentService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/im-documents");
+
+        for(ImDocumentDTO imDocumentDTO : page.getContent()){
+            imDocumentDTO.setUrlHelperService(urlHelperService);
+        }
+
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -108,8 +119,12 @@ public class ImDocumentResource {
     @GetMapping("/im-documents/{id}")
     @Timed
     public ResponseEntity<ImDocumentDTO> getImDocument(@PathVariable Long id) {
+        // TODO check accesa for current user
         log.debug("REST request to get ImDocument : {}", id);
         ImDocumentDTO imDocumentDTO = imDocumentService.findOne(id);
+
+        imDocumentDTO.setUrlHelperService(urlHelperService);
+
         return Optional.ofNullable(imDocumentDTO)
             .map(result -> new ResponseEntity<>(
                 result,
@@ -126,29 +141,30 @@ public class ImDocumentResource {
     @DeleteMapping("/im-documents/{id}")
     @Timed
     public ResponseEntity<Void> deleteImDocument(@PathVariable Long id) {
+        // TODO check accesa for current user
         log.debug("REST request to delete ImDocument : {}", id);
         imDocumentService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/im-documents?query=:query : search for the imDocument corresponding
-     * to the query.
-     *
-     * @param query the query of the imDocument search 
-     * @param pageable the pagination information
-     * @return the result of the search
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
-     */
-    @GetMapping("/_search/im-documents")
-    @Timed
-    public ResponseEntity<List<ImDocumentDTO>> searchImDocuments(@RequestParam String query, @ApiParam Pageable pageable)
-        throws URISyntaxException {
-        log.debug("REST request to search for a page of ImDocuments for query {}", query);
-        Page<ImDocumentDTO> page = imDocumentService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/im-documents");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+//    /**
+//     * SEARCH  /_search/im-documents?query=:query : search for the imDocument corresponding
+//     * to the query.
+//     *
+//     * @param query the query of the imDocument search
+//     * @param pageable the pagination information
+//     * @return the result of the search
+//     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
+//     */
+//    @GetMapping("/_search/im-documents")
+//    @Timed
+//    public ResponseEntity<List<ImDocumentDTO>> searchImDocuments(@RequestParam String query, @ApiParam Pageable pageable)
+//        throws URISyntaxException {
+//        log.debug("REST request to search for a page of ImDocuments for query {}", query);
+//        Page<ImDocumentDTO> page = imDocumentService.search(query, pageable);
+//        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/im-documents");
+//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+//    }
 
 
 }

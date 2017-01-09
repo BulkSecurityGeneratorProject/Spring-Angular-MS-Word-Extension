@@ -19,7 +19,7 @@
             "guid": "Guid",
             "label": "Label",
             "position": "Position",
-            "imDocument": "Im Document",
+            "imDocument": "Document",
             "block": "Block"
         }
     }
