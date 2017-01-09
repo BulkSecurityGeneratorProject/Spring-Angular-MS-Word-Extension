@@ -79,7 +79,7 @@ public class ImDocumentResource {
     public ResponseEntity<ImDocumentDTO> updateImDocument(@Valid @RequestBody ImDocumentDTO imDocumentDTO) throws URISyntaxException {
         log.debug("REST request to update ImDocument : {}", imDocumentDTO);
         if (imDocumentDTO.getId() == null) {
-            return createImDocument(imDocumentDTO);
+            return ResponseEntity.badRequest().body(null);
         }
         ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
         return ResponseEntity.ok()
