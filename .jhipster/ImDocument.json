@@ -69,6 +69,6 @@
     "service": "serviceImpl",
     "entityTableName": "im_document",
     "pagination": "infinite-scroll",
-    "angularJSSuffix": "route",
+    "angularJSSuffix": "",
     "enableEntityAudit": true
 }

@@ -1,0 +1,103 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myImDocumentLabel" data-translate="imicloudApp.imDocument.home.createOrEditLabel">Create or edit a Im Document</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.imDocument.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.imDocument.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.language" for="field_language">Language</label>
+            <input type="text" class="form-control" name="language" id="field_language"
+                    ng-model="vm.imDocument.language"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.password" for="field_password">Password</label>
+            <input type="text" class="form-control" name="password" id="field_password"
+                    ng-model="vm.imDocument.password"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.documentName" for="field_documentName">Document Name</label>
+            <input type="text" class="form-control" name="documentName" id="field_documentName"
+                    ng-model="vm.imDocument.documentName"
+                    required />
+            <div ng-show="editForm.documentName.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.documentName.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.originalXml" for="field_originalXml">Original Xml</label>
+                <textarea class="form-control" name="originalXml" id="field_originalXml"
+                    ng-model="vm.imDocument.originalXml" required ></textarea>
+            <div ng-show="editForm.originalXml.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.originalXml.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.secret" for="field_secret">Secret</label>
+            <input type="text" class="form-control" name="secret" id="field_secret"
+                    ng-model="vm.imDocument.secret"
+                    required />
+            <div ng-show="editForm.secret.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.secret.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.defaultTemplate" for="field_defaultTemplate">Default Template</label>
+            <input type="text" class="form-control" name="defaultTemplate" id="field_defaultTemplate"
+                    ng-model="vm.imDocument.defaultTemplate"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="imicloudApp.imDocument.uploadComplete" for="field_uploadComplete">Upload Complete</label>
+            <input type="checkbox" class="form-control" name="uploadComplete" id="field_uploadComplete"
+                    ng-model="vm.imDocument.uploadComplete"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label data-translate="imicloudApp.imDocument.folder" for="field_folder">Folder</label>
+            <select class="form-control" id="field_folder" name="folder" ng-model="vm.imDocument.folderId" ng-options="folder.id as folder.id for folder in vm.folders"            >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="imicloudApp.imDocument.user" for="field_user">User</label>
+            <select class="form-control" id="field_user" name="user" ng-model="vm.imDocument.userId" ng-options="user.id as user.email for user in vm.users"             required>
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-show="editForm.user.$invalid">
+            <p class="help-block"
+                ng-show="editForm.user.$error.required" data-translate="entity.validation.required">
+                This field is required.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>
