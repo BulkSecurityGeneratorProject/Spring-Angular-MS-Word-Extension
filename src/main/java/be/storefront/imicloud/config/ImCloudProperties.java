@@ -79,6 +79,9 @@ public class ImCloudProperties {
     public static class Magento {
 
         private boolean allowMagentoCustomerLogin = false;
+        private String forgotPasswordUrl;
+        private String registerNewAccountUrl;
+
         private final Api api = new Api();
 
         public boolean getAllowMagentoCustomerLogin() {
@@ -87,6 +90,22 @@ public class ImCloudProperties {
 
         public void setAllowMagentoCustomerLogin(boolean allowMagentoCustomerLogin) {
             this.allowMagentoCustomerLogin = allowMagentoCustomerLogin;
+        }
+
+        public String getForgotPasswordUrl() {
+            return forgotPasswordUrl;
+        }
+
+        public void setForgotPasswordUrl(String forgotPasswordUrl) {
+            this.forgotPasswordUrl = forgotPasswordUrl;
+        }
+
+        public String getRegisterNewAccountUrl() {
+            return registerNewAccountUrl;
+        }
+
+        public void setRegisterNewAccountUrl(String registerNewAccountUrl) {
+            this.registerNewAccountUrl = registerNewAccountUrl;
         }
 
         public Api getApi() {
