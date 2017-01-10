@@ -23,8 +23,4 @@ public class MyUserDetails extends User{
     public Long getId() {
         return id;
     }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
 }

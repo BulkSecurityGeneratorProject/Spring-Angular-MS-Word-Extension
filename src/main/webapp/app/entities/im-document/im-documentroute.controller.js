@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('ImDocumentRouteController', ImDocumentRouteController);
 
-    ImDocumentRouteController.$inject = ['$scope', '$state', 'DataUtils', 'ImDocument', 'ImDocumentSearch', 'ParseLinks', 'AlertService', 'paginationConstants'];
+    ImDocumentRouteController.$inject = ['$scope', '$state', 'DataUtils', 'ImDocument', 'ImDocumentSearch', 'ParseLinks', 'AlertService', 'paginationConstants','Principal'];
 
-    function ImDocumentRouteController ($scope, $state, DataUtils, ImDocument, ImDocumentSearch, ParseLinks, AlertService, paginationConstants) {
+    function ImDocumentRouteController ($scope, $state, DataUtils, ImDocument, ImDocumentSearch, ParseLinks, AlertService, paginationConstants, Principal) {
         var vm = this;
 
         vm.imDocuments = [];
@@ -25,6 +25,11 @@
         vm.search = search;
         vm.openFile = DataUtils.openFile;
         vm.byteSize = DataUtils.byteSize;
+
+        Principal.identity().then(function(account) {
+            var brandingId = account.branding.id;
+            vm.editBrandingUrl = '/#/branding/'+brandingId;
+        });
 
         loadAll();
 

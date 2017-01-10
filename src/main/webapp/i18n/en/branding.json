@@ -3,24 +3,24 @@
         "branding" : {
             "home": {
                 "title": "Brandings",
-                "createLabel": "Create a new Branding",
-                "createOrEditLabel": "Create or edit a Branding",
+                "createLabel": "Create Branding",
+                "createOrEditLabel": "Edit Branding",
                 "search": "Search for Branding"
             },
-            "created": "A new Branding is created with identifier {{ param }}",
-            "updated": "A Branding is updated with identifier {{ param }}",
-            "deleted": "A Branding is deleted with identifier {{ param }}",
+            "created": "Branding created",
+            "updated": "Branding updated",
+            "deleted": "Branding deleted",
             "delete": {
-                "question": "Are you sure you want to delete Branding {{ id }}?"
+                "question": "Are you sure you want to delete branding?"
             },
             "detail": {
                 "title": "Branding"
             },
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",
-            "pageBackgroundColor": "Page Background Color",
+            "pageBackgroundColor": "Page Background",
             "textColor": "Text Color",
-            "logoImage": "Logo Image"
+            "logoImage": "Logo"
         }
     }
 }

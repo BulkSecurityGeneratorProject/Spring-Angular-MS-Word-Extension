@@ -8,6 +8,7 @@
                 "search": "Search for a publication"
             },
             "noDocumentsExist": "You haven't published any documents yet.",
+            "editBranding": "Edit branding",
             "created": "New publication created",
             "updated": "Publication updated",
             "deleted": "Publication deleted",

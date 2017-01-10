@@ -2,6 +2,7 @@ package be.storefront.imicloud.service;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
@@ -25,6 +26,8 @@ public class UrlHelperService {
 
     @Inject
     private ImDocumentMapper imDocumentMapper;
+
+    @Inject private ImageRepository imageRepository;
 
     public String getDocumentPublicUrl(ImDocument imDocument) {
         return imCloudProperties.getBaseUrl() + "document/" + imDocument.getId() + "/" + imDocument.getSecret() + "/";
@@ -67,5 +70,9 @@ public class UrlHelperService {
             return getImageUrl(branding.getLogoImage());
         }
 
+    }
+
+    public String getImageUrl(String imageFilename) {
+        return getImageUrl(imageRepository.findByFilename(imageFilename));
     }
 }

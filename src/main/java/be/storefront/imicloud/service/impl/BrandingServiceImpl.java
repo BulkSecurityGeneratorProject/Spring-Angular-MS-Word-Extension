@@ -7,6 +7,7 @@ import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.domain.Branding;
 import be.storefront.imicloud.repository.BrandingRepository;
 import be.storefront.imicloud.repository.search.BrandingSearchRepository;
+import be.storefront.imicloud.service.UrlHelperService;
 import be.storefront.imicloud.service.UserInfoService;
 import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.mapper.BrandingMapper;
@@ -43,6 +44,8 @@ public class BrandingServiceImpl implements BrandingService{
 
     @Inject private UserInfoRepository userInfoRepository;
 
+    @Inject private UrlHelperService urlHelperService;
+
     /**
      * Save a branding.
      *
@@ -70,6 +73,10 @@ public class BrandingServiceImpl implements BrandingService{
             .map(brandingMapper::brandingToBrandingDTO)
             .collect(Collectors.toCollection(LinkedList::new));
 
+        for(BrandingDTO brandingDTO : result){
+            brandingDTO.setUrlHelperService(urlHelperService);
+        }
+
         return result;
     }
 
@@ -84,6 +91,7 @@ public class BrandingServiceImpl implements BrandingService{
         log.debug("Request to get Branding : {}", id);
         Branding branding = brandingRepository.findOne(id);
         BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(branding);
+        brandingDTO.setUrlHelperService(urlHelperService);
         return brandingDTO;
     }
 
@@ -114,13 +122,25 @@ public class BrandingServiceImpl implements BrandingService{
     }
 
     @Override
-    public Object findByDocument(ImDocument imDocument) {
+    public BrandingDTO findByDocument(ImDocument imDocument) {
         if(imDocument != null){
-            UserInfo ui = userInfoRepository.findByUserId(imDocument.getUser().getId());
-            return ui.getOrganization().getBranding();
+            return findByUserId(imDocument.getUser().getId());
         }else{
             return null;
         }
 
     }
+
+    @Override
+    public BrandingDTO findByUserId(Long userId) {
+        if(userId != null){
+            UserInfo ui = userInfoRepository.findByUserId(userId);
+            BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(ui.getOrganization().getBranding());
+            brandingDTO.setUrlHelperService(urlHelperService);
+            return brandingDTO;
+        }else{
+            return null;
+        }
+    }
+
 }

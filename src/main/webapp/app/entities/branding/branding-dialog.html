@@ -1,5 +1,5 @@
 
-<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+<form name="editForm" role="form" enctype="multipart/form-data" encoding="multipart/form-data" class="form-horizontal" novalidate ng-upload="uploadComplete(content)" ng-submit="vm.save()" show-validation>
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -8,66 +8,81 @@
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" ng-show="vm.branding.id">
-            <label for="id" data-translate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                    ng-model="vm.branding.id" readonly />
-        </div>
+
         <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.branding.primaryColor" for="field_primaryColor">Primary Color</label>
-            <input type="text" class="form-control" name="primaryColor" id="field_primaryColor"
-                    ng-model="vm.branding.primaryColor"
-                    ng-maxlength="7" />
-            <div ng-show="editForm.primaryColor.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.primaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
-                    This field cannot be longer than 7 characters.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.branding.secundaryColor" for="field_secundaryColor">Secundary Color</label>
-            <input type="text" class="form-control" name="secundaryColor" id="field_secundaryColor"
-                    ng-model="vm.branding.secundaryColor"
-                    ng-maxlength="7" />
-            <div ng-show="editForm.secundaryColor.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.secundaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
-                    This field cannot be longer than 7 characters.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.branding.pageBackgroundColor" for="field_pageBackgroundColor">Page Background Color</label>
-            <input type="text" class="form-control" name="pageBackgroundColor" id="field_pageBackgroundColor"
-                    ng-model="vm.branding.pageBackgroundColor"
-                    ng-maxlength="7" />
-            <div ng-show="editForm.pageBackgroundColor.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.pageBackgroundColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
-                    This field cannot be longer than 7 characters.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="imicloudApp.branding.textColor" for="field_textColor">Text Color</label>
-            <input type="text" class="form-control" name="textColor" id="field_textColor"
-                    ng-model="vm.branding.textColor"
-                    ng-maxlength="7" />
-            <div ng-show="editForm.textColor.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.textColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
-                    This field cannot be longer than 7 characters.
-                </p>
+            <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.logoImage" for="field_logoImage">Logo</label>
+            <div class="col-sm-8 col-md-9">
+                <!--
+                <img src="{{vm.branding.logoUrl}}" alt="" class="img-responsive img-thumbnail" />
+                -->
+                <input type="file" class="form-control" name="logo" id="field_logoImage" />
+                <!--
+                <select class="form-control" id="field_logoImage" name="logoImage" ng-model="vm.branding.logoImageId" ng-options="image.id as image.filename for image in vm.logoimages | orderBy:'id'">
+                    <option value=""></option>
+                </select>
+                -->
             </div>
         </div>
 
         <div class="form-group">
-            <label data-translate="imicloudApp.branding.logoImage" for="field_logoImage">Logo Image</label>
-            <select class="form-control" id="field_logoImage" name="logoImage" ng-model="vm.branding.logoImageId" ng-options="image.id as image.filename for image in vm.logoimages | orderBy:'id'">
-                <option value=""></option>
-            </select>
+            <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.primaryColor" for="field_primaryColor">Primary Color</label>
+            <div class="col-sm-2">
+                <input type="color" class="form-control" name="primaryColor" id="field_primaryColor"
+                        ng-model="vm.branding.primaryColor"
+                        ng-maxlength="7" />
+                <div ng-show="editForm.primaryColor.$invalid">
+                    <p class="help-block"
+                        ng-show="editForm.primaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                        This field cannot be longer than 7 characters.
+                    </p>
+                </div>
+            </div>
         </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 col-md-3 control-label" data-translate="imicloudApp.branding.secundaryColor" for="field_secundaryColor">Secundary Color</label>
+            <div class="col-sm-2">
+                <input type="color" class="form-control" name="secundaryColor" id="field_secundaryColor"
+                        ng-model="vm.branding.secundaryColor"
+                        ng-maxlength="7" />
+                <div ng-show="editForm.secundaryColor.$invalid">
+                    <p class="help-block"
+                        ng-show="editForm.secundaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                        This field cannot be longer than 7 characters.
+                    </p>
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="form-group">
+            <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.pageBackgroundColor" for="field_pageBackgroundColor">Page Background</label>
+            <div class="col-sm-2">
+                <input type="color" class="form-control" name="pageBackgroundColor" id="field_pageBackgroundColor"
+                        ng-model="vm.branding.pageBackgroundColor"
+                        ng-maxlength="7" />
+                <div ng-show="editForm.pageBackgroundColor.$invalid">
+                    <p class="help-block"
+                        ng-show="editForm.pageBackgroundColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                        This field cannot be longer than 7 characters.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.textColor" for="field_textColor">Text Color</label>
+            <div class="col-sm-2">
+                <input type="color" class="form-control" name="textColor" id="field_textColor"
+                        ng-model="vm.branding.textColor"
+                        ng-maxlength="7" />
+                <div ng-show="editForm.textColor.$invalid">
+                    <p class="help-block"
+                        ng-show="editForm.textColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
+                        This field cannot be longer than 7 characters.
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">

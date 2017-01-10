@@ -41,8 +41,11 @@ public final class SecurityUtils {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
-            MyUserDetails currentUser = (MyUserDetails) authentication.getPrincipal();
-            return currentUser;
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof MyUserDetails) {
+                MyUserDetails currentUser = (MyUserDetails) principal;
+                return currentUser;
+            }
         }
         return null;
     }

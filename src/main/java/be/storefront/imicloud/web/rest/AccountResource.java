@@ -2,6 +2,10 @@ package be.storefront.imicloud.web.rest;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.security.MagentoAuthenticationToken;
+import be.storefront.imicloud.service.*;
+import be.storefront.imicloud.service.dto.BrandingDTO;
+import be.storefront.imicloud.service.dto.FullAccountDTO;
+import be.storefront.imicloud.service.dto.OrganizationDTO;
 import com.codahale.metrics.annotation.Timed;
 
 import be.storefront.imicloud.domain.PersistentToken;
@@ -9,8 +13,6 @@ import be.storefront.imicloud.domain.User;
 import be.storefront.imicloud.repository.PersistentTokenRepository;
 import be.storefront.imicloud.repository.UserRepository;
 import be.storefront.imicloud.security.SecurityUtils;
-import be.storefront.imicloud.service.MailService;
-import be.storefront.imicloud.service.UserService;
 import be.storefront.imicloud.service.dto.UserDTO;
 import be.storefront.imicloud.web.rest.vm.KeyAndPasswordVM;
 import be.storefront.imicloud.web.rest.vm.ManagedUserVM;
@@ -60,6 +62,14 @@ public class AccountResource {
 
     @Inject
     private ImCloudProperties imCloudProperties;
+
+    @Inject private UrlHelperService urlHelperService;
+
+//    @Inject private OrganizationService organizationService;
+//
+//    @Inject private UserInfoService userInfoService;
+    @Inject private BrandingService brandingService;
+
 
 //    /**
 //     * POST  /register : register the user.
@@ -125,50 +135,24 @@ public class AccountResource {
      */
     @GetMapping("/account")
     @Timed
-    public ResponseEntity<UserDTO> getAccount() {
+    public ResponseEntity<FullAccountDTO> getAccount() {
 
         User dbUser = userService.getUserWithAuthorities();
-        Optional<User> optionalUser = Optional.ofNullable(dbUser);
-        UserDTO dto = null;
 
-        ResponseEntity<UserDTO> r;
+        if (dbUser != null) {
+            UserDTO dto = new UserDTO(dbUser);
 
-        if (optionalUser.isPresent()) {
-            dto = new UserDTO(optionalUser.get());
-        } else if (imCloudProperties.getSecurity().getMagento().getAllowMagentoCustomerLogin()) {
-            // Load from Magento
+            OrganizationDTO organizationDto = null;
+            BrandingDTO brandingDto = brandingService.findByUserId(dto.getId());
+            brandingDto.setUrlHelperService(urlHelperService);
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication instanceof MagentoAuthenticationToken) {
+            FullAccountDTO fullAccountDTO = new FullAccountDTO(dto, organizationDto, brandingDto);
 
-                MagentoAuthenticationToken magentoAuth = (MagentoAuthenticationToken) authentication;
-
-                String email = magentoAuth.getEmail();
-                String firstName = authentication.getName();
-                String lastName = authentication.getName();
-                boolean activated = magentoAuth.isActive();
-                String langCode = magentoAuth.getLangCode();
-
-
-                HashSet<String> authorityStrings = new HashSet<>();
-                for (GrantedAuthority grantedAuthority : magentoAuth.getAuthorities()) {
-                    authorityStrings.add(grantedAuthority.toString());
-                }
-
-                dto = new UserDTO(email, firstName, lastName, email, activated, langCode, authorityStrings);
-            }
-        }
-
-        if (dto != null) {
-            final UserDTO dto2 = dto;
-            r = new ResponseEntity<>(dto2, HttpStatus.OK);
+            return new ResponseEntity<>(fullAccountDTO, HttpStatus.OK);
 
         } else {
-            r = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return r;
-
     }
 
 //    /**

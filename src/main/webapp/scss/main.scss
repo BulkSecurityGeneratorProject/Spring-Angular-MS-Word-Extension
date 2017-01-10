@@ -140,6 +140,12 @@ Generic styles
     opacity: 1;
 }
 
+input[type=color]{
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+}
+
 /* ==========================================================================
 make sure browsers use the pointer cursor for anchors, even with no href
 ========================================================================== */

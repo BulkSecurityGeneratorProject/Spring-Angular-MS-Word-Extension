@@ -1,5 +1,10 @@
 package be.storefront.imicloud.service.dto;
 
+import be.storefront.imicloud.service.UrlHelperService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.annotation.Transient;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -14,6 +19,9 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 
+    @JsonIgnore
+    private UrlHelperService urlHelperService;
+
     @Size(max = 7)
     private String primaryColor;
 
@@ -26,11 +34,19 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     @Size(max = 7)
     private String textColor;
 
-
     private Long logoImageId;
-    
 
     private String logoImageFilename;
+
+
+
+    public BrandingDTO(){
+
+    }
+
+    public BrandingDTO(UrlHelperService urlHelperService){
+        this.urlHelperService = urlHelperService;
+    }
 
     public Long getId() {
         return id;
@@ -76,6 +92,13 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
         this.logoImageId = imageId;
     }
 
+    public String getLogoUrl(){
+        if(urlHelperService == null){
+            return null;
+        }else {
+            return urlHelperService.getImageUrl(getLogoImageFilename());
+        }
+    }
 
     public String getLogoImageFilename() {
         return logoImageFilename;
@@ -115,5 +138,9 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
             ", pageBackgroundColor='" + pageBackgroundColor + "'" +
             ", textColor='" + textColor + "'" +
             '}';
+    }
+
+    public void setUrlHelperService(UrlHelperService urlHelperService) {
+        this.urlHelperService = urlHelperService;
     }
 }
