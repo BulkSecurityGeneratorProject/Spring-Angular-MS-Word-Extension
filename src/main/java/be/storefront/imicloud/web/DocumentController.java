@@ -6,6 +6,8 @@ import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
+import be.storefront.imicloud.security.MyUserDetails;
+import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
@@ -103,10 +105,10 @@ public class DocumentController {
                     // Check document password
                     boolean accessGranted = true;
                     if (imDocument.getPassword() != null && imDocument.getPassword().length() > 0) {
-
                         // Document is password protected
-                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                        if(imDocument.getUser().getId().equals(auth.getPrincipal())){
+
+                        MyUserDetails currentUser = SecurityUtils.getCurrentUser();
+                        if(imDocument.getUser().getId().equals(currentUser.getId())){
                             // I am the uploader of the document
 
                         }else {
