@@ -8,7 +8,9 @@ import java.util.Collection;
 /**
  * Created by wouter on 19/12/2016.
  */
-public class MyUserDetails extends User {
+public class MyUserDetails extends User{
+
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 
@@ -20,5 +22,9 @@ public class MyUserDetails extends User {
 
     public Long getId() {
         return id;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 }
