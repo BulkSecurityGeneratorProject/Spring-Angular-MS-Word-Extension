@@ -1,5 +1,8 @@
 package be.storefront.imicloud.service.impl;
 
+import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.security.SecurityUtils;
+import be.storefront.imicloud.service.FileStorageService;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.domain.Image;
 import be.storefront.imicloud.repository.ImageRepository;
@@ -10,8 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +46,8 @@ public class ImageServiceImpl implements ImageService{
 
     @Inject
     private ImageSearchRepository imageSearchRepository;
+
+    @Inject private FileStorageService fileStorageService;
 
     /**
      * Save a image.
@@ -115,5 +127,35 @@ public class ImageServiceImpl implements ImageService{
         // Check use as logo in branding
 
         return true;
+    }
+
+
+    public Image createImageFromUpload(MultipartFile file, String contentType, User uploadingUser) throws IOException, NoSuchAlgorithmException {
+        String filename = fileStorageService.saveFileAndGetPath(file);
+
+        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+        Integer width = bufferedImage.getWidth();
+        Integer height = bufferedImage.getHeight();
+
+        File f = fileStorageService.loadFile(filename);
+        long contentLength = Files.size(f.toPath());
+
+        Image image = imageRepository.findByFilename(filename);
+
+        if (image != null) {
+            // This image has already been uploaded before. Don't create a new record.
+        } else {
+            image = new Image();
+            image.setFilename(filename);
+            image.setContentType(contentType);
+            image.setContentLength(contentLength);
+            image.setImageWidth(width);
+            image.setImageHeight(height);
+            image.setUploadedByUser(uploadingUser);
+            image.setSecret(SecurityUtils.generateSecret());
+
+            image = imageRepository.save(image);
+        }
+        return image;
     }
 }

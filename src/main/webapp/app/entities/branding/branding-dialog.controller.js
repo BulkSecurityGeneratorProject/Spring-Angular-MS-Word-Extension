@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('BrandingDialogController', BrandingDialogController);
 
-    BrandingDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Branding', 'Image'];
+    BrandingDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'Branding', 'Image','Upload'];
 
-    function BrandingDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Branding, Image) {
+    function BrandingDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, Branding, Image, Upload) {
         var vm = this;
 
         vm.branding = entity;
@@ -26,6 +26,24 @@
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
         });
+
+        // upload on file select or drop
+        $scope.upload = function (file) {
+            Upload.upload({
+                url: '/upload/logo/',
+                data: {logo_file: file}
+            }).then(function (resp) {
+                vm.branding.logoImageFilename = resp.data.filename;
+                vm.branding.logoUrl = resp.data.url;
+                vm.branding.logoImageId = resp.data.imageId;
+
+            }, function (resp) {
+                console.log('Error status: ' + resp.status);
+            }, function (evt) {
+                //var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                //console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+            });
+        };
 
         function clear () {
             $uibModalInstance.dismiss('cancel');

@@ -7,6 +7,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 
 /**
@@ -42,7 +44,7 @@ public final class SecurityUtils {
         Authentication authentication = securityContext.getAuthentication();
         if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
             Object principal = authentication.getPrincipal();
-            if(principal instanceof MyUserDetails) {
+            if (principal instanceof MyUserDetails) {
                 MyUserDetails currentUser = (MyUserDetails) principal;
                 return currentUser;
             }
@@ -88,5 +90,11 @@ public final class SecurityUtils {
 
         MyUserDetails myUserDetails = new MyUserDetails(userFromDatabase.getId(), lowercaseLogin, password, grantedAuthorities);
         return myUserDetails;
+    }
+
+    public static String generateSecret() {
+        SecureRandom random = new SecureRandom();
+        String r = new BigInteger(130, random).toString(32);
+        return r;
     }
 }

@@ -11,16 +11,21 @@
 
         <div class="form-group">
             <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.logoImage" for="field_logoImage">Logo</label>
-            <div class="col-sm-8 col-md-9">
-                <!--
-                <img src="{{vm.branding.logoUrl}}" alt="" class="img-responsive img-thumbnail" />
-                -->
-                <input type="file" class="form-control" name="logo" id="field_logoImage" />
+            <div class="col-sm-8 col-md-9"
+                <p ng-if="vm.branding.logoUrl">
+                    <img src="{{vm.branding.logoUrl}}" alt="" class="img-responsive img-thumbnail" />
+                </p>
+
+                <p>
+                    <a class="btn btn-default" ngf-select="upload($file)" data-translate="imicloudApp.branding.selectLogoFile">Select logo file</a>
+                </p>
+
                 <!--
                 <select class="form-control" id="field_logoImage" name="logoImage" ng-model="vm.branding.logoImageId" ng-options="image.id as image.filename for image in vm.logoimages | orderBy:'id'">
                     <option value=""></option>
                 </select>
                 -->
+
             </div>
         </div>
 

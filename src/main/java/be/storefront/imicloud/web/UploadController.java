@@ -2,12 +2,11 @@ package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
-import be.storefront.imicloud.repository.ImBlockRepository;
-import be.storefront.imicloud.repository.ImDocumentRepository;
-import be.storefront.imicloud.repository.ImageRepository;
-import be.storefront.imicloud.repository.ImageSourcePathRepository;
+import be.storefront.imicloud.repository.*;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
+import be.storefront.imicloud.security.MyUserDetails;
+import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.*;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
@@ -23,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 import org.joox.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -114,6 +114,9 @@ public class UploadController {
     @Inject
     private UrlHelperService urlHelperService;
 
+    @Inject
+    private UserRepository userRepository;
+
     //@Inject private PasswordEncoder passwordEncoder;
 
     private PasswordEncoder documentPasswordEncoder = new DocumentPasswordEncoder();
@@ -122,7 +125,6 @@ public class UploadController {
     public String index() {
         return "upload";
     }
-
 
 
     @GetMapping("/xml/")
@@ -246,8 +248,8 @@ public class UploadController {
         doc.setDefaultTemplate(templateCode);
 
         // Add missing random secret
-        if(doc.getSecret() == null || "".equals(doc.getSecret())) {
-            doc.setSecret(generateSecret());
+        if (doc.getSecret() == null || "".equals(doc.getSecret())) {
+            doc.setSecret(SecurityUtils.generateSecret());
         }
 
         doc = imDocumentRepository.save(doc);
@@ -255,12 +257,6 @@ public class UploadController {
         doc = processXmlSavedInDocument(doc);
 
         return imDocumentMapper.imDocumentToImDocumentDTO(doc);
-    }
-
-    private String generateSecret(){
-        SecureRandom random = new SecureRandom();
-        String r = new BigInteger(130, random).toString(32);
-        return r;
     }
 
     private Document getXmlDocumentFromString(String xml) throws IOException, SAXException, ParserConfigurationException {
@@ -370,7 +366,7 @@ public class UploadController {
         int numberToKeep = 0;
         int numberToDelete = targets.getLength() - numberToKeep;
 
-        for(int i = 0; i < numberToDelete; i++){
+        for (int i = 0; i < numberToDelete; i++) {
             Node target = targets.item(numberToKeep);
             Node parent = target.getParentNode();
             parent.removeChild(target);
@@ -393,7 +389,7 @@ public class UploadController {
         root.find("list[numbered=true]").rename("ol").removeAttr("numbered");
         root.find("listitem").rename("li");
 
-        renameAttr(root.find("hyperlink").rename("a"), "address","href");
+        renameAttr(root.find("hyperlink").rename("a"), "address", "href");
 
         renameAttr(root.find("image").rename("img"), "source", "data-source");
 
@@ -501,8 +497,8 @@ public class UploadController {
     }
 
     private Match renameAttr(Match m, String oldName, String newName) {
-        if(m.size() > 0){
-            for(Match item : m.each()){
+        if (m.size() > 0) {
+            for (Match item : m.each()) {
                 String src = item.attr(oldName);
                 item.attr(newName, src);
                 item.removeAttr(oldName);
@@ -582,20 +578,12 @@ public class UploadController {
                     if (documentDto.getUserId().equals(uploadingUser.getId())) {
                         // Owner is uploading more images
 
-                        BufferedImage image = ImageIO.read(file.getInputStream());
-                        Integer width = image.getWidth();
-                        Integer height = image.getHeight();
 
-                        if (width > 0 && height > 0) {
-                            Image savedImage = processUploadedImage(file, source, document, contentType, width, height, uploadingUser);
+                        Image savedImage = processUploadedImage(file, source, document, contentType, uploadingUser);
 
-                            return ResponseEntity.ok()
-                                .body(new ImageCreated(savedImage));
+                        return ResponseEntity.ok()
+                            .body(new ImageCreated(savedImage));
 
-                        } else {
-                            // Invalid image dimensions
-                            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_image", "The uploaded file is not an image.")).body(null);
-                        }
 
                     } else {
                         // Not the document owner, cannot upload
@@ -652,33 +640,13 @@ public class UploadController {
 
 
     @Transactional
-    private Image processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType, int width, int height, User uploadingUser) throws IOException, NoSuchAlgorithmException {
-        String filename = fileStorageService.saveFileAndGetPath(file);
-
-        File f = fileStorageService.loadFile(filename);
-        long contentLength = Files.size(f.toPath());
-
-        Image image = imageRepository.findByFilename(filename);
-
-        if (image != null) {
-            // This image has already been uploaded before. Don't create a new record.
-        } else {
-            image = new Image();
-            image.setFilename(filename);
-            image.setContentType(contentType);
-            image.setContentLength(contentLength);
-            image.setImageWidth(width);
-            image.setImageHeight(height);
-            image.setUploadedByUser(uploadingUser);
-            image.setSecret(generateSecret());
-
-            image = imageRepository.save(image);
-        }
+    private Image processUploadedImage(MultipartFile file, String source, ImDocument document, String contentType, User uploadingUser) throws IOException, NoSuchAlgorithmException {
+        Image image = imageService.createImageFromUpload(file, contentType, uploadingUser);
 
         // Prevent double data
         List<ImageSourcePath> existingSourcePaths = imageSourcePathRepository.findByDocumentIdAndSource(document.getId(), source);
 
-        if(existingSourcePaths.size() == 0) {
+        if (existingSourcePaths.size() == 0) {
             // Remember the "source" for this image, so we can later reprocess the XML
             ImageSourcePath isp = new ImageSourcePath();
             isp.setImage(image);
@@ -693,18 +661,18 @@ public class UploadController {
         return image;
     }
 
-    private void processImagesInDocument(ImDocument doc){
+    private void processImagesInDocument(ImDocument doc) {
         List<ImageSourcePath> sourcePaths = imageSourcePathRepository.findByDocumentId(doc.getId());
-        for(ImageSourcePath sourcePath : sourcePaths){
+        for (ImageSourcePath sourcePath : sourcePaths) {
             Image image = sourcePath.getImage();
             String source = sourcePath.getSource();
             processImageInDocument(doc, source, image);
         }
     }
 
-    private void processImageInDocument(ImDocument doc, String source,Image image){
+    private void processImageInDocument(ImDocument doc, String source, Image image) {
 
-        if(doc.getMaps() == null){
+        if (doc.getMaps() == null) {
             // Reload before processing image, because the "maps" can be null due to earlier processing
             doc = imDocumentRepository.findOne(doc.getId());
         }
@@ -750,6 +718,57 @@ public class UploadController {
 
     private ResponseEntity accessDeniedResponse() {
         return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("accessdenied", "Access denied")).body(null);
+    }
+
+
+    @PostMapping("/logo/")
+    @Timed
+    public ResponseEntity<ImageCreated> handleLogoFileUpload(@RequestParam("logo_file") MultipartFile file) {
+        log.debug("Logo upload request: {}", file.getOriginalFilename());
+
+        MyUserDetails currentUser = SecurityUtils.getCurrentUser();
+
+        if (currentUser == null) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        } else if (file == null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "missing_image", "There was no file upload with name \"image_file\" present.")).body(null);
+        }
+
+        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")).toLowerCase();
+
+        String contentType = null;
+
+        if (".jpg".equals(extension)) {
+            // Check if this is a valid JPG
+            contentType = "image/jpg";
+
+        } else if (".png".equals(extension)) {
+            // Check if this is a valid PNG
+            contentType = "image/png";
+        }
+
+        if (contentType != null) {
+            try {
+                User uploadingUser = userRepository.findOne(currentUser.getId());
+                Image savedImage = imageService.createImageFromUpload(file, contentType, uploadingUser);
+
+                return ResponseEntity.ok()
+                    .body(new ImageCreated(savedImage, urlHelperService));
+
+            } catch (Exception ex) {
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "exception", ex.getMessage())).body(null);
+            }
+
+        } else {
+            // Invalid extension
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
+        }
+
+//        redirectAttributes.addFlashAttribute("message",
+//            "You successfully uploaded " + file.getOriginalFilename() + "!");
+
+
     }
 
 //    private ResponseEntity exceptionResponse(Exception ex){

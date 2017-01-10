@@ -57,6 +57,7 @@ public class BrandingServiceImpl implements BrandingService{
         Branding branding = brandingMapper.brandingDTOToBranding(brandingDTO);
         branding = brandingRepository.save(branding);
         BrandingDTO result = brandingMapper.brandingToBrandingDTO(branding);
+        result.setUrlHelperService(urlHelperService);
         brandingSearchRepository.save(branding);
         return result;
     }

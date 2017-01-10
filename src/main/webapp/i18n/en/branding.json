@@ -20,7 +20,8 @@
             "secundaryColor": "Secundary Color",
             "pageBackgroundColor": "Page Background",
             "textColor": "Text Color",
-            "logoImage": "Logo"
+            "logoImage": "Logo",
+            "selectLogoFile": "Select logo file"
         }
     }
 }

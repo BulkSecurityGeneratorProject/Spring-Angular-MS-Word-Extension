@@ -1,6 +1,12 @@
 package be.storefront.imicloud.service;
 
+import be.storefront.imicloud.domain.Image;
+import be.storefront.imicloud.domain.User;
 import be.storefront.imicloud.service.dto.ImageDTO;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -49,4 +55,6 @@ public interface ImageService {
 
 
     boolean isImageInUse(Long imageId);
+
+    Image createImageFromUpload(MultipartFile file, String contentType, User uploadingUser) throws IOException, NoSuchAlgorithmException;
 }
