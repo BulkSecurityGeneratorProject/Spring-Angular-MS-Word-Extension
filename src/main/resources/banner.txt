@@ -1,1 +1,1 @@
-${AnsiColor.BRIGHT_BLUE}:: Information Mapping Publishing Cloud - Developed by Storefront BVBA ::${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_BLUE}:: Information Mapping Publishing Cloud - Developed by Storefront.be ::${AnsiColor.DEFAULT}
