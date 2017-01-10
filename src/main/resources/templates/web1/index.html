@@ -247,10 +247,12 @@ END INTRO: FULL SCREEN OVERLAY-->
 
                     <!-- Show the contents immediately if only 1 block -->
                     <div th:if="${mapIter.count} == 1" class="view-content-slider owl-carousel">
-                        <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
-                            <h3 th:text="${block.label}">The Benefits</h3>
-                            <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent())}">
+                        <div class="sixteen">
+                            <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
+                                <h3 th:text="${block.label}">The Benefits</h3>
+                                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent())}">
 
+                                </div>
                             </div>
                         </div>
                     </div>
