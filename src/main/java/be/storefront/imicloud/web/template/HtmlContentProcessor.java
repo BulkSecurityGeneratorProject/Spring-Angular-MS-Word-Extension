@@ -46,6 +46,11 @@ public class HtmlContentProcessor {
 
         }
 
+        // Make links open in new tab
+        for (Match a : root.find("a").each()) {
+            a.attr("target", "_blank");
+        }
+
         String r = DomHelper.domToString(root);
 
 
