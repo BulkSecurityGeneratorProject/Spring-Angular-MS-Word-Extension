@@ -285,6 +285,9 @@ public class UploadController {
 
         // Process what's in the XML
         Document xmlDoc = getXmlDocumentFromString(doc.getOriginalXml());
+
+        removeNodesByType(xmlDoc, "overviewmap");
+
         NodeList mapList = xmlDoc.getElementsByTagName("map");
 
         for (int i = 0; i < mapList.getLength(); i++) {
@@ -361,16 +364,36 @@ public class UploadController {
         return doc;
     }
 
+    private void removeNodesByType(Document xmlDoc, String nodeName) {
+        NodeList targets = xmlDoc.getElementsByTagName(nodeName);
+
+        int numberToKeep = 0;
+        int numberToDelete = targets.getLength() - numberToKeep;
+
+        for(int i = 0; i < numberToDelete; i++){
+            Node target = targets.item(numberToKeep);
+            Node parent = target.getParentNode();
+            parent.removeChild(target);
+        }
+    }
+
 
     private String transformContentToHtml(String contentText) {
         Match root = $(contentText);
 
         root.find("paragraph").rename("p");
+        // Nested text in hyperlink
+        root.find("hyperlink > text").rename("span");
+
+        // All other text should be <p>
         root.find("text").rename("p");
+
         root.find("format[formattype=bold]").rename("strong").removeAttr("formattype");
         root.find("list[numbered=false]").rename("ul").removeAttr("numbered");
         root.find("list[numbered=true]").rename("ol").removeAttr("numbered");
         root.find("listitem").rename("li");
+
+        renameAttr(root.find("hyperlink").rename("a"), "address","href");
 
         renameAttr(root.find("image").rename("img"), "source", "data-source");
 

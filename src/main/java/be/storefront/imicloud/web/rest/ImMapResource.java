@@ -32,51 +32,51 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImMapResource {
 
     private final Logger log = LoggerFactory.getLogger(ImMapResource.class);
-        
+
     @Inject
     private ImMapService imMapService;
 
-    /**
-     * POST  /im-maps : Create a new imMap.
-     *
-     * @param imMapDTO the imMapDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new imMapDTO, or with status 400 (Bad Request) if the imMap has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/im-maps")
-    @Timed
-    public ResponseEntity<ImMapDTO> createImMap(@Valid @RequestBody ImMapDTO imMapDTO) throws URISyntaxException {
-        log.debug("REST request to save ImMap : {}", imMapDTO);
-        if (imMapDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imMap", "idexists", "A new imMap cannot already have an ID")).body(null);
-        }
-        ImMapDTO result = imMapService.save(imMapDTO);
-        return ResponseEntity.created(new URI("/api/im-maps/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("imMap", result.getId().toString()))
-            .body(result);
-    }
+//    /**
+//     * POST  /im-maps : Create a new imMap.
+//     *
+//     * @param imMapDTO the imMapDTO to create
+//     * @return the ResponseEntity with status 201 (Created) and with body the new imMapDTO, or with status 400 (Bad Request) if the imMap has already an ID
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PostMapping("/im-maps")
+//    @Timed
+//    public ResponseEntity<ImMapDTO> createImMap(@Valid @RequestBody ImMapDTO imMapDTO) throws URISyntaxException {
+//        log.debug("REST request to save ImMap : {}", imMapDTO);
+//        if (imMapDTO.getId() != null) {
+//            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imMap", "idexists", "A new imMap cannot already have an ID")).body(null);
+//        }
+//        ImMapDTO result = imMapService.save(imMapDTO);
+//        return ResponseEntity.created(new URI("/api/im-maps/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert("imMap", result.getId().toString()))
+//            .body(result);
+//    }
 
-    /**
-     * PUT  /im-maps : Updates an existing imMap.
-     *
-     * @param imMapDTO the imMapDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated imMapDTO,
-     * or with status 400 (Bad Request) if the imMapDTO is not valid,
-     * or with status 500 (Internal Server Error) if the imMapDTO couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/im-maps")
-    @Timed
-    public ResponseEntity<ImMapDTO> updateImMap(@Valid @RequestBody ImMapDTO imMapDTO) throws URISyntaxException {
-        log.debug("REST request to update ImMap : {}", imMapDTO);
-        if (imMapDTO.getId() == null) {
-            return createImMap(imMapDTO);
-        }
-        ImMapDTO result = imMapService.save(imMapDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("imMap", imMapDTO.getId().toString()))
-            .body(result);
-    }
+//    /**
+//     * PUT  /im-maps : Updates an existing imMap.
+//     *
+//     * @param imMapDTO the imMapDTO to update
+//     * @return the ResponseEntity with status 200 (OK) and with body the updated imMapDTO,
+//     * or with status 400 (Bad Request) if the imMapDTO is not valid,
+//     * or with status 500 (Internal Server Error) if the imMapDTO couldnt be updated
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PutMapping("/im-maps")
+//    @Timed
+//    public ResponseEntity<ImMapDTO> updateImMap(@Valid @RequestBody ImMapDTO imMapDTO) throws URISyntaxException {
+//        log.debug("REST request to update ImMap : {}", imMapDTO);
+//        if (imMapDTO.getId() == null) {
+//            return createImMap(imMapDTO);
+//        }
+//        ImMapDTO result = imMapService.save(imMapDTO);
+//        return ResponseEntity.ok()
+//            .headers(HeaderUtil.createEntityUpdateAlert("imMap", imMapDTO.getId().toString()))
+//            .body(result);
+//    }
 
     /**
      * GET  /im-maps : get all the imMaps.
@@ -108,33 +108,33 @@ public class ImMapResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /**
-     * DELETE  /im-maps/:id : delete the "id" imMap.
-     *
-     * @param id the id of the imMapDTO to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/im-maps/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteImMap(@PathVariable Long id) {
-        log.debug("REST request to delete ImMap : {}", id);
-        imMapService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imMap", id.toString())).build();
-    }
+//    /**
+//     * DELETE  /im-maps/:id : delete the "id" imMap.
+//     *
+//     * @param id the id of the imMapDTO to delete
+//     * @return the ResponseEntity with status 200 (OK)
+//     */
+//    @DeleteMapping("/im-maps/{id}")
+//    @Timed
+//    public ResponseEntity<Void> deleteImMap(@PathVariable Long id) {
+//        log.debug("REST request to delete ImMap : {}", id);
+//        imMapService.delete(id);
+//        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imMap", id.toString())).build();
+//    }
 
-    /**
-     * SEARCH  /_search/im-maps?query=:query : search for the imMap corresponding
-     * to the query.
-     *
-     * @param query the query of the imMap search 
-     * @return the result of the search
-     */
-    @GetMapping("/_search/im-maps")
-    @Timed
-    public List<ImMapDTO> searchImMaps(@RequestParam String query) {
-        log.debug("REST request to search ImMaps for query {}", query);
-        return imMapService.search(query);
-    }
+//    /**
+//     * SEARCH  /_search/im-maps?query=:query : search for the imMap corresponding
+//     * to the query.
+//     *
+//     * @param query the query of the imMap search
+//     * @return the result of the search
+//     */
+//    @GetMapping("/_search/im-maps")
+//    @Timed
+//    public List<ImMapDTO> searchImMaps(@RequestParam String query) {
+//        log.debug("REST request to search ImMaps for query {}", query);
+//        return imMapService.search(query);
+//    }
 
 
 }

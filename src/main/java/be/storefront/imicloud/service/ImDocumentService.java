@@ -20,11 +20,15 @@ public interface ImDocumentService {
 
     /**
      *  Get all the imDocuments.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     Page<ImDocumentDTO> findAll(Pageable pageable);
+
+
+    Page<ImDocumentDTO> findByUserId(Long userId, Pageable pageable);
+
 
     /**
      *  Get the "id" imDocument.
@@ -45,7 +49,7 @@ public interface ImDocumentService {
      * Search for the imDocument corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */

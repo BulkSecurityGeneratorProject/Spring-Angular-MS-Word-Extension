@@ -1,6 +1,7 @@
 package be.storefront.imicloud.web.rest;
 
-import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.security.MyUserDetails;
+import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.UrlHelperService;
 import com.codahale.metrics.annotation.Timed;
 import be.storefront.imicloud.service.ImDocumentService;
@@ -20,15 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing ImDocument.
@@ -81,10 +76,26 @@ public class ImDocumentResource {
         if (imDocumentDTO.getId() == null) {
             return ResponseEntity.badRequest().body(null);
         }
-        ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("imDocument", imDocumentDTO.getId().toString()))
-            .body(result);
+
+        MyUserDetails userDetails = SecurityUtils.getCurrentUser();
+
+        if (imDocumentDTO.getUserId() == null) {
+            // User ID is required => Access denied
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        } else if (imDocumentDTO.getUserId().equals(userDetails.getId())) {
+            // This is my document
+
+            ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert("imDocument", imDocumentDTO.getId().toString()))
+                .body(result);
+
+        } else {
+            // Cannot update someone else's document
+            //return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -98,12 +109,14 @@ public class ImDocumentResource {
     @Timed
     public ResponseEntity<List<ImDocumentDTO>> getAllImDocuments(@ApiParam Pageable pageable)
         throws URISyntaxException {
-        // TODO limit to current user documents
         log.debug("REST request to get a page of ImDocuments");
-        Page<ImDocumentDTO> page = imDocumentService.findAll(pageable);
+
+        MyUserDetails myUserDetails = SecurityUtils.getCurrentUser();
+
+        Page<ImDocumentDTO> page = imDocumentService.findByUserId(myUserDetails.getId(), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/im-documents");
 
-        for(ImDocumentDTO imDocumentDTO : page.getContent()){
+        for (ImDocumentDTO imDocumentDTO : page.getContent()) {
             imDocumentDTO.setUrlHelperService(urlHelperService);
         }
 
@@ -119,17 +132,25 @@ public class ImDocumentResource {
     @GetMapping("/im-documents/{id}")
     @Timed
     public ResponseEntity<ImDocumentDTO> getImDocument(@PathVariable Long id) {
-        // TODO check accesa for current user
         log.debug("REST request to get ImDocument : {}", id);
         ImDocumentDTO imDocumentDTO = imDocumentService.findOne(id);
 
-        imDocumentDTO.setUrlHelperService(urlHelperService);
+        MyUserDetails myUserDetails = SecurityUtils.getCurrentUser();
 
-        return Optional.ofNullable(imDocumentDTO)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (imDocumentDTO.getUserId() != null && imDocumentDTO.getUserId().equals(myUserDetails.getId())) {
+            // Access granted
+            imDocumentDTO.setUrlHelperService(urlHelperService);
+
+            return Optional.ofNullable(imDocumentDTO)
+                .map(result -> new ResponseEntity<>(
+                    result,
+                    HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
     }
 
     /**
@@ -141,10 +162,20 @@ public class ImDocumentResource {
     @DeleteMapping("/im-documents/{id}")
     @Timed
     public ResponseEntity<Void> deleteImDocument(@PathVariable Long id) {
-        // TODO check accesa for current user
         log.debug("REST request to delete ImDocument : {}", id);
-        imDocumentService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
+
+        ImDocumentDTO imDocumentDTO = imDocumentService.findOne(id);
+
+        MyUserDetails myUserDetails = SecurityUtils.getCurrentUser();
+
+        if (imDocumentDTO.getUserId() != null && imDocumentDTO.getUserId().equals(myUserDetails.getId())) {
+            // Access granted
+            imDocumentService.delete(id);
+            return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imDocument", id.toString())).build();
+
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 //    /**

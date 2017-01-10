@@ -36,51 +36,51 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class OrganizationResource {
 
     private final Logger log = LoggerFactory.getLogger(OrganizationResource.class);
-        
+
     @Inject
     private OrganizationService organizationService;
 
-    /**
-     * POST  /organizations : Create a new organization.
-     *
-     * @param organizationDTO the organizationDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new organizationDTO, or with status 400 (Bad Request) if the organization has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/organizations")
-    @Timed
-    public ResponseEntity<OrganizationDTO> createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) throws URISyntaxException {
-        log.debug("REST request to save Organization : {}", organizationDTO);
-        if (organizationDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("organization", "idexists", "A new organization cannot already have an ID")).body(null);
-        }
-        OrganizationDTO result = organizationService.save(organizationDTO);
-        return ResponseEntity.created(new URI("/api/organizations/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("organization", result.getId().toString()))
-            .body(result);
-    }
+//    /**
+//     * POST  /organizations : Create a new organization.
+//     *
+//     * @param organizationDTO the organizationDTO to create
+//     * @return the ResponseEntity with status 201 (Created) and with body the new organizationDTO, or with status 400 (Bad Request) if the organization has already an ID
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PostMapping("/organizations")
+//    @Timed
+//    public ResponseEntity<OrganizationDTO> createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) throws URISyntaxException {
+//        log.debug("REST request to save Organization : {}", organizationDTO);
+//        if (organizationDTO.getId() != null) {
+//            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("organization", "idexists", "A new organization cannot already have an ID")).body(null);
+//        }
+//        OrganizationDTO result = organizationService.save(organizationDTO);
+//        return ResponseEntity.created(new URI("/api/organizations/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert("organization", result.getId().toString()))
+//            .body(result);
+//    }
 
-    /**
-     * PUT  /organizations : Updates an existing organization.
-     *
-     * @param organizationDTO the organizationDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated organizationDTO,
-     * or with status 400 (Bad Request) if the organizationDTO is not valid,
-     * or with status 500 (Internal Server Error) if the organizationDTO couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/organizations")
-    @Timed
-    public ResponseEntity<OrganizationDTO> updateOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) throws URISyntaxException {
-        log.debug("REST request to update Organization : {}", organizationDTO);
-        if (organizationDTO.getId() == null) {
-            return createOrganization(organizationDTO);
-        }
-        OrganizationDTO result = organizationService.save(organizationDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("organization", organizationDTO.getId().toString()))
-            .body(result);
-    }
+//    /**
+//     * PUT  /organizations : Updates an existing organization.
+//     *
+//     * @param organizationDTO the organizationDTO to update
+//     * @return the ResponseEntity with status 200 (OK) and with body the updated organizationDTO,
+//     * or with status 400 (Bad Request) if the organizationDTO is not valid,
+//     * or with status 500 (Internal Server Error) if the organizationDTO couldnt be updated
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PutMapping("/organizations")
+//    @Timed
+//    public ResponseEntity<OrganizationDTO> updateOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) throws URISyntaxException {
+//        log.debug("REST request to update Organization : {}", organizationDTO);
+//        if (organizationDTO.getId() == null) {
+//            return createOrganization(organizationDTO);
+//        }
+//        OrganizationDTO result = organizationService.save(organizationDTO);
+//        return ResponseEntity.ok()
+//            .headers(HeaderUtil.createEntityUpdateAlert("organization", organizationDTO.getId().toString()))
+//            .body(result);
+//    }
 
     /**
      * GET  /organizations : get all the organizations.
@@ -117,38 +117,38 @@ public class OrganizationResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /**
-     * DELETE  /organizations/:id : delete the "id" organization.
-     *
-     * @param id the id of the organizationDTO to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/organizations/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
-        log.debug("REST request to delete Organization : {}", id);
-        organizationService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("organization", id.toString())).build();
-    }
+//    /**
+//     * DELETE  /organizations/:id : delete the "id" organization.
+//     *
+//     * @param id the id of the organizationDTO to delete
+//     * @return the ResponseEntity with status 200 (OK)
+//     */
+//    @DeleteMapping("/organizations/{id}")
+//    @Timed
+//    public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
+//        log.debug("REST request to delete Organization : {}", id);
+//        organizationService.delete(id);
+//        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("organization", id.toString())).build();
+//    }
 
-    /**
-     * SEARCH  /_search/organizations?query=:query : search for the organization corresponding
-     * to the query.
-     *
-     * @param query the query of the organization search 
-     * @param pageable the pagination information
-     * @return the result of the search
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
-     */
-    @GetMapping("/_search/organizations")
-    @Timed
-    public ResponseEntity<List<OrganizationDTO>> searchOrganizations(@RequestParam String query, @ApiParam Pageable pageable)
-        throws URISyntaxException {
-        log.debug("REST request to search for a page of Organizations for query {}", query);
-        Page<OrganizationDTO> page = organizationService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/organizations");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+//    /**
+//     * SEARCH  /_search/organizations?query=:query : search for the organization corresponding
+//     * to the query.
+//     *
+//     * @param query the query of the organization search
+//     * @param pageable the pagination information
+//     * @return the result of the search
+//     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
+//     */
+//    @GetMapping("/_search/organizations")
+//    @Timed
+//    public ResponseEntity<List<OrganizationDTO>> searchOrganizations(@RequestParam String query, @ApiParam Pageable pageable)
+//        throws URISyntaxException {
+//        log.debug("REST request to search for a page of Organizations for query {}", query);
+//        Page<OrganizationDTO> page = organizationService.search(query, pageable);
+//        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/organizations");
+//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+//    }
 
 
 }

@@ -105,7 +105,7 @@
             "value": "Value"
         },
         "delete": {
-            "title": "Confirm delete operation"
+            "title": "Confirm delete"
         },
         "validation": {
             "required": "This field is required.",
@@ -129,5 +129,5 @@
         "emailexists": "E-mail is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID"
     },
-    "footer": "© 2016 Information Mapping International | All rights reserved"
+    "footer": "© 2017 Information Mapping International - All rights reserved"
 }

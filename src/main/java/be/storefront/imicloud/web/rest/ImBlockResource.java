@@ -32,51 +32,51 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ImBlockResource {
 
     private final Logger log = LoggerFactory.getLogger(ImBlockResource.class);
-        
+
     @Inject
     private ImBlockService imBlockService;
 
-    /**
-     * POST  /im-blocks : Create a new imBlock.
-     *
-     * @param imBlockDTO the imBlockDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new imBlockDTO, or with status 400 (Bad Request) if the imBlock has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/im-blocks")
-    @Timed
-    public ResponseEntity<ImBlockDTO> createImBlock(@Valid @RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
-        log.debug("REST request to save ImBlock : {}", imBlockDTO);
-        if (imBlockDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imBlock", "idexists", "A new imBlock cannot already have an ID")).body(null);
-        }
-        ImBlockDTO result = imBlockService.save(imBlockDTO);
-        return ResponseEntity.created(new URI("/api/im-blocks/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("imBlock", result.getId().toString()))
-            .body(result);
-    }
+//    /**
+//     * POST  /im-blocks : Create a new imBlock.
+//     *
+//     * @param imBlockDTO the imBlockDTO to create
+//     * @return the ResponseEntity with status 201 (Created) and with body the new imBlockDTO, or with status 400 (Bad Request) if the imBlock has already an ID
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PostMapping("/im-blocks")
+//    @Timed
+//    public ResponseEntity<ImBlockDTO> createImBlock(@Valid @RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
+//        log.debug("REST request to save ImBlock : {}", imBlockDTO);
+//        if (imBlockDTO.getId() != null) {
+//            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("imBlock", "idexists", "A new imBlock cannot already have an ID")).body(null);
+//        }
+//        ImBlockDTO result = imBlockService.save(imBlockDTO);
+//        return ResponseEntity.created(new URI("/api/im-blocks/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert("imBlock", result.getId().toString()))
+//            .body(result);
+//    }
 
-    /**
-     * PUT  /im-blocks : Updates an existing imBlock.
-     *
-     * @param imBlockDTO the imBlockDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated imBlockDTO,
-     * or with status 400 (Bad Request) if the imBlockDTO is not valid,
-     * or with status 500 (Internal Server Error) if the imBlockDTO couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/im-blocks")
-    @Timed
-    public ResponseEntity<ImBlockDTO> updateImBlock(@Valid @RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
-        log.debug("REST request to update ImBlock : {}", imBlockDTO);
-        if (imBlockDTO.getId() == null) {
-            return createImBlock(imBlockDTO);
-        }
-        ImBlockDTO result = imBlockService.save(imBlockDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("imBlock", imBlockDTO.getId().toString()))
-            .body(result);
-    }
+//    /**
+//     * PUT  /im-blocks : Updates an existing imBlock.
+//     *
+//     * @param imBlockDTO the imBlockDTO to update
+//     * @return the ResponseEntity with status 200 (OK) and with body the updated imBlockDTO,
+//     * or with status 400 (Bad Request) if the imBlockDTO is not valid,
+//     * or with status 500 (Internal Server Error) if the imBlockDTO couldnt be updated
+//     * @throws URISyntaxException if the Location URI syntax is incorrect
+//     */
+//    @PutMapping("/im-blocks")
+//    @Timed
+//    public ResponseEntity<ImBlockDTO> updateImBlock(@Valid @RequestBody ImBlockDTO imBlockDTO) throws URISyntaxException {
+//        log.debug("REST request to update ImBlock : {}", imBlockDTO);
+//        if (imBlockDTO.getId() == null) {
+//            return createImBlock(imBlockDTO);
+//        }
+//        ImBlockDTO result = imBlockService.save(imBlockDTO);
+//        return ResponseEntity.ok()
+//            .headers(HeaderUtil.createEntityUpdateAlert("imBlock", imBlockDTO.getId().toString()))
+//            .body(result);
+//    }
 
     /**
      * GET  /im-blocks : get all the imBlocks.
@@ -108,33 +108,33 @@ public class ImBlockResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /**
-     * DELETE  /im-blocks/:id : delete the "id" imBlock.
-     *
-     * @param id the id of the imBlockDTO to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/im-blocks/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteImBlock(@PathVariable Long id) {
-        log.debug("REST request to delete ImBlock : {}", id);
-        imBlockService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imBlock", id.toString())).build();
-    }
+//    /**
+//     * DELETE  /im-blocks/:id : delete the "id" imBlock.
+//     *
+//     * @param id the id of the imBlockDTO to delete
+//     * @return the ResponseEntity with status 200 (OK)
+//     */
+//    @DeleteMapping("/im-blocks/{id}")
+//    @Timed
+//    public ResponseEntity<Void> deleteImBlock(@PathVariable Long id) {
+//        log.debug("REST request to delete ImBlock : {}", id);
+//        imBlockService.delete(id);
+//        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("imBlock", id.toString())).build();
+//    }
 
-    /**
-     * SEARCH  /_search/im-blocks?query=:query : search for the imBlock corresponding
-     * to the query.
-     *
-     * @param query the query of the imBlock search 
-     * @return the result of the search
-     */
-    @GetMapping("/_search/im-blocks")
-    @Timed
-    public List<ImBlockDTO> searchImBlocks(@RequestParam String query) {
-        log.debug("REST request to search ImBlocks for query {}", query);
-        return imBlockService.search(query);
-    }
+//    /**
+//     * SEARCH  /_search/im-blocks?query=:query : search for the imBlock corresponding
+//     * to the query.
+//     *
+//     * @param query the query of the imBlock search
+//     * @return the result of the search
+//     */
+//    @GetMapping("/_search/im-blocks")
+//    @Timed
+//    public List<ImBlockDTO> searchImBlocks(@RequestParam String query) {
+//        log.debug("REST request to search ImBlocks for query {}", query);
+//        return imBlockService.search(query);
+//    }
 
 
 }

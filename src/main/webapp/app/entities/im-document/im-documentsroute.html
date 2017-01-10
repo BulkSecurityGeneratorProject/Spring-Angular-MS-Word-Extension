@@ -1,7 +1,14 @@
 <div>
     <h2 data-translate="imicloudApp.imDocument.home.title">Im Documents</h2>
     <jhi-alert></jhi-alert>
-    <div class="table-responsive">
+
+    <div ng-show="vm.imDocuments.length == 0">
+        <p class="alert alert-info" data-translate="imicloudApp.imDocument.noDocumentsExist">
+            You haven't published any documents yet.
+        </p>
+    </div>
+
+    <div ng-show="vm.imDocuments.length > 0" class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
