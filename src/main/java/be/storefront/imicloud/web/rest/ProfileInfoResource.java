@@ -1,6 +1,7 @@
 package be.storefront.imicloud.web.rest;
 
 import be.storefront.imicloud.config.DefaultProfileUtil;
+import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.config.JHipsterProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class ProfileInfoResource {
 
     @Inject
     private JHipsterProperties jHipsterProperties;
+
+    @Inject private ImCloudProperties imCloudProperties;
 
     @GetMapping("/profile-info")
     public ProfileInfoResponse getActiveProfiles() {
@@ -50,10 +53,14 @@ public class ProfileInfoResource {
 
         public String[] activeProfiles;
         public String ribbonEnv;
+        public String createAccountUrl;
+        public String forgotPasswordUrl;
 
         ProfileInfoResponse(String[] activeProfiles, String ribbonEnv) {
             this.activeProfiles = activeProfiles;
             this.ribbonEnv = ribbonEnv;
+            this.createAccountUrl = imCloudProperties.getRegisterNewAccountUrl();
+            this.forgotPasswordUrl = imCloudProperties.getForgotPasswordUrl();
         }
     }
 }

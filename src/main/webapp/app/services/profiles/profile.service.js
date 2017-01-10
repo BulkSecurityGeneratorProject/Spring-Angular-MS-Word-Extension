@@ -24,6 +24,8 @@
                         var response = {};
                         response.activeProfiles = result.data.activeProfiles;
                         response.ribbonEnv = result.data.ribbonEnv;
+                        response.createAccountUrl = result.data.createAccountUrl;
+                        response.forgotPasswordUrl = result.data.forgotPasswordUrl;
                         response.inProduction = result.data.activeProfiles.indexOf("prod") !== -1;
                         response.swaggerEnabled = result.data.activeProfiles.indexOf("swagger") !== -1;
                         return response;

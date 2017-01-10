@@ -92,13 +92,15 @@ imcloud:
 
     cloudName: Information Mapping Cloud
 
+    forgotPasswordUrl: http://localinformationmapping.com:10089/en/shop/customer/account/forgotPassword
+    registerNewAccountUrl: http://localinformationmapping.com:10089/en/shop/customer/account/create
+
+
     # Enter the full path to the dir where images are stored. Must end with a "/"
     fileStorageDir: /Users/wouter/Business/Workspace/imi-publishing-cloud/uploads
     security:
         magento:
             allowMagentoCustomerLogin: true
-            forgotPasswordUrl: http://localinformationmapping.com:10089/en/shop/customer/account/forgotPassword
-            registerNewAccountUrl: http://localinformationmapping.com:10089/en/shop/customer/account/create
             api:
                 url: http://localinformationmapping.com:10089/magento/
                 user: user

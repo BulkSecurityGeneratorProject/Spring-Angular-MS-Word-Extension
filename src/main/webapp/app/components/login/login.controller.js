@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$rootScope', '$state', '$timeout', 'Auth', '$uibModalInstance'];
+    LoginController.$inject = ['$scope','$rootScope', '$state', '$timeout', 'Auth', '$uibModalInstance', 'ProfileService'];
 
-    function LoginController ($rootScope, $state, $timeout, Auth, $uibModalInstance) {
+    function LoginController ($scope, $rootScope, $state, $timeout, Auth, $uibModalInstance, ProfileService) {
         var vm = this;
 
         vm.authenticationError = false;
@@ -19,6 +19,11 @@
         vm.rememberMe = true;
         vm.requestResetPassword = requestResetPassword;
         vm.username = null;
+
+        ProfileService.getProfileInfo().then(function(response) {
+            vm.forgotPasswordUrl = response.forgotPasswordUrl;
+            vm.createAccountUrl = response.createAccountUrl;
+        });
 
         $timeout(function (){angular.element('#username').focus();});
 
@@ -69,5 +74,6 @@
             $uibModalInstance.dismiss('cancel');
             $state.go('requestReset');
         }
+
     }
 })();

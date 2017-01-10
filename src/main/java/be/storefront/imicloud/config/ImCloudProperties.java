@@ -19,6 +19,9 @@ public class ImCloudProperties {
     private String fileStorageDir = null;
     private String baseUrl = null;
     private String cloudName = null;
+    private String forgotPasswordUrl;
+    private String registerNewAccountUrl;
+
     private final Security security = new Security();
 
     private final FsProCloud fsProCloud = new FsProCloud();
@@ -58,6 +61,22 @@ public class ImCloudProperties {
         this.baseUrl = baseUrl;
     }
 
+    public String getForgotPasswordUrl() {
+        return forgotPasswordUrl;
+    }
+
+    public void setForgotPasswordUrl(String forgotPasswordUrl) {
+        this.forgotPasswordUrl = forgotPasswordUrl;
+    }
+
+    public String getRegisterNewAccountUrl() {
+        return registerNewAccountUrl;
+    }
+
+    public void setRegisterNewAccountUrl(String registerNewAccountUrl) {
+        this.registerNewAccountUrl = registerNewAccountUrl;
+    }
+
     public Security getSecurity() {
         return security;
     }
@@ -79,8 +98,7 @@ public class ImCloudProperties {
     public static class Magento {
 
         private boolean allowMagentoCustomerLogin = false;
-        private String forgotPasswordUrl;
-        private String registerNewAccountUrl;
+
 
         private final Api api = new Api();
 
@@ -90,22 +108,6 @@ public class ImCloudProperties {
 
         public void setAllowMagentoCustomerLogin(boolean allowMagentoCustomerLogin) {
             this.allowMagentoCustomerLogin = allowMagentoCustomerLogin;
-        }
-
-        public String getForgotPasswordUrl() {
-            return forgotPasswordUrl;
-        }
-
-        public void setForgotPasswordUrl(String forgotPasswordUrl) {
-            this.forgotPasswordUrl = forgotPasswordUrl;
-        }
-
-        public String getRegisterNewAccountUrl() {
-            return registerNewAccountUrl;
-        }
-
-        public void setRegisterNewAccountUrl(String registerNewAccountUrl) {
-            this.registerNewAccountUrl = registerNewAccountUrl;
         }
 
         public Api getApi() {
