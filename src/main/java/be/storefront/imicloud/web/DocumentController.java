@@ -108,7 +108,7 @@ public class DocumentController {
                         // Document is password protected
 
                         MyUserDetails currentUser = SecurityUtils.getCurrentUser();
-                        if(imDocument.getUser().getId().equals(currentUser.getId())){
+                        if(currentUser != null && imDocument.getUser().getId().equals(currentUser.getId())){
                             // I am the uploader of the document
 
                         }else {

@@ -36,7 +36,7 @@ public class ImageSourcePath extends AbstractAuditingEntity implements Serializa
     @ManyToOne
     private Image image;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private ImDocument imDocument;
 
     public Long getId() {

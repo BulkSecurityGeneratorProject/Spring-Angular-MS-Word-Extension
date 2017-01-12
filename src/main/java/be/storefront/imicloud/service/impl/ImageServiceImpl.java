@@ -132,8 +132,9 @@ public class ImageServiceImpl implements ImageService{
 
     public Image createImageFromUpload(MultipartFile file, String contentType, User uploadingUser) throws IOException, NoSuchAlgorithmException {
         String filename = fileStorageService.saveFileAndGetPath(file);
+        File savedFile = fileStorageService.loadFile(filename);
 
-        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+        BufferedImage bufferedImage = ImageIO.read(savedFile);
         Integer width = bufferedImage.getWidth();
         Integer height = bufferedImage.getHeight();
 
