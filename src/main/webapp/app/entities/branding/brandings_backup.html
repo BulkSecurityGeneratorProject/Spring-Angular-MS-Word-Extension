@@ -1,0 +1,64 @@
+<div>
+    <h2 data-translate="imicloudApp.branding.home.title">Brandings</h2>
+    <jhi-alert></jhi-alert>
+
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <!--
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    -->
+                    <th><span data-translate="imicloudApp.branding.primaryColor">Primary Color</span></th>
+                    <!--
+                    <th><span data-translate="imicloudApp.branding.secundaryColor">Secundary Color</span></th>
+                    -->
+                    <th><span data-translate="imicloudApp.branding.pageBackgroundColor">Page Background</span></th>
+                    <th><span data-translate="imicloudApp.branding.textColor">Text Color</span></th>
+                    <th><span data-translate="imicloudApp.branding.logoImage">Logo Image</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="branding in vm.brandings track by branding.id">
+                    <!--
+                    <td><a ui-sref="branding-detail({id:branding.id})">{{branding.id}}</a></td>
+                    -->
+                    <td>{{branding.primaryColor}}</td>
+                    <!--
+                    <td>{{branding.secundaryColor}}</td>
+                    -->
+                    <td>{{branding.pageBackgroundColor}}</td>
+                    <td>{{branding.textColor}}</td>
+                    <td>
+                        <a ui-sref="image-detail({id:branding.logoImageId})">{{branding.logoImageFilename}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="branding-detail({id:branding.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="branding.edit({id:branding.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
+                            </button>
+                            <!--
+                            <button type="submit"
+                                    ui-sref="branding.delete({id:branding.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.delete"></span>
+                            </button>
+                            -->
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -278,7 +278,7 @@ public class UploadController {
         return xmlDoc;
     }
 
-    private void processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
         // Delete old maps - if any
         for (ImMap m : doc.getMaps()) {
@@ -351,6 +351,7 @@ public class UploadController {
         doc = imDocumentRepository.save(doc);
 
         processImagesInDocument(doc);
+        return doc;
     }
 
     private void removeNodesByType(Document xmlDoc, String nodeName) {
