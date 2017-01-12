@@ -636,15 +636,24 @@ public class UploadController {
         // Prevent double data
         List<ImageSourcePath> existingSourcePaths = imageSourcePathRepository.findByDocumentIdAndSource(document.getId(), source);
 
-        if (existingSourcePaths.size() == 0) {
-            // Remember the "source" for this image, so we can later reprocess the XML
-            ImageSourcePath isp = new ImageSourcePath();
-            isp.setImage(image);
-            isp.setImDocument(document);
-            isp.setSource(source);
-
-            isp = imageSourcePathRepository.save(isp);
+        // Delete all previously incomplete uploads
+        for(ImageSourcePath isp : existingSourcePaths){
+            if(isp.isUploadComplete()){
+                // This image is now in use -> keep it
+            }else{
+                // This is an other upload that was not completed -> delete it, we have a new one
+                imageSourcePathRepository.delete(isp);
+            }
         }
+
+        // Remember the "source" for this image, so we can later reprocess the XML
+        ImageSourcePath isp = new ImageSourcePath();
+        isp.setImage(image);
+        isp.setImDocument(document);
+        isp.setSource(source);
+        isp.setUploadComplete(false);
+
+        isp = imageSourcePathRepository.save(isp);
 
         //processImageInDocument(document, source, image);
 
@@ -657,8 +666,22 @@ public class UploadController {
         imDocument.setOriginalXml(imDocument.getTempXml());
         imDocument.setPassword(imDocument.getTempPassword());
         imDocument.setDefaultTemplate(imDocument.getTempTemplate());
-
         imDocument.setUploadComplete(true);
+
+        // Delete all previously ok images
+        List<ImageSourcePath> existingSourcePaths = imageSourcePathRepository.findByDocumentId(imDocument.getId());
+
+        for(ImageSourcePath isp : existingSourcePaths){
+            if(isp.isUploadComplete()){
+                // This image is old -> remove it
+                imageSourcePathRepository.delete(isp);
+            }else{
+                // This is the new image -> keep it
+                isp.setUploadComplete(true);
+                imageSourcePathRepository.save(isp);
+            }
+        }
+
         processXmlSavedInDocument(imDocument);
 
         return imDocument;
@@ -674,7 +697,6 @@ public class UploadController {
     }
 
     private void processImageInDocument(ImDocument doc, String source, Image image) {
-
         if (doc.getMaps() == null) {
             // Reload before processing image, because the "maps" can be null due to earlier processing
             doc = imDocumentRepository.findOne(doc.getId());
