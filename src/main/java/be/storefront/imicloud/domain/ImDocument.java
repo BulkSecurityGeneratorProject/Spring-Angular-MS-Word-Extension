@@ -33,6 +33,9 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "temp_password")
+    private String tempPassword;
+
     @NotNull
     @Column(name = "document_name", nullable = false)
     private String documentName;
@@ -42,12 +45,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @Column(name = "original_xml", nullable = false)
     private String originalXml;
 
+    @Lob
+    @Column(name = "temp_xml")
+    private String tempXml;
+
     @NotNull
     @Column(name = "secret", nullable = false)
     private String secret;
 
     @Column(name = "default_template")
     private String defaultTemplate;
+
+    @Column(name = "temp_template")
+    private String tempTemplate;
 
     @Column(name = "upload_complete")
     private Boolean uploadComplete;
@@ -99,6 +109,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
         this.password = password;
     }
 
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public ImDocument tempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
+        return this;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
+    }
+
     public String getDocumentName() {
         return documentName;
     }
@@ -125,6 +148,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
         this.originalXml = originalXml;
     }
 
+    public String getTempXml() {
+        return tempXml;
+    }
+
+    public ImDocument tempXml(String tempXml) {
+        this.tempXml = tempXml;
+        return this;
+    }
+
+    public void setTempXml(String tempXml) {
+        this.tempXml = tempXml;
+    }
+
     public String getSecret() {
         return secret;
     }
@@ -149,6 +185,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
 
     public void setDefaultTemplate(String defaultTemplate) {
         this.defaultTemplate = defaultTemplate;
+    }
+
+    public String getTempTemplate() {
+        return tempTemplate;
+    }
+
+    public ImDocument tempTemplate(String tempTemplate) {
+        this.tempTemplate = tempTemplate;
+        return this;
+    }
+
+    public void setTempTemplate(String tempTemplate) {
+        this.tempTemplate = tempTemplate;
     }
 
     public Boolean isUploadComplete() {
@@ -241,10 +290,13 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
             "id=" + id +
             ", language='" + language + "'" +
             ", password='" + password + "'" +
+            ", tempPassword='" + tempPassword + "'" +
             ", documentName='" + documentName + "'" +
             ", originalXml='" + originalXml + "'" +
+            ", tempXml='" + tempXml + "'" +
             ", secret='" + secret + "'" +
             ", defaultTemplate='" + defaultTemplate + "'" +
+            ", tempTemplate='" + tempTemplate + "'" +
             ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }

@@ -106,10 +106,13 @@
                             return {
                                 language: null,
                                 password: null,
+                                tempPassword: null,
                                 documentName: null,
                                 originalXml: null,
+                                tempXml: null,
                                 secret: null,
                                 defaultTemplate: null,
+                                tempTemplate: null,
                                 uploadComplete: null,
                                 id: null
                             };

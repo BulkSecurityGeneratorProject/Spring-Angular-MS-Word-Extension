@@ -21,6 +21,8 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     private String password;
 
+    private String tempPassword;
+
     @NotNull
     private String documentName;
 
@@ -28,25 +30,32 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     @Lob
     private String originalXml;
 
+    @Lob
+    private String tempXml;
+
     @NotNull
     private String secret;
 
     private String defaultTemplate;
 
+    private String tempTemplate;
+
     private Boolean uploadComplete;
 
 
     private Long folderId;
-
+    
     private Long userId;
-
+    
 
     private String userEmail;
+
+
 
     private UrlHelperService urlHelperService;
 
     public void setUrlHelperService(UrlHelperService urlHelperService){
-this.urlHelperService = urlHelperService;
+        this.urlHelperService = urlHelperService;
     }
 
     public Long getId() {
@@ -70,6 +79,13 @@ this.urlHelperService = urlHelperService;
     public void setPassword(String password) {
         this.password = password;
     }
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
+    }
     public String getDocumentName() {
         return documentName;
     }
@@ -84,6 +100,13 @@ this.urlHelperService = urlHelperService;
     public void setOriginalXml(String originalXml) {
         this.originalXml = originalXml;
     }
+    public String getTempXml() {
+        return tempXml;
+    }
+
+    public void setTempXml(String tempXml) {
+        this.tempXml = tempXml;
+    }
     public String getSecret() {
         return secret;
     }
@@ -97,6 +120,13 @@ this.urlHelperService = urlHelperService;
 
     public void setDefaultTemplate(String defaultTemplate) {
         this.defaultTemplate = defaultTemplate;
+    }
+    public String getTempTemplate() {
+        return tempTemplate;
+    }
+
+    public void setTempTemplate(String tempTemplate) {
+        this.tempTemplate = tempTemplate;
     }
     public Boolean getUploadComplete() {
         return uploadComplete;
@@ -166,10 +196,13 @@ this.urlHelperService = urlHelperService;
             "id=" + id +
             ", language='" + language + "'" +
             ", password='" + password + "'" +
+            ", tempPassword='" + tempPassword + "'" +
             ", documentName='" + documentName + "'" +
             ", originalXml='" + originalXml + "'" +
+            ", tempXml='" + tempXml + "'" +
             ", secret='" + secret + "'" +
             ", defaultTemplate='" + defaultTemplate + "'" +
+            ", tempTemplate='" + tempTemplate + "'" +
             ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }

@@ -49,17 +49,26 @@ public class ImDocumentResourceIntTest {
     private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
     private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
 
+    private static final String DEFAULT_TEMP_PASSWORD = "AAAAAAAAAA";
+    private static final String UPDATED_TEMP_PASSWORD = "BBBBBBBBBB";
+
     private static final String DEFAULT_DOCUMENT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_DOCUMENT_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_ORIGINAL_XML = "AAAAAAAAAA";
     private static final String UPDATED_ORIGINAL_XML = "BBBBBBBBBB";
 
+    private static final String DEFAULT_TEMP_XML = "AAAAAAAAAA";
+    private static final String UPDATED_TEMP_XML = "BBBBBBBBBB";
+
     private static final String DEFAULT_SECRET = "AAAAAAAAAA";
     private static final String UPDATED_SECRET = "BBBBBBBBBB";
 
     private static final String DEFAULT_DEFAULT_TEMPLATE = "AAAAAAAAAA";
     private static final String UPDATED_DEFAULT_TEMPLATE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TEMP_TEMPLATE = "AAAAAAAAAA";
+    private static final String UPDATED_TEMP_TEMPLATE = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_UPLOAD_COMPLETE = false;
     private static final Boolean UPDATED_UPLOAD_COMPLETE = true;
@@ -109,10 +118,13 @@ public class ImDocumentResourceIntTest {
         ImDocument imDocument = new ImDocument()
                 .language(DEFAULT_LANGUAGE)
                 .password(DEFAULT_PASSWORD)
+                .tempPassword(DEFAULT_TEMP_PASSWORD)
                 .documentName(DEFAULT_DOCUMENT_NAME)
                 .originalXml(DEFAULT_ORIGINAL_XML)
+                .tempXml(DEFAULT_TEMP_XML)
                 .secret(DEFAULT_SECRET)
                 .defaultTemplate(DEFAULT_DEFAULT_TEMPLATE)
+                .tempTemplate(DEFAULT_TEMP_TEMPLATE)
                 .uploadComplete(DEFAULT_UPLOAD_COMPLETE);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
@@ -147,10 +159,13 @@ public class ImDocumentResourceIntTest {
         ImDocument testImDocument = imDocumentList.get(imDocumentList.size() - 1);
         assertThat(testImDocument.getLanguage()).isEqualTo(DEFAULT_LANGUAGE);
         assertThat(testImDocument.getPassword()).isEqualTo(DEFAULT_PASSWORD);
+        assertThat(testImDocument.getTempPassword()).isEqualTo(DEFAULT_TEMP_PASSWORD);
         assertThat(testImDocument.getDocumentName()).isEqualTo(DEFAULT_DOCUMENT_NAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(DEFAULT_ORIGINAL_XML);
+        assertThat(testImDocument.getTempXml()).isEqualTo(DEFAULT_TEMP_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(DEFAULT_SECRET);
         assertThat(testImDocument.getDefaultTemplate()).isEqualTo(DEFAULT_DEFAULT_TEMPLATE);
+        assertThat(testImDocument.getTempTemplate()).isEqualTo(DEFAULT_TEMP_TEMPLATE);
         assertThat(testImDocument.isUploadComplete()).isEqualTo(DEFAULT_UPLOAD_COMPLETE);
 
         // Validate the ImDocument in ElasticSearch
@@ -249,10 +264,13 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(imDocument.getId().intValue())))
             .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
+            .andExpect(jsonPath("$.[*].tempPassword").value(hasItem(DEFAULT_TEMP_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
+            .andExpect(jsonPath("$.[*].tempXml").value(hasItem(DEFAULT_TEMP_XML.toString())))
             .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())))
             .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())))
+            .andExpect(jsonPath("$.[*].tempTemplate").value(hasItem(DEFAULT_TEMP_TEMPLATE.toString())))
             .andExpect(jsonPath("$.[*].uploadComplete").value(hasItem(DEFAULT_UPLOAD_COMPLETE.booleanValue())));
     }
 
@@ -269,10 +287,13 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.id").value(imDocument.getId().intValue()))
             .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
+            .andExpect(jsonPath("$.tempPassword").value(DEFAULT_TEMP_PASSWORD.toString()))
             .andExpect(jsonPath("$.documentName").value(DEFAULT_DOCUMENT_NAME.toString()))
             .andExpect(jsonPath("$.originalXml").value(DEFAULT_ORIGINAL_XML.toString()))
+            .andExpect(jsonPath("$.tempXml").value(DEFAULT_TEMP_XML.toString()))
             .andExpect(jsonPath("$.secret").value(DEFAULT_SECRET.toString()))
             .andExpect(jsonPath("$.defaultTemplate").value(DEFAULT_DEFAULT_TEMPLATE.toString()))
+            .andExpect(jsonPath("$.tempTemplate").value(DEFAULT_TEMP_TEMPLATE.toString()))
             .andExpect(jsonPath("$.uploadComplete").value(DEFAULT_UPLOAD_COMPLETE.booleanValue()));
     }
 
@@ -297,10 +318,13 @@ public class ImDocumentResourceIntTest {
         updatedImDocument
                 .language(UPDATED_LANGUAGE)
                 .password(UPDATED_PASSWORD)
+                .tempPassword(UPDATED_TEMP_PASSWORD)
                 .documentName(UPDATED_DOCUMENT_NAME)
                 .originalXml(UPDATED_ORIGINAL_XML)
+                .tempXml(UPDATED_TEMP_XML)
                 .secret(UPDATED_SECRET)
                 .defaultTemplate(UPDATED_DEFAULT_TEMPLATE)
+                .tempTemplate(UPDATED_TEMP_TEMPLATE)
                 .uploadComplete(UPDATED_UPLOAD_COMPLETE);
         ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(updatedImDocument);
 
@@ -315,10 +339,13 @@ public class ImDocumentResourceIntTest {
         ImDocument testImDocument = imDocumentList.get(imDocumentList.size() - 1);
         assertThat(testImDocument.getLanguage()).isEqualTo(UPDATED_LANGUAGE);
         assertThat(testImDocument.getPassword()).isEqualTo(UPDATED_PASSWORD);
+        assertThat(testImDocument.getTempPassword()).isEqualTo(UPDATED_TEMP_PASSWORD);
         assertThat(testImDocument.getDocumentName()).isEqualTo(UPDATED_DOCUMENT_NAME);
         assertThat(testImDocument.getOriginalXml()).isEqualTo(UPDATED_ORIGINAL_XML);
+        assertThat(testImDocument.getTempXml()).isEqualTo(UPDATED_TEMP_XML);
         assertThat(testImDocument.getSecret()).isEqualTo(UPDATED_SECRET);
         assertThat(testImDocument.getDefaultTemplate()).isEqualTo(UPDATED_DEFAULT_TEMPLATE);
+        assertThat(testImDocument.getTempTemplate()).isEqualTo(UPDATED_TEMP_TEMPLATE);
         assertThat(testImDocument.isUploadComplete()).isEqualTo(UPDATED_UPLOAD_COMPLETE);
 
         // Validate the ImDocument in ElasticSearch
@@ -381,10 +408,13 @@ public class ImDocumentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(imDocument.getId().intValue())))
             .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
+            .andExpect(jsonPath("$.[*].tempPassword").value(hasItem(DEFAULT_TEMP_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].documentName").value(hasItem(DEFAULT_DOCUMENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].originalXml").value(hasItem(DEFAULT_ORIGINAL_XML.toString())))
+            .andExpect(jsonPath("$.[*].tempXml").value(hasItem(DEFAULT_TEMP_XML.toString())))
             .andExpect(jsonPath("$.[*].secret").value(hasItem(DEFAULT_SECRET.toString())))
             .andExpect(jsonPath("$.[*].defaultTemplate").value(hasItem(DEFAULT_DEFAULT_TEMPLATE.toString())))
+            .andExpect(jsonPath("$.[*].tempTemplate").value(hasItem(DEFAULT_TEMP_TEMPLATE.toString())))
             .andExpect(jsonPath("$.[*].uploadComplete").value(hasItem(DEFAULT_UPLOAD_COMPLETE.booleanValue())));
     }
 }
