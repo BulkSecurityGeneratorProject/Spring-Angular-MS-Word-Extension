@@ -26,7 +26,6 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     @NotNull
     private String documentName;
 
-    @NotNull
     @Lob
     private String originalXml;
 

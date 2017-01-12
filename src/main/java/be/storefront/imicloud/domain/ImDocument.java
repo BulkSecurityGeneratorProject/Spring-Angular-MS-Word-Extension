@@ -41,7 +41,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     private String documentName;
 
     @Lob
-    @Column(name = "original_xml", nullable = false)
+    @Column(name = "original_xml")
     private String originalXml;
 
     @Lob

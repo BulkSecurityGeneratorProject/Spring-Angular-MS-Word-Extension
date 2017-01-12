@@ -215,25 +215,6 @@ public class ImDocumentResourceIntTest {
 
     @Test
     @Transactional
-    public void checkOriginalXmlIsRequired() throws Exception {
-        int databaseSizeBeforeTest = imDocumentRepository.findAll().size();
-        // set the field null
-        imDocument.setOriginalXml(null);
-
-        // Create the ImDocument, which fails.
-        ImDocumentDTO imDocumentDTO = imDocumentMapper.imDocumentToImDocumentDTO(imDocument);
-
-        restImDocumentMockMvc.perform(post("/api/im-documents")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(imDocumentDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<ImDocument> imDocumentList = imDocumentRepository.findAll();
-        assertThat(imDocumentList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkSecretIsRequired() throws Exception {
         int databaseSizeBeforeTest = imDocumentRepository.findAll().size();
         // set the field null
