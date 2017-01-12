@@ -139,9 +139,10 @@ public class UploadController {
 
         if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
             //return "Document already exists";
-            List<ImDocument> docs = imDocumentRepository.findByUserAndDocumentName(uploadingUser.getId(), documentName);
 
-            if (docs.size() > 0) {
+            boolean isOverwritingExistingDoc = isOverwritingExistingDoc(uploadingUser, documentName);
+
+            if (isOverwritingExistingDoc) {
                 response.setStatus(200);
                 return "A document already exists with this name";
 
@@ -191,8 +192,11 @@ public class UploadController {
             User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
 
             if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
-                if (imCloudSecurity.hasUserAvailableStorage(uploadingUser)) {
+                // User is allowed to upload
 
+                boolean isOverwritingExistingDoc = isOverwritingExistingDoc(uploadingUser, documentName);
+
+                if (imCloudSecurity.hasUserAvailableStorage(uploadingUser, isOverwritingExistingDoc)) {
                     ImDocumentDTO newDocument = processUploadedDocument(documentName, file, password, templateCode, uploadingUser);
 
                     ImDocumentCreated imDocumentUploaded = new ImDocumentCreated(newDocument);
@@ -213,8 +217,6 @@ public class UploadController {
 
     @Transactional
     private ImDocumentDTO processUploadedDocument(String documentName, MultipartFile file, String password, String templateCode, User user) throws IOException, ParserConfigurationException, SAXException, TransformerException {
-
-
         ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
         String xmlString = IOUtils.toString(stream, "UTF-8");
 
@@ -243,9 +245,9 @@ public class UploadController {
             doc.setUser(user);
         }
 
-        doc.setOriginalXml(xmlString);
-        doc.setPassword(hashedPassword);
-        doc.setDefaultTemplate(templateCode);
+        doc.setTempXml(xmlString);
+        doc.setTempPassword(hashedPassword);
+        doc.setTempTemplate(templateCode);
 
         // Add missing random secret
         if (doc.getSecret() == null || "".equals(doc.getSecret())) {
@@ -254,9 +256,14 @@ public class UploadController {
 
         doc = imDocumentRepository.save(doc);
 
-        doc = processXmlSavedInDocument(doc);
+        //processXmlSavedInDocument(doc);
 
         return imDocumentMapper.imDocumentToImDocumentDTO(doc);
+    }
+
+    private boolean isOverwritingExistingDoc(User u, String documentName) {
+        List<ImDocument> docs = imDocumentRepository.findByUserAndDocumentName(u.getId(), documentName);
+        return (docs.size() > 0);
     }
 
     private Document getXmlDocumentFromString(String xml) throws IOException, SAXException, ParserConfigurationException {
@@ -271,7 +278,7 @@ public class UploadController {
         return xmlDoc;
     }
 
-    private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    private void processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
         // Delete old maps - if any
         for (ImMap m : doc.getMaps()) {
@@ -339,25 +346,11 @@ public class UploadController {
                     }
                 }
             }
-
-
-//                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-//                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//
-//                        Element eElement = (Element) nNode;
-//
-//                        System.out.println("Staff id : " + eElement.getAttribute("id"));
-//                        System.out.println("First Name : " + eElement.getElementsByTagName("
-//
-//                    }
         }
 
         doc = imDocumentRepository.save(doc);
 
         processImagesInDocument(doc);
-
-        return doc;
     }
 
     private void removeNodesByType(Document xmlDoc, String nodeName) {
@@ -613,7 +606,7 @@ public class UploadController {
 
     @PostMapping("/complete")
     @Timed
-    public ResponseEntity<ImDocumentCompletelyUploaded> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId, @RequestParam(value = "send_email", required = false) Boolean sendEmail) {
+    public ResponseEntity<ImDocumentCompletelyUploaded> handleDocumentComplete(@RequestParam("access_token") String accessToken, @RequestParam("document_id") Long documentId, @RequestParam(value = "send_email", required = false) Boolean sendEmail) throws ParserConfigurationException, IOException, SAXException, TransformerException {
         log.debug("Document complete request: {}", documentId);
 
         User uploadingUser = imCloudSecurity.getUserByFsProAccessToken(accessToken);
@@ -621,15 +614,12 @@ public class UploadController {
         if (imCloudSecurity.canUserUploadDocuments(uploadingUser)) {
             ImDocument doc = imDocumentRepository.findOne(documentId);
 
-            doc.setUploadComplete(true);
-
-            doc = imDocumentRepository.save(doc);
+            doc = markDocumentComplete(doc);
 
             if (sendEmail) {
                 mailService.sendDocumentUploadedEmail(uploadingUser, doc);
             }
 
-            String baseUrl = imCloudProperties.getBaseUrl();
             return ResponseEntity.ok().body(new ImDocumentCompletelyUploaded(doc, urlHelperService));
 
         } else {
@@ -656,9 +646,22 @@ public class UploadController {
             isp = imageSourcePathRepository.save(isp);
         }
 
-        processImageInDocument(document, source, image);
+        //processImageInDocument(document, source, image);
 
         return image;
+    }
+
+    @Transactional
+    private ImDocument markDocumentComplete(ImDocument imDocument) throws ParserConfigurationException, TransformerException, SAXException, IOException {
+
+        imDocument.setOriginalXml(imDocument.getTempXml());
+        imDocument.setPassword(imDocument.getTempPassword());
+        imDocument.setDefaultTemplate(imDocument.getTempTemplate());
+
+        imDocument.setUploadComplete(true);
+        processXmlSavedInDocument(imDocument);
+
+        return imDocument;
     }
 
     private void processImagesInDocument(ImDocument doc) {

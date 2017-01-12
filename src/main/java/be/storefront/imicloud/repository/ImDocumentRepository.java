@@ -23,4 +23,7 @@ public interface ImDocumentRepository extends JpaRepository<ImDocument,Long> {
 
     @Query("select imDocument from ImDocument imDocument where imDocument.user.id = :userId")
     Page<ImDocument> findByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("select imDocument from ImDocument imDocument where imDocument.user.id = :userId")
+    List<ImDocument> findByUserId(@Param("userId") Long userId);
 }

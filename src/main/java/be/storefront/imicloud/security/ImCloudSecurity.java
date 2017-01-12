@@ -1,11 +1,9 @@
 package be.storefront.imicloud.security;
 
 import be.storefront.imicloud.config.ImCloudProperties;
-import be.storefront.imicloud.domain.Branding;
-import be.storefront.imicloud.domain.Organization;
-import be.storefront.imicloud.domain.User;
-import be.storefront.imicloud.domain.UserInfo;
+import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.repository.BrandingRepository;
+import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.restclient.SimpleRestClient;
@@ -15,6 +13,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class ImCloudSecurity {
@@ -28,7 +27,7 @@ public class ImCloudSecurity {
     @Inject
     private MagentoCustomerService magentoCustomerService;
 
-
+    @Inject private ImDocumentRepository imDocumentRepository;
 
     // This class handles security features connected to the Word plugin FS Pro.
 
@@ -86,12 +85,38 @@ public class ImCloudSecurity {
         }
     }
 
-    public boolean hasUserAvailableStorage(User uploadingUser) {
+    public int getNumberOfDocumentsUploaded(User u){
+        List<ImDocument> docsAlreadyUploaded = imDocumentRepository.findByUserId(u.getId());
+        return docsAlreadyUploaded.size();
+    }
+
+    public boolean hasUserAvailableStorage(User uploadingUser, boolean isOverwritingExistingDocument) {
         if(uploadingUser != null) {
-            // No limits in phase 1
-            return true;
+
+            int inUse = getNumberOfDocumentsUploaded(uploadingUser);
+            int allowed = getDocumentStorageSize(uploadingUser);
+
+            if(isOverwritingExistingDocument){
+                allowed++;
+            }
+
+            if(inUse < allowed){
+                return true;
+            }else{
+                return false;
+            }
+
         }else{
             return false;
         }
+    }
+
+    /**
+     * Get how many documents the user is allowed to upload
+     * @param u
+     * @return
+     */
+    public int getDocumentStorageSize(User u){
+        return 5;
     }
 }

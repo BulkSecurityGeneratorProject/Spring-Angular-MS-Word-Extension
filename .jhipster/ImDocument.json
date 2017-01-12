@@ -34,6 +34,10 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "tempPassword",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "documentName",
             "fieldType": "String",
             "fieldValidateRules": [
@@ -49,6 +53,14 @@
             ]
         },
         {
+            "fieldName": "tempXml",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
             "fieldName": "secret",
             "fieldType": "String",
             "fieldValidateRules": [
@@ -57,6 +69,10 @@
         },
         {
             "fieldName": "defaultTemplate",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "tempTemplate",
             "fieldType": "String"
         },
         {
