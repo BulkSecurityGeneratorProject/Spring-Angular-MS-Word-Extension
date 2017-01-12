@@ -17,6 +17,8 @@ public class ImageSourcePathDTO extends AbstractAuditingDTO implements Serializa
     @NotNull
     private String source;
 
+    private Boolean uploadComplete;
+
 
     private Long imageId;
     
@@ -35,6 +37,13 @@ public class ImageSourcePathDTO extends AbstractAuditingDTO implements Serializa
 
     public void setSource(String source) {
         this.source = source;
+    }
+    public Boolean getUploadComplete() {
+        return uploadComplete;
+    }
+
+    public void setUploadComplete(Boolean uploadComplete) {
+        this.uploadComplete = uploadComplete;
     }
 
     public Long getImageId() {
@@ -79,6 +88,7 @@ public class ImageSourcePathDTO extends AbstractAuditingDTO implements Serializa
         return "ImageSourcePathDTO{" +
             "id=" + id +
             ", source='" + source + "'" +
+            ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }
 }

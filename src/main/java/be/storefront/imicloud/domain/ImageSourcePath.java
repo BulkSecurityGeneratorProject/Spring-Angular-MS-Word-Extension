@@ -30,6 +30,9 @@ public class ImageSourcePath extends AbstractAuditingEntity implements Serializa
     @Column(name = "source", nullable = false)
     private String source;
 
+    @Column(name = "upload_complete")
+    private Boolean uploadComplete;
+
     @ManyToOne
     private Image image;
 
@@ -55,6 +58,19 @@ public class ImageSourcePath extends AbstractAuditingEntity implements Serializa
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Boolean isUploadComplete() {
+        return uploadComplete;
+    }
+
+    public ImageSourcePath uploadComplete(Boolean uploadComplete) {
+        this.uploadComplete = uploadComplete;
+        return this;
+    }
+
+    public void setUploadComplete(Boolean uploadComplete) {
+        this.uploadComplete = uploadComplete;
     }
 
     public Image getImage() {
@@ -108,6 +124,7 @@ public class ImageSourcePath extends AbstractAuditingEntity implements Serializa
         return "ImageSourcePath{" +
             "id=" + id +
             ", source='" + source + "'" +
+            ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }
 }

@@ -44,6 +44,9 @@ public class ImageSourcePathResourceIntTest {
     private static final String DEFAULT_SOURCE = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_UPLOAD_COMPLETE = false;
+    private static final Boolean UPDATED_UPLOAD_COMPLETE = true;
+
     @Inject
     private ImageSourcePathRepository imageSourcePathRepository;
 
@@ -87,7 +90,8 @@ public class ImageSourcePathResourceIntTest {
      */
     public static ImageSourcePath createEntity(EntityManager em) {
         ImageSourcePath imageSourcePath = new ImageSourcePath()
-                .source(DEFAULT_SOURCE);
+                .source(DEFAULT_SOURCE)
+                .uploadComplete(DEFAULT_UPLOAD_COMPLETE);
         return imageSourcePath;
     }
 
@@ -115,6 +119,7 @@ public class ImageSourcePathResourceIntTest {
         assertThat(imageSourcePathList).hasSize(databaseSizeBeforeCreate + 1);
         ImageSourcePath testImageSourcePath = imageSourcePathList.get(imageSourcePathList.size() - 1);
         assertThat(testImageSourcePath.getSource()).isEqualTo(DEFAULT_SOURCE);
+        assertThat(testImageSourcePath.isUploadComplete()).isEqualTo(DEFAULT_UPLOAD_COMPLETE);
 
         // Validate the ImageSourcePath in ElasticSearch
         ImageSourcePath imageSourcePathEs = imageSourcePathSearchRepository.findOne(testImageSourcePath.getId());
@@ -172,7 +177,8 @@ public class ImageSourcePathResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(imageSourcePath.getId().intValue())))
-            .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE.toString())));
+            .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE.toString())))
+            .andExpect(jsonPath("$.[*].uploadComplete").value(hasItem(DEFAULT_UPLOAD_COMPLETE.booleanValue())));
     }
 
     @Test
@@ -186,7 +192,8 @@ public class ImageSourcePathResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(imageSourcePath.getId().intValue()))
-            .andExpect(jsonPath("$.source").value(DEFAULT_SOURCE.toString()));
+            .andExpect(jsonPath("$.source").value(DEFAULT_SOURCE.toString()))
+            .andExpect(jsonPath("$.uploadComplete").value(DEFAULT_UPLOAD_COMPLETE.booleanValue()));
     }
 
     @Test
@@ -208,7 +215,8 @@ public class ImageSourcePathResourceIntTest {
         // Update the imageSourcePath
         ImageSourcePath updatedImageSourcePath = imageSourcePathRepository.findOne(imageSourcePath.getId());
         updatedImageSourcePath
-                .source(UPDATED_SOURCE);
+                .source(UPDATED_SOURCE)
+                .uploadComplete(UPDATED_UPLOAD_COMPLETE);
         ImageSourcePathDTO imageSourcePathDTO = imageSourcePathMapper.imageSourcePathToImageSourcePathDTO(updatedImageSourcePath);
 
         restImageSourcePathMockMvc.perform(put("/api/image-source-paths")
@@ -221,6 +229,7 @@ public class ImageSourcePathResourceIntTest {
         assertThat(imageSourcePathList).hasSize(databaseSizeBeforeUpdate);
         ImageSourcePath testImageSourcePath = imageSourcePathList.get(imageSourcePathList.size() - 1);
         assertThat(testImageSourcePath.getSource()).isEqualTo(UPDATED_SOURCE);
+        assertThat(testImageSourcePath.isUploadComplete()).isEqualTo(UPDATED_UPLOAD_COMPLETE);
 
         // Validate the ImageSourcePath in ElasticSearch
         ImageSourcePath imageSourcePathEs = imageSourcePathSearchRepository.findOne(testImageSourcePath.getId());
@@ -280,6 +289,7 @@ public class ImageSourcePathResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(imageSourcePath.getId().intValue())))
-            .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE.toString())));
+            .andExpect(jsonPath("$.[*].source").value(hasItem(DEFAULT_SOURCE.toString())))
+            .andExpect(jsonPath("$.[*].uploadComplete").value(hasItem(DEFAULT_UPLOAD_COMPLETE.booleanValue())));
     }
 }

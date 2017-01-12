@@ -21,6 +21,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "uploadComplete",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20170106125306",

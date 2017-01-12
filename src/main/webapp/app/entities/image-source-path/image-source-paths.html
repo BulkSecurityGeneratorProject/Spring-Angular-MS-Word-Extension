@@ -37,6 +37,7 @@
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="source"><span data-translate="imicloudApp.imageSourcePath.source">Source</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="uploadComplete"><span data-translate="imicloudApp.imageSourcePath.uploadComplete">Upload Complete</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="imageId"><span data-translate="imicloudApp.imageSourcePath.image">Image</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="imDocumentId"><span data-translate="imicloudApp.imageSourcePath.imDocument">Im Document</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
@@ -46,6 +47,7 @@
                 <tr ng-repeat="imageSourcePath in vm.imageSourcePaths track by imageSourcePath.id">
                     <td><a ui-sref="image-source-path-detail({id:imageSourcePath.id})">{{imageSourcePath.id}}</a></td>
                     <td>{{imageSourcePath.source}}</td>
+                    <td>{{imageSourcePath.uploadComplete}}</td>
                     <td>
                         <a ui-sref="image-detail({id:imageSourcePath.imageId})">{{imageSourcePath.imageId}}</a>
                     </td>

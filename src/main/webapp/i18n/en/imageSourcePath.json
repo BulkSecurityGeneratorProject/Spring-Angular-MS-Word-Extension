@@ -17,8 +17,9 @@
                 "title": "Image Source Path"
             },
             "source": "Source",
+            "uploadComplete": "Upload Complete",
             "image": "Image",
-            "imDocument": "Document"
+            "imDocument": "Publication"
         }
     }
 }

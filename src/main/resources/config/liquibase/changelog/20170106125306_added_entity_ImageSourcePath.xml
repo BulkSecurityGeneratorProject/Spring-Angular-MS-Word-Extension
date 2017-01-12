@@ -28,6 +28,10 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="upload_complete" type="bit">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="image_id" type="bigint">
                 <constraints nullable="true" />
             </column>

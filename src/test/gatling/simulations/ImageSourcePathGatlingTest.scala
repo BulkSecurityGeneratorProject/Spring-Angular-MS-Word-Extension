@@ -67,7 +67,7 @@ class ImageSourcePathGatlingTest extends Simulation {
             .exec(http("Create new imageSourcePath")
             .post("/api/image-source-paths")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "source":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "source":"SAMPLE_TEXT", "uploadComplete":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_imageSourcePath_url"))).exitHereIfFailed
             .pause(10)

@@ -125,6 +125,7 @@
                         entity: function () {
                             return {
                                 source: null,
+                                uploadComplete: null,
                                 id: null
                             };
                         }
