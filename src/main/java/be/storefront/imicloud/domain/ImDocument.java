@@ -64,7 +64,7 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @ManyToOne
     private Folder folder;
 
-    @OneToMany(mappedBy = "imDocument", cascade=CascadeType.REMOVE)
+    @OneToMany(mappedBy = "imDocument", cascade=CascadeType.ALL)
     @OrderBy("position ASC")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -73,6 +73,10 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     @ManyToOne
     @NotNull
     private User user;
+
+
+    @OneToMany(mappedBy = "imDocument", cascade=CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ImageSourcePath> imageSourcePaths;
 
     public Long getId() {
         return id;
