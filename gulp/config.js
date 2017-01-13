@@ -9,6 +9,7 @@ module.exports = {
     sassSrc: 'src/main/webapp/scss/**/*.{scss,sass}',
     sassVendor: 'src/main/webapp/scss/vendor.scss',
     cssDir: 'src/main/webapp/content/css',
+    templateStaticDir: 'src/main/webapp/content/templates',
     bower: 'src/main/webapp/bower_components/',
     tmp: 'target/tmp',
     revManifest: 'target/tmp/rev-manifest.json',
