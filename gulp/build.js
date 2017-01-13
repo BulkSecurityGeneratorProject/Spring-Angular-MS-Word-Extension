@@ -44,6 +44,7 @@ module.exports = function() {
         .pipe(gulpIf('*.js', jsTask()))
         .pipe(gulpIf('*.css', cssTask()))
         .pipe(gulpIf('*.html', htmlmin({collapseWhitespace: true})))
+        .pipe(gulp.dest(config.dist))
         .pipe(gulpIf('**/*.!(html)', rev()))
         .pipe(revReplace({manifest: manifest}))
         .pipe(sourcemaps.write('.'))
