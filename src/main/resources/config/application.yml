@@ -18,7 +18,7 @@ management:
             enabled: false # When using the MailService, configure an SMTP server and set this to true
 spring:
     application:
-        name: Information Mapping Cloud
+        name: FS Pro Cloud
 
     data:
         elasticsearch:
@@ -71,7 +71,7 @@ imcloud:
     # The base URL of the app. Must end with a "/"
     baseUrl: http://localhost:8080/
 
-    cloudName: Information Mapping Cloud
+    cloudName: Fs Pro Cloud
 
     forgotPasswordUrl: http://localinformationmapping.com:10089/en/shop/customer/account/forgotPassword
     registerNewAccountUrl: http://localinformationmapping.com:10089/en/shop/customer/account/create

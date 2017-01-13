@@ -90,7 +90,7 @@ imcloud:
     # The base URL of the app. Must end with a "/"
     baseUrl: http://localhost:8080/
 
-    cloudName: Information Mapping Cloud
+    cloudName: FS Pro Cloud
 
     forgotPasswordUrl: http://localinformationmapping.com:10089/en/shop/customer/account/forgotPassword
     registerNewAccountUrl: http://localinformationmapping.com:10089/en/shop/customer/account/create

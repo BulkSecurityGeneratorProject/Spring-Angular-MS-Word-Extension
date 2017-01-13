@@ -1,6 +1,6 @@
 {
     "global": {
-        "title": "Information Mapping Cloud",
+        "title": "FS Pro Cloud",
         "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
         "menu": {
             "home": "Home",
@@ -129,5 +129,5 @@
         "emailexists": "E-mail is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID"
     },
-    "footer": "© 2017 Information Mapping International - All rights reserved"
+    "footer": ""
 }
