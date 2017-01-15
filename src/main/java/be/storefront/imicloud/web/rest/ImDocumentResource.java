@@ -113,14 +113,18 @@ public class ImDocumentResource {
 
         MyUserDetails myUserDetails = SecurityUtils.getCurrentUser();
 
-        Page<ImDocumentDTO> page = imDocumentService.findByUserId(myUserDetails.getId(), pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/im-documents");
+        if(myUserDetails != null) {
+            Page<ImDocumentDTO> page = imDocumentService.findByUserId(myUserDetails.getId(), pageable);
+            HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/im-documents");
 
-        for (ImDocumentDTO imDocumentDTO : page.getContent()) {
-            imDocumentDTO.setUrlHelperService(urlHelperService);
+            for (ImDocumentDTO imDocumentDTO : page.getContent()) {
+                imDocumentDTO.setUrlHelperService(urlHelperService);
+            }
+
+            return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
