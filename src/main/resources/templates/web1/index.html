@@ -231,7 +231,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                     <div class="clear"></div>
 
                     <!-- Show the block links if there is more then 1 block -->
-                    <div th:if="${mapIter.count} > 1" class="parts block">
+                    <div th:if="${map.getBlocks().size()} > 1" class="parts block">
 
                        <a th:each="block,blockIter : ${map.getBlocks()}"
                            href="..."
@@ -246,7 +246,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                     </div>
 
                     <!-- Show the contents immediately if only 1 block -->
-                    <div th:if="${mapIter.count} == 1" class="view-content-slider owl-carousel">
+                    <div th:if="${map.getBlocks().size()} == 1" class="view-content-slider owl-carousel">
                         <div class="sixteen">
                             <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
                                 <h3 th:text="${block.label}">The Benefits</h3>
