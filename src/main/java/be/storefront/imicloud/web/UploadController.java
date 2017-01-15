@@ -161,19 +161,39 @@ public class UploadController {
     @Timed
     public
     @ResponseBody
-    String reprocessSavedXmls(HttpServletResponse response) {
+    String reprocessAllXmls(HttpServletResponse response) {
         String r = "";
 
         List<ImDocument> docs = imDocumentRepository.findAll();
         for (ImDocument doc : docs) {
-            try {
-                doc = processXmlSavedInDocument(doc);
-                r += "Document " + doc.getId() + ": OK\n";
-            } catch (Exception e) {
-                r += "Document " + doc.getId() + ": ERROR: " + e.toString() + "\n";
-            }
+            r += reprocessXml(doc);
         }
 
+        return r;
+    }
+
+    @GetMapping("/xml/reprocess/{documentId}")
+    @Timed
+    public
+    @ResponseBody
+    String reprocessOneXml(@PathVariable(value = "documentId") Long documentId) {
+        String r = "";
+
+        ImDocument doc = imDocumentRepository.findOne(documentId);
+
+        r += reprocessXml(doc);
+
+        return r;
+    }
+
+    protected String reprocessXml(ImDocument doc){
+        String r = "";
+        try {
+            doc = processXmlSavedInDocument(doc);
+            r += "Document " + doc.getId() + ": OK\n";
+        } catch (Exception e) {
+            r += "Document " + doc.getId() + ": ERROR: " + e.toString() + "\n";
+        }
         return r;
     }
 
@@ -278,6 +298,7 @@ public class UploadController {
         return xmlDoc;
     }
 
+    @Transactional
     private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
         // Delete old maps - if any
@@ -289,7 +310,7 @@ public class UploadController {
         // Process what's in the XML
         Document xmlDoc = getXmlDocumentFromString(doc.getOriginalXml());
 
-        removeNodesByType(xmlDoc, "overviewmap");
+        //removeNodesByType(xmlDoc, "overviewmap");
 
         NodeList mapList = xmlDoc.getElementsByTagName("map");
 
@@ -301,6 +322,18 @@ public class UploadController {
 
                 String mapGuid = oneMapElement.getAttribute("guid");
                 String mapLabel = getText(oneMap, "label");
+
+                // Is the map in an overviewmap? Use that label instead...
+                Node parentNode = oneMap.getParentNode();
+                if("overviewmap".equals(parentNode.getNodeName())){
+                    String overviewMapTitle = getText(parentNode, "title");
+
+                    if(mapLabel.length() == 0){
+                        mapLabel = overviewMapTitle;
+                    }else{
+                        mapLabel = overviewMapTitle + " - "+mapLabel;
+                    }
+                }
 
                 // Save all maps
                 ImMapDTO newMapDto = new ImMapDTO();
@@ -707,15 +740,18 @@ public class UploadController {
             for (ImBlock block : map.getBlocks()) {
 
                 // Check block image label
+                boolean imageIsUsedAsLabel = false;
                 if (source.equals(block.getLabelImageSource())) {
                     block.setLabelImage(image);
                     block.setLabelImageSource(null);
+
+                    imageIsUsedAsLabel = true;
                 }
+
+                String blockContent = block.getContent();
 
                 // Check images in content
                 boolean imageIsUsedInBlock = false;
-
-                String blockContent = block.getContent();
 
                 Match root = DomHelper.getDomRoot(blockContent);
                 for (Match img : root.find("img[data-source]").each()) {
@@ -731,12 +767,16 @@ public class UploadController {
                 }
 
                 if (imageIsUsedInBlock) {
-                    block.addImage(image);
-
                     blockContent = DomHelper.domToString(root);
                     block.setContent(blockContent);
+                }
 
-                    block = imBlockRepository.save(block);
+                if(imageIsUsedInBlock || imageIsUsedAsLabel){
+                    // This block needs this image
+                    block.addImage(image);
+
+                    // Save is needed
+                    imBlockRepository.save(block);
                 }
             }
         }
