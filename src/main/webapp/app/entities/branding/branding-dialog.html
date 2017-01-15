@@ -34,12 +34,17 @@
                 <input type="color" class="form-control" name="primaryColor" id="field_primaryColor"
                         ng-model="vm.branding.primaryColor"
                         ng-maxlength="7" />
+
                 <div ng-show="editForm.primaryColor.$invalid">
                     <p class="help-block"
                         ng-show="editForm.primaryColor.$error.maxlength" data-translate="entity.validation.maxlength" translate-value-max="7">
                         This field cannot be longer than 7 characters.
                     </p>
                 </div>
+            </div>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" ng-model="vm.branding.primaryColor" ng-maxlength="7" />
             </div>
         </div>
         <!--
@@ -71,6 +76,10 @@
                     </p>
                 </div>
             </div>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" ng-model="vm.branding.pageBackgroundColor" ng-maxlength="7" />
+            </div>
         </div>
         <div class="form-group">
             <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.textColor" for="field_textColor">Text Color</label>
@@ -84,6 +93,10 @@
                         This field cannot be longer than 7 characters.
                     </p>
                 </div>
+            </div>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" ng-model="vm.branding.textColor" ng-maxlength="7" />
             </div>
         </div>
 

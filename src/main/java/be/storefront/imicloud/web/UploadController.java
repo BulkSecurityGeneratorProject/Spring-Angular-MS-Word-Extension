@@ -586,7 +586,7 @@ public class UploadController {
 
             String contentType = null;
 
-            if (".jpg".equals(extension)) {
+            if (".jpg".equals(extension) || ".jpeg".equals(extension)) {
                 // Check if this is a valid JPG
                 contentType = "image/jpg";
 
@@ -623,7 +623,7 @@ public class UploadController {
 
             } else {
                 // Invalid extension
-                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg, .jpeg or .png are allowed.")).body(null);
             }
 
         } else {
@@ -805,7 +805,7 @@ public class UploadController {
 
         String contentType = null;
 
-        if (".jpg".equals(extension)) {
+        if (".jpg".equals(extension) || ".jpeg".equals(extension)) {
             // Check if this is a valid JPG
             contentType = "image/jpg";
 
@@ -828,7 +828,7 @@ public class UploadController {
 
         } else {
             // Invalid extension
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg or .png are allowed.")).body(null);
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("image", "invalid_extension", "Only files with extension .jpg, .jpeg or .png are allowed.")).body(null);
         }
 
 //        redirectAttributes.addFlashAttribute("message",

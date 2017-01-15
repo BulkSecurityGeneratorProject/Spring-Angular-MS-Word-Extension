@@ -137,6 +137,7 @@ public class DocumentController {
                     viewMap.put("branding", brandingService.findByDocument(imDocument));
                     viewMap.put("cssHelper", new CssHelper());
                     viewMap.put("urlHelperService", urlHelperService);
+                    viewMap.put("templateCode", template);
 
                     if (accessGranted) {
 
@@ -150,7 +151,7 @@ public class DocumentController {
                         // Access denied due to wrong password
                         viewMap.put("passwordSubmitUrl", urlHelperService.getDocumentPasswordSubmitUrl());
                         viewMap.put("documentId", imDocument.getId());
-                        viewMap.put("templateCode", templateCode);
+
 
                         return new ModelAndView("password_form", viewMap);
                     }

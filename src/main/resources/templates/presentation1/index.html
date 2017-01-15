@@ -95,7 +95,7 @@
                 <h2 th:text="${block.label}">Block label</h2>
                 <div class="block-wrapper">
                     <div class="block" >
-                        <div class="block-content" th:utext="${HtmlContentProcessor.process(block.getContent())}">
+                        <div class="block-content" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode)}">
                             Block content
                         </div>
                         <p class="spacer" style="display: none;">&nbsp;</p>

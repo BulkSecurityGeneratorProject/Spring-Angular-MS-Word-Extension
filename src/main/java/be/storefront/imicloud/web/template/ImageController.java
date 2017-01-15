@@ -41,8 +41,8 @@ public class ImageController {
 
             InputStream in = new FileInputStream(file);
 
-            final HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG);
+//            final HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.IMAGE_PNG);
 
             long contentLength = imageDTO.getContentLength();
             MediaType contentType = MediaType.parseMediaType(imageDTO.getContentType());
