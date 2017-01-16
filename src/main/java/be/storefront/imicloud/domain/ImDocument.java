@@ -75,8 +75,10 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
     private User user;
 
 
-    @OneToMany(mappedBy = "imDocument", cascade=CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ImageSourcePath> imageSourcePaths;
+    @JsonIgnore
+    @OneToMany(mappedBy = "imDocument", orphanRemoval = true, fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<ImageSourcePath> imageSourcePaths = new HashSet<>();
 
     public Long getId() {
         return id;
