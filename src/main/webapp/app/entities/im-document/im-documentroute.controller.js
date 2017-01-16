@@ -23,8 +23,10 @@
         vm.clear = clear;
         vm.loadAll = loadAll;
         vm.search = search;
+        vm.showShareDialog = showShareDialog;
         vm.openFile = DataUtils.openFile;
         vm.byteSize = DataUtils.byteSize;
+        vm.shareModalDocument = null;
 
         Principal.identity().then(function(account) {
             var brandingId = account.branding.id;
@@ -68,6 +70,14 @@
                 AlertService.error(error.data.message);
             }
         }
+
+        function showShareDialog(imDocument){
+            $('#shareModal').modal('show');
+
+            vm.shareModalDocument = imDocument;
+
+            console.log(imDocument);
+        };
 
         function reset () {
             vm.page = 0;

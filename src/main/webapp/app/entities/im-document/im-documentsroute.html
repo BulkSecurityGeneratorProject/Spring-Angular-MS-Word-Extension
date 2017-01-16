@@ -40,7 +40,17 @@
                 <tr ng-repeat="imDocument in vm.imDocuments track by imDocument.id">
                     <td><a target="_blank" ng-href="{{imDocument.publicViewUrl}}">{{imDocument.documentName}}</a></td>
                     <td>{{imDocument.password}}</td>
-                    <td>{{imDocument.defaultTemplate}}</td>
+                    <td ng-switch="imDocument.defaultTemplate">
+                        <span ng-switch-when="web1">
+                            Website 1
+                        </span>
+                        <span ng-switch-when="presentation1">
+                            Presentation 1
+                        </span>
+                        <span ng-switch-default>
+                            {{imDocument.defaultTemplate}}
+                        </span>
+                    </td>
                     <!--
                     <td>
                         <a ui-sref="folderroute-detail({id:imDocument.folderId})">{{imDocument.folderId}}</a>
@@ -55,6 +65,10 @@
                                 <span class="glyphicon glyphicon-eye-open"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
                             </a>
+                            <button type="submit" ng-click="vm.showShareDialog(imDocument)" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-share-alt"></span>
+                                <span class="hidden-xs hidden-sm" data-translate="entity.action.share"></span>
+                            </button>
                             <button type="submit"
                                     ui-sref="im-documentroute.edit({id:imDocument.id})"
                                     class="btn btn-default btn-sm">
@@ -73,4 +87,36 @@
             </tbody>
         </table>
     </div>
+
+
+    <!-- Modal "Share Document" -->
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="shareModalLabel">Share</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Share this URL with others:</p>
+                    <blockquote>
+                        {{vm.shareModalDocument.publicViewUrl}}
+                    </blockquote>
+
+                    <div ng-show="vm.shareModalDocument.password">
+                        <p>And let them know the presentation password:</p>
+                        <blockquote>
+                            {{vm.shareModalDocument.password}}
+                        </blockquote>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>

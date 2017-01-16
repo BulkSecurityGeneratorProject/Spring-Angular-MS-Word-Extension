@@ -97,7 +97,8 @@
             "edit": "Wijzigen",
             "open": "Open",
             "save": "Opslaan",
-            "view": "View"
+            "view": "View",
+            "share": "Delen"
         },
         "detail": {
             "field": "Veld",
