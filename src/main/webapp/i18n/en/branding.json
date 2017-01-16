@@ -4,7 +4,7 @@
             "home": {
                 "title": "Brandings",
                 "createLabel": "Create Branding",
-                "createOrEditLabel": "Edit Branding",
+                "createOrEditLabel": "Customize your template",
                 "search": "Search for Branding"
             },
             "created": "Branding created",
@@ -14,7 +14,7 @@
                 "question": "Are you sure you want to delete branding?"
             },
             "detail": {
-                "title": "Branding"
+                "title": "Customize your template"
             },
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",

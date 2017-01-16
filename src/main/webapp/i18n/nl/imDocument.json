@@ -7,6 +7,8 @@
                 "createOrEditLabel": "Maak of wijzig een Im Document",
                 "search": "Search for Im Document"
             },
+            "editBranding": "Branding aanpassen",
+            "customizeYourTemplate": "Pas jouw template aan",
             "created": "A new Im Document is created with identifier {{ param }}",
             "updated": "A Im Document is updated with identifier {{ param }}",
             "deleted": "A Im Document is deleted with identifier {{ param }}",
