@@ -8,6 +8,11 @@
     opacity: 1;
 }
 
+.reveal section img{
+    border: 0;
+    box-shadow: none;
+}
+
 .scroll-for-more{
     overflow: scroll;
 }
