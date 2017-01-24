@@ -117,6 +117,10 @@ public class ImCloudSecurity {
      * @return
      */
     public int getDocumentStorageSize(User u){
-        return 5;
+        if(u.getEmail() != null && (u.getEmail().endsWith("@informationmapping.com") || u.getEmail().endsWith("@storefront.be"))){
+            return 1000000;
+        }else{
+            return 5;
+        }
     }
 }
