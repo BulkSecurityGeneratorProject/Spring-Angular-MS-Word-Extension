@@ -27,6 +27,7 @@
         vm.openFile = DataUtils.openFile;
         vm.byteSize = DataUtils.byteSize;
         vm.shareModalDocument = null;
+        vm.copyUrlToClipboard = copyUrlToClipboard;
 
         Principal.identity().then(function(account) {
             var brandingId = account.branding.id;
@@ -78,6 +79,18 @@
 
             console.log(imDocument);
         };
+
+        function copyUrlToClipboard(){
+            debugger;
+            var input = document.querySelector('#copy-input');
+            input.setSelectionRange(0, input.value.length + 1);
+            var success = null;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                success = false;
+            }
+        }
 
         function reset () {
             vm.page = 0;

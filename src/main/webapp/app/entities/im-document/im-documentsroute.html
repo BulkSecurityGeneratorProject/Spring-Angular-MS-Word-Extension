@@ -99,16 +99,30 @@
                 </div>
                 <div class="modal-body">
                     <p>Share this URL with others:</p>
-                    <blockquote>
+                    <blockquote style="word-break: break-all;">
                         {{vm.shareModalDocument.publicViewUrl}}
                     </blockquote>
 
                     <div ng-show="vm.shareModalDocument.password">
                         <p>And let them know the password:</p>
-                        <blockquote>
+                        <blockquote style="word-break: break-all;">
                             {{vm.shareModalDocument.password}}
                         </blockquote>
                     </div>
+
+                    <!--
+                    Copy to clipboard work-in-progress
+
+                        <form>
+                        <p>Share this URL with others:</p>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="{{vm.shareModalDocument.publicViewUrl}}" id="copy-input">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="copy-button" ng-click="vm.copyUrlToClipboard()" title="Copy to Clipboard">Copy</button>
+                            </span>
+                        </div>
+                        </form>
+                        -->
 
                 </div>
                 <div class="modal-footer">
