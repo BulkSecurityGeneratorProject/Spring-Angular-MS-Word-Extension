@@ -12,7 +12,7 @@
 ============================================================================================*/
 @background-white:#fff;
 @background-grey:#f4f4f4;
-@primary-color:#0a1927;
+@primary-color:#000000;
 @secondary-color:#e66404;
 
 @black:#333;
@@ -393,7 +393,7 @@ ol{
     text-decoration:none;
     border:none;
     width:~'calc(100% - 67px)';
-    height:50px;
+    height:75px;
     background-repeat:no-repeat;
     background-size: contain;
 }
@@ -509,11 +509,15 @@ nav{
         text-align:right;
         i{
             font-size:@font-size + 8px;
-
         }
         &:hover{
             color:@secondary-color;
         }
+    }
+
+    nav > a{
+        text-decoration: none;
+        font-size: 13px;
     }
 }
 
@@ -584,17 +588,17 @@ nav{
         height:130px;
         position:relative;
         .background-size-cover();
-        text-transform:uppercase;
+
         span{
             display:block;
-            width:100%;
-            .box-sizing(border-box);
-            padding:0 20px;
-            position:absolute;
-            top:45%;
-            left:50%;
-            .transform(translate(-50%,-50%));
-            z-index:2;
+            padding:13px 17px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            text-align: left;
+            z-index: 1;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+            font-size: 110%;
         }
         .more{
             position:absolute;
@@ -625,7 +629,7 @@ nav{
             left:0;
             right:0;
             bottom:0;
-            background:fade(@primary-color,50%);
+            background:fade(#000,55%);
             z-index:0;
             .transition();
         }

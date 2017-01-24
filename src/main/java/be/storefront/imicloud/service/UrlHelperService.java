@@ -28,6 +28,7 @@ public class UrlHelperService {
     private ImDocumentMapper imDocumentMapper;
 
     @Inject private ImageRepository imageRepository;
+    private String allDocumentsUrl;
 
     public String getDocumentPublicUrl(ImDocument imDocument) {
         return imCloudProperties.getBaseUrl() + "document/" + imDocument.getId() + "/" + imDocument.getSecret() + "/";
@@ -74,5 +75,9 @@ public class UrlHelperService {
 
     public String getImageUrl(String imageFilename) {
         return getImageUrl(imageRepository.findByFilename(imageFilename));
+    }
+
+    public String getAllDocumentsUrl() {
+        return imCloudProperties.getBaseUrl() + "#/im-documentroute";
     }
 }

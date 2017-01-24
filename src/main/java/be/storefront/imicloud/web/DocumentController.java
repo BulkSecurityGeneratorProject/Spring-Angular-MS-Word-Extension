@@ -133,6 +133,7 @@ public class DocumentController {
 
                     HashMap<String, Object> viewMap = new HashMap<>();
                     viewMap.put("baseUrl", imCloudProperties.getBaseUrl());
+                    viewMap.put("allDocumentsUrl", urlHelperService.getAllDocumentsUrl());
                     viewMap.put("logoUrl", urlHelperService.getLogoUrl(imDocument.getUser()));
                     viewMap.put("branding", brandingService.findByDocument(imDocument));
                     viewMap.put("cssHelper", new CssHelper());
@@ -151,7 +152,6 @@ public class DocumentController {
                         // Access denied due to wrong password
                         viewMap.put("passwordSubmitUrl", urlHelperService.getDocumentPasswordSubmitUrl());
                         viewMap.put("documentId", imDocument.getId());
-
 
                         return new ModelAndView("password_form", viewMap);
                     }

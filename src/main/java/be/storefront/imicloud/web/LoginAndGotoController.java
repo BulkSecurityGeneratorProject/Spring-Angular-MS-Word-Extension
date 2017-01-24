@@ -44,7 +44,7 @@ public class LoginAndGotoController {
     public ModelAndView loginAndRedirect(@RequestParam("access_token") String accessToken) {
         loginUser(accessToken);
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/#/im-documentroute");
     }
 
 
