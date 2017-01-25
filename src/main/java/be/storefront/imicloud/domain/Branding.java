@@ -40,6 +40,9 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
     @Column(name = "text_color", length = 7)
     private String textColor;
 
+    @Column(name = "name")
+    private String name;
+
     @OneToOne
     @JoinColumn(unique = true)
     private Image logoImage;
@@ -104,6 +107,19 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
         this.textColor = textColor;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Branding name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Image getLogoImage() {
         return logoImage;
     }
@@ -145,6 +161,7 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
             ", secundaryColor='" + secundaryColor + "'" +
             ", pageBackgroundColor='" + pageBackgroundColor + "'" +
             ", textColor='" + textColor + "'" +
+            ", name='" + name + "'" +
             '}';
     }
 }

@@ -22,6 +22,8 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     @JsonIgnore
     private UrlHelperService urlHelperService;
 
+	private String name;
+
     @Size(max = 7)
     private String primaryColor;
 
@@ -55,6 +57,15 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+	
+	public String getName() {
+        return name;
+	}
+
+    public void setName(String name) {
+        this.name = name;
+    }
+		
     public String getPrimaryColor() {
         return primaryColor;
     }
@@ -133,6 +144,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     public String toString() {
         return "BrandingDTO{" +
             "id=" + id +
+			", name='" + name + "'" +
             ", primaryColor='" + primaryColor + "'" +
             ", secundaryColor='" + secundaryColor + "'" +
             ", pageBackgroundColor='" + pageBackgroundColor + "'" +

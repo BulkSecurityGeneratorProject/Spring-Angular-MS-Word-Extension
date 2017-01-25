@@ -16,6 +16,7 @@
             "detail": {
                 "title": "Customize your template"
             },
+			"name": "Name",
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",
             "pageBackgroundColor": "Page Background",

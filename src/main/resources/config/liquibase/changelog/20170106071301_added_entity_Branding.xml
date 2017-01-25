@@ -39,6 +39,10 @@
             <column name="text_color" type="varchar(7)">
                 <constraints nullable="true" />
             </column>
+            
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
                         <column name="logo_image_id" type="bigint">
                 <constraints unique="true" nullable="true" />
             </column>

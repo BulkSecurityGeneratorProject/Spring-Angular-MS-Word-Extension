@@ -108,6 +108,7 @@
                                 secundaryColor: null,
                                 pageBackgroundColor: null,
                                 textColor: null,
+                                name: null,
                                 id: null
                             };
                         }

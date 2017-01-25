@@ -53,6 +53,9 @@ public class BrandingResourceIntTest {
     private static final String DEFAULT_TEXT_COLOR = "AAAAAAA";
     private static final String UPDATED_TEXT_COLOR = "BBBBBBB";
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     @Inject
     private BrandingRepository brandingRepository;
 
@@ -99,7 +102,8 @@ public class BrandingResourceIntTest {
                 .primaryColor(DEFAULT_PRIMARY_COLOR)
                 .secundaryColor(DEFAULT_SECUNDARY_COLOR)
                 .pageBackgroundColor(DEFAULT_PAGE_BACKGROUND_COLOR)
-                .textColor(DEFAULT_TEXT_COLOR);
+                .textColor(DEFAULT_TEXT_COLOR)
+                .name(DEFAULT_NAME);
         return branding;
     }
 
@@ -130,6 +134,7 @@ public class BrandingResourceIntTest {
         assertThat(testBranding.getSecundaryColor()).isEqualTo(DEFAULT_SECUNDARY_COLOR);
         assertThat(testBranding.getPageBackgroundColor()).isEqualTo(DEFAULT_PAGE_BACKGROUND_COLOR);
         assertThat(testBranding.getTextColor()).isEqualTo(DEFAULT_TEXT_COLOR);
+        assertThat(testBranding.getName()).isEqualTo(DEFAULT_NAME);
 
         // Validate the Branding in ElasticSearch
         Branding brandingEs = brandingSearchRepository.findOne(testBranding.getId());
@@ -171,7 +176,8 @@ public class BrandingResourceIntTest {
             .andExpect(jsonPath("$.[*].primaryColor").value(hasItem(DEFAULT_PRIMARY_COLOR.toString())))
             .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())))
             .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())))
-            .andExpect(jsonPath("$.[*].textColor").value(hasItem(DEFAULT_TEXT_COLOR.toString())));
+            .andExpect(jsonPath("$.[*].textColor").value(hasItem(DEFAULT_TEXT_COLOR.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
 
     @Test
@@ -188,7 +194,8 @@ public class BrandingResourceIntTest {
             .andExpect(jsonPath("$.primaryColor").value(DEFAULT_PRIMARY_COLOR.toString()))
             .andExpect(jsonPath("$.secundaryColor").value(DEFAULT_SECUNDARY_COLOR.toString()))
             .andExpect(jsonPath("$.pageBackgroundColor").value(DEFAULT_PAGE_BACKGROUND_COLOR.toString()))
-            .andExpect(jsonPath("$.textColor").value(DEFAULT_TEXT_COLOR.toString()));
+            .andExpect(jsonPath("$.textColor").value(DEFAULT_TEXT_COLOR.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
     @Test
@@ -213,7 +220,8 @@ public class BrandingResourceIntTest {
                 .primaryColor(UPDATED_PRIMARY_COLOR)
                 .secundaryColor(UPDATED_SECUNDARY_COLOR)
                 .pageBackgroundColor(UPDATED_PAGE_BACKGROUND_COLOR)
-                .textColor(UPDATED_TEXT_COLOR);
+                .textColor(UPDATED_TEXT_COLOR)
+                .name(UPDATED_NAME);
         BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(updatedBranding);
 
         restBrandingMockMvc.perform(put("/api/brandings")
@@ -229,6 +237,7 @@ public class BrandingResourceIntTest {
         assertThat(testBranding.getSecundaryColor()).isEqualTo(UPDATED_SECUNDARY_COLOR);
         assertThat(testBranding.getPageBackgroundColor()).isEqualTo(UPDATED_PAGE_BACKGROUND_COLOR);
         assertThat(testBranding.getTextColor()).isEqualTo(UPDATED_TEXT_COLOR);
+        assertThat(testBranding.getName()).isEqualTo(UPDATED_NAME);
 
         // Validate the Branding in ElasticSearch
         Branding brandingEs = brandingSearchRepository.findOne(testBranding.getId());
@@ -291,6 +300,7 @@ public class BrandingResourceIntTest {
             .andExpect(jsonPath("$.[*].primaryColor").value(hasItem(DEFAULT_PRIMARY_COLOR.toString())))
             .andExpect(jsonPath("$.[*].secundaryColor").value(hasItem(DEFAULT_SECUNDARY_COLOR.toString())))
             .andExpect(jsonPath("$.[*].pageBackgroundColor").value(hasItem(DEFAULT_PAGE_BACKGROUND_COLOR.toString())))
-            .andExpect(jsonPath("$.[*].textColor").value(hasItem(DEFAULT_TEXT_COLOR.toString())));
+            .andExpect(jsonPath("$.[*].textColor").value(hasItem(DEFAULT_TEXT_COLOR.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
 }

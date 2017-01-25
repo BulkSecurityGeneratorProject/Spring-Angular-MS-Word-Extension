@@ -20,6 +20,7 @@
             "secundaryColor": "Secundary Color",
             "pageBackgroundColor": "Page Background Color",
             "textColor": "Text Color",
+            "name": "Name",
             "logoImage": "Logo Image"
         }
     }

@@ -42,6 +42,10 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": "7"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20170106071301",
