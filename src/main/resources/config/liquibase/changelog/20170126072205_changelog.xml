@@ -7,6 +7,14 @@
       <addColumn tableName="branding">
          <column name="name" type="varchar(255)"/>
       </addColumn>
+
+       <sql dbms="mysql"
+            endDelimiter="\nGO"
+            splitStatements="true"
+            stripComments="true">update branding set name = "Default branding" where name is null or name = ""
+           <comment>Set default branding name</comment>
+       </sql>
+
    </changeSet>
    <changeSet author="wouter (generated)" id="1485415342852-2">
       <addUniqueConstraint columnNames="filename"

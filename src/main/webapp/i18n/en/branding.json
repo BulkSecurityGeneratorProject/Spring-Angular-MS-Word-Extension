@@ -2,24 +2,24 @@
     "imicloudApp": {
         "branding" : {
             "home": {
-                "title": "Brandings",
+                "title": "Branding",
                 "createLabel": "Create Branding",
-                "createOrEditLabel": "Customize your template",
+                "createOrEditLabel": "Edit branding",
                 "search": "Search for Branding"
             },
             "created": "Branding created",
             "updated": "Branding updated",
             "deleted": "Branding deleted",
             "delete": {
-                "question": "Are you sure you want to delete branding?"
+                "question": "Are you sure you want to delete this branding?"
             },
             "detail": {
-                "title": "Customize your template"
+                "title": "Branding Details"
             },
 			"name": "Name",
 			"organization": "Organization",
             "primaryColor": "Primary Color",
-            "secundaryColor": "Secundary Color",
+            "secundaryColor": "Secondary Color",
             "pageBackgroundColor": "Page Background",
             "textColor": "Text Color",
             "logoImage": "Logo",

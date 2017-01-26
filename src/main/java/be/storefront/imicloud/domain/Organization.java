@@ -39,7 +39,20 @@ public class Organization extends AbstractAuditingEntity implements Serializable
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Folder> folders = new HashSet<>();
 
-    @OneToOne
+    @OneToMany(mappedBy = "organization")
+    @JsonIgnore
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Branding> brandings = new HashSet<>();
+
+    public Set<Branding> getBrandings() {
+        return brandings;
+    }
+
+    public void setBrandings(Set<Branding> brandings) {
+        this.brandings = brandings;
+    }
+
+    @OneToOne(mappedBy = "branding")
     @JoinColumn(unique = true)
     private Branding branding;
 
@@ -102,7 +115,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
         this.folders = folders;
     }
 
-    public Branding getBranding() {
+    public Branding getDefaultBranding() {
         return branding;
     }
 
@@ -111,7 +124,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
         return this;
     }
 
-    public void setBranding(Branding branding) {
+    public void setDefaultBranding(Branding branding) {
         this.branding = branding;
     }
 

@@ -7,9 +7,10 @@
 
             </div>
             <div class="col-xs-8 no-padding-right">
-                <a class="btn btn-primary pull-right" href="{{vm.editBrandingUrl}}">
+
+                <a class="btn btn-primary pull-right" ui-sref="branding">
                     <span class="glyphicon glyphicon-wrench"></span>
-                    <span data-translate="imicloudApp.imDocument.customizeYourTemplate">Customize your template</span>
+                    <span data-translate="imicloudApp.imDocument.editBranding">Edit branding</span>
                 </a>
             </div>
         </div>
@@ -29,6 +30,7 @@
                     <th jh-sort-by="documentName"><span data-translate="imicloudApp.imDocument.documentName">Document Name</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="password"><span data-translate="imicloudApp.imDocument.password">Password</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="defaultTemplate"><span data-translate="imicloudApp.imDocument.defaultTemplate">Default Template</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="brandingName"><span data-translate="imicloudApp.imDocument.branding">Branding</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <!--
                     <th jh-sort-by="folderId"><span data-translate="imicloudApp.imDocument.folder">Folder</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="userEmail"><span data-translate="imicloudApp.imDocument.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -50,6 +52,9 @@
                         <span ng-switch-default>
                             {{imDocument.defaultTemplate}}
                         </span>
+                    </td>
+                    <td>
+                        <a ui-sref="brandingroute-detail({id:imDocument.brandingId})">{{imDocument.brandingName}}</a>
                     </td>
                     <!--
                     <td>
