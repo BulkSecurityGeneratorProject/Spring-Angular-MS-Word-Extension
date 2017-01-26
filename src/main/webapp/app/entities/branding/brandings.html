@@ -39,7 +39,9 @@
                 <tr>
                     <th><span data-translate="imicloudApp.branding.name">Name</span></th>
                     <th><span data-translate="imicloudApp.branding.primaryColor">Primary Color</span></th>
-                    <th><span data-translate="imicloudApp.branding.secundaryColor">Secundary Color</span></th>
+                    <!--
+                    <th><span data-translate="imicloudApp.branding.secundaryColor">Secondary Color</span></th>
+                    -->
                     <th><span data-translate="imicloudApp.branding.pageBackgroundColor">Page Background Color</span></th>
                     <th><span data-translate="imicloudApp.branding.textColor">Text Color</span></th>
                     <!--
@@ -55,10 +57,12 @@
                         <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.primaryColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
                         {{branding.primaryColor}}
                     </td>
+                    <!--
                     <td>
                         <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.secundaryColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
                         {{branding.secundaryColor}}
                     </td>
+                    -->
                     <td>
                         <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.pageBackgroundColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
                         {{branding.pageBackgroundColor}}
@@ -90,7 +94,7 @@
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-xs hidden-sm" data-translate="entity.action.edit"></span>
                             </button>
-                            <button type="submit"
+                            <button ng-show="vm.brandings.length > 1" type="submit"
                                     ui-sref="branding.delete({id:branding.id})"
                                     class="btn btn-default btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
