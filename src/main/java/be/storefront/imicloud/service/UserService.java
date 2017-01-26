@@ -271,28 +271,38 @@ public class UserService {
         UserInfo ui = userInfoRepository.findByUserId(u.getId());
 
         if(ui == null){
-            // Create default branding
-            Branding b = new Branding();
-            b.setPageBackgroundColor("#FFFFFF");
-            b.setTextColor("#222222");
-            b.setPrimaryColor("#009edf");
-            b.setSecundaryColor("#d5155b");
-            b = brandingRepository.save(b);
-
-
             // Create default organization
             Organization o = new Organization();
             o.setName(u.getFirstName() + "'s organization");
             o.setMagentoCustomerId(magentoCustomerId);
+            organizationRepository.save(o);
+
+
+            // Create default branding
+            Branding b = new Branding();
+            b.setName("Default branding");
+            b.setPageBackgroundColor("#FFFFFF");
+            b.setTextColor("#222222");
+            b.setPrimaryColor("#009edf");
+            b.setSecundaryColor("#d5155b");
+            b.setOrganization(o);
+            brandingRepository.save(b);
+
+
+            // Link branding to organization
             o.setBranding(b);
-            o = organizationRepository.save(o);
+//            HashSet<Branding> brandingsSet = new HashSet<>();
+//            brandingsSet.add(b);
+//            o.setBrandings(brandingsSet);
+            organizationRepository.save(o);
+
 
             // Create a new UserInfo object
             ui = new UserInfo();
             ui.setUser(u);
             ui.setOrganization(o);
 
-            ui = userInfoRepository.save(ui);
+            userInfoRepository.save(ui);
         }
     }
 }
