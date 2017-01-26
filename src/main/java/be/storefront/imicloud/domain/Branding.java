@@ -47,6 +47,10 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(unique = true)
     private Image logoImage;
 
+    @ManyToOne
+    @NotNull
+    private Organization organization;
+
     public Long getId() {
         return id;
     }
@@ -131,6 +135,19 @@ public class Branding extends AbstractAuditingEntity implements Serializable {
 
     public void setLogoImage(Image image) {
         this.logoImage = image;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public Branding organization(Organization organization) {
+        this.organization = organization;
+        return this;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     @Override

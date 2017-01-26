@@ -17,6 +17,7 @@
                 "title": "Customize your template"
             },
 			"name": "Name",
+			"organization": "Organization",
             "primaryColor": "Primary Color",
             "secundaryColor": "Secundary Color",
             "pageBackgroundColor": "Page Background",

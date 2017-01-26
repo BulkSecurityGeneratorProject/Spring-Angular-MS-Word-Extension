@@ -40,6 +40,9 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
 
     private String logoImageFilename;
 
+	private Long organizationId;
+	
+	private String organizationName;
 
 
     public BrandingDTO(){
@@ -117,6 +120,23 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
 
     public void setLogoImageFilename(String imageFilename) {
         this.logoImageFilename = imageFilename;
+    }
+	
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 
     @Override

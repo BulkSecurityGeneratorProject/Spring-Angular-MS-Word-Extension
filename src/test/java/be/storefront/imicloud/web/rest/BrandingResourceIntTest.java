@@ -3,6 +3,7 @@ package be.storefront.imicloud.web.rest;
 import be.storefront.imicloud.ImicloudApp;
 
 import be.storefront.imicloud.domain.Branding;
+import be.storefront.imicloud.domain.Organization;
 import be.storefront.imicloud.repository.BrandingRepository;
 import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.repository.search.BrandingSearchRepository;
@@ -104,6 +105,11 @@ public class BrandingResourceIntTest {
                 .pageBackgroundColor(DEFAULT_PAGE_BACKGROUND_COLOR)
                 .textColor(DEFAULT_TEXT_COLOR)
                 .name(DEFAULT_NAME);
+        // Add required entity
+        Organization organization = OrganizationResourceIntTest.createEntity(em);
+        em.persist(organization);
+        em.flush();
+        branding.setOrganization(organization);
         return branding;
     }
 

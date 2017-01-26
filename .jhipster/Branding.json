@@ -8,6 +8,15 @@
             "otherEntityField": "filename",
             "ownerSide": true,
             "otherEntityRelationshipName": "branding"
+        },
+        {
+            "relationshipName": "organization",
+            "otherEntityName": "organization",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "name"
         }
     ],
     "fields": [
