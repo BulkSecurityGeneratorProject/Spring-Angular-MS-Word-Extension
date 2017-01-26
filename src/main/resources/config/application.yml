@@ -29,6 +29,18 @@ spring:
 #                path:
 #                  logs: target/elasticsearch/log
 #                  data: target/elasticsearch/data
+    datasource:
+            type: com.zaxxer.hikari.HikariDataSource
+            url: jdbc:mysql://localhost:3306/imicloud?useUnicode=true&characterEncoding=utf8&useSSL=false
+            name:
+            username: root
+            password: root
+            hikari:
+                data-source-properties:
+                    cachePrepStmts: true
+                    prepStmtCacheSize: 250
+                    prepStmtCacheSqlLimit: 2048
+                    useServerPrepStmts: true
     profiles:
         # The commented value for `active` can be replaced with valid Spring profiles to load.
         # Otherwise, it will be filled in by maven when building the WAR file
