@@ -7,6 +7,12 @@
       <addColumn tableName="branding">
          <column name="organization_id" type="bigint"/>
       </addColumn>
+       <sql dbms="mysql"
+            endDelimiter="\nGO"
+            splitStatements="true"
+            stripComments="true">update branding b inner join organization o on o.branding_id = b.id set b.organization_id = o.id;
+           <comment>Fix new branding relationship not being linked to an organization</comment>
+       </sql>
    </changeSet>
    <changeSet author="wouter (generated)" id="1485416516728-2">
       <addForeignKeyConstraint baseColumnNames="organization_id"
@@ -17,4 +23,5 @@
                                referencedColumnNames="id"
                                referencedTableName="organization"/>
    </changeSet>
+
 </databaseChangeLog>
