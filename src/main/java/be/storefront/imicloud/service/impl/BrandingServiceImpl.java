@@ -58,7 +58,7 @@ public class BrandingServiceImpl implements BrandingService{
         branding = brandingRepository.save(branding);
         BrandingDTO result = brandingMapper.brandingToBrandingDTO(branding);
         result.setUrlHelperService(urlHelperService);
-        brandingSearchRepository.save(branding);
+        //brandingSearchRepository.save(branding);
         return result;
     }
 
@@ -125,7 +125,11 @@ public class BrandingServiceImpl implements BrandingService{
     @Override
     public BrandingDTO findByDocument(ImDocument imDocument) {
         if(imDocument != null){
-            return findByUserId(imDocument.getUser().getId());
+            if(imDocument.getBranding() != null){
+                return brandingMapper.brandingToBrandingDTO(imDocument.getBranding());
+            }else{
+                return findByUserId(imDocument.getUser().getId());
+            }
         }else{
             return null;
         }

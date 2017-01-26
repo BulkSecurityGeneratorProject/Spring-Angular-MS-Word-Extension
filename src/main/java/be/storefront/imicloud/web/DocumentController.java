@@ -12,6 +12,7 @@ import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.service.ImageService;
 import be.storefront.imicloud.service.UrlHelperService;
+import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import be.storefront.imicloud.web.exception.AccessDeniedException;
@@ -131,11 +132,13 @@ public class DocumentController {
                         template = imDocumentDto.getDefaultTemplate();
                     }
 
+                    BrandingDTO branding = brandingService.findByDocument(imDocument);
+                    branding.setUrlHelperService(urlHelperService);
+
                     HashMap<String, Object> viewMap = new HashMap<>();
                     viewMap.put("baseUrl", imCloudProperties.getBaseUrl());
                     viewMap.put("allDocumentsUrl", urlHelperService.getAllDocumentsUrl());
-                    viewMap.put("logoUrl", urlHelperService.getLogoUrl(imDocument.getUser()));
-                    viewMap.put("branding", brandingService.findByDocument(imDocument));
+                    viewMap.put("branding", branding);
                     viewMap.put("cssHelper", new CssHelper());
                     viewMap.put("urlHelperService", urlHelperService);
                     viewMap.put("templateCode", template);

@@ -50,7 +50,7 @@ public class ImDocumentServiceImpl implements ImDocumentService{
         ImDocument imDocument = imDocumentMapper.imDocumentDTOToImDocument(imDocumentDTO);
         imDocument = imDocumentRepository.save(imDocument);
         ImDocumentDTO result = imDocumentMapper.imDocumentToImDocumentDTO(imDocument);
-        imDocumentSearchRepository.save(imDocument);
+        //imDocumentSearchRepository.save(imDocument);
         return result;
     }
 

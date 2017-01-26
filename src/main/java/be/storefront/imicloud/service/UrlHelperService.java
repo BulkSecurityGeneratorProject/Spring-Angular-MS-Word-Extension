@@ -5,7 +5,9 @@ import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.UserInfoRepository;
+import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
+import be.storefront.imicloud.service.mapper.BrandingMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import org.springframework.stereotype.Service;
 
@@ -58,19 +60,6 @@ public class UrlHelperService {
 
     public Object getDocumentPasswordSubmitUrl() {
         return imCloudProperties.getBaseUrl() + "document/password/";
-    }
-
-    public Object getLogoUrl(User u) {
-        UserInfo ui = userInfoRepository.findByUserId(u.getId());
-        Organization organization = ui.getOrganization();
-        Branding branding = organization.getBranding();
-
-        if(branding.getLogoImage() == null){
-            return "";
-        }else {
-            return getImageUrl(branding.getLogoImage());
-        }
-
     }
 
     public String getImageUrl(String imageFilename) {

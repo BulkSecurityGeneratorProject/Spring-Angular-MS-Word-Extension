@@ -48,7 +48,7 @@ public interface BrandingService {
      */
     List<BrandingDTO> search(String query);
 
-    Object findByDocument(ImDocument imDocument);
+    BrandingDTO findByDocument(ImDocument imDocument);
 
     BrandingDTO findByUserId(Long userId);
 

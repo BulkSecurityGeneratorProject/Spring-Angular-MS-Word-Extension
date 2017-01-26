@@ -41,7 +41,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     private String logoImageFilename;
 
 	private Long organizationId;
-	
+
 	private String organizationName;
 
 
@@ -60,7 +60,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-	
+
 	public String getName() {
         return name;
 	}
@@ -68,7 +68,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-		
+
     public String getPrimaryColor() {
         return primaryColor;
     }
@@ -121,7 +121,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
     public void setLogoImageFilename(String imageFilename) {
         this.logoImageFilename = imageFilename;
     }
-	
+
     public Long getOrganizationId() {
         return organizationId;
     }
