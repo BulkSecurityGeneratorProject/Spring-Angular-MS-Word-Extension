@@ -8,6 +8,7 @@ import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.security.MyUserDetails;
 import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.*;
+import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.dto.ImMapDTO;
@@ -116,6 +117,10 @@ public class UploadController {
 
     @Inject
     private UserRepository userRepository;
+
+    @Inject private BrandingRepository brandingRepository;
+
+    @Inject private UserInfoRepository userInfoRepository;
 
     //@Inject private PasswordEncoder passwordEncoder;
 
@@ -272,6 +277,14 @@ public class UploadController {
         // Add missing random secret
         if (doc.getSecret() == null || "".equals(doc.getSecret())) {
             doc.setSecret(SecurityUtils.generateSecret());
+        }
+
+        if(doc.getBranding() == null){
+            UserInfo ui = userInfoRepository.findByUserId(doc.getUser().getId());
+            Organization organization = ui.getOrganization();
+            Branding defaultBranding = organization.getBranding();
+
+            doc.setBranding(defaultBranding);
         }
 
         doc = imDocumentRepository.save(doc);
