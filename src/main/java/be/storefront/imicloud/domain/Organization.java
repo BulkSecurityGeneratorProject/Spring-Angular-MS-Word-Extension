@@ -52,7 +52,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
         this.brandings = brandings;
     }
 
-    @OneToOne(mappedBy = "branding")
+    @OneToOne
     @JoinColumn(unique = true)
     private Branding branding;
 
@@ -115,7 +115,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
         this.folders = folders;
     }
 
-    public Branding getDefaultBranding() {
+    public Branding getBranding() {
         return branding;
     }
 
@@ -124,7 +124,7 @@ public class Organization extends AbstractAuditingEntity implements Serializable
         return this;
     }
 
-    public void setDefaultBranding(Branding branding) {
+    public void setBranding(Branding branding) {
         this.branding = branding;
     }
 
