@@ -27,29 +27,6 @@ public class MagentoAuthenticationProvider implements AuthenticationProvider, Se
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        //GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
-
-//        List<String> authoritiesList = Arrays.asList(StringUtils.split("ROLE_USER", ","));
-//        List<GrantedAuthority> authorities = authoritiesMapper.mapAuthorities(GrantedAuthority);
-
-//            String firstName = "Wouter";
-//            String lastName = "Samaey";
-//            boolean isActive = true;
-//            String langCode = "NL";
-//
-//            ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-//            authorities.add(new GrantedAuthority() {
-//                @Override
-//                public String getAuthority() {
-//                    return AuthoritiesConstants.USER;
-//                }
-//            });
-//
-//            MagentoAuthenticationToken result = new MagentoAuthenticationToken(email, password, firstName, lastName, isActive, langCode, authorities);
-//            result.setDetails(authentication.getDetails());
-//
-//            return result;
-
         String email = authentication.getPrincipal().toString();
         String password = authentication.getCredentials().toString();
 
@@ -60,7 +37,6 @@ public class MagentoAuthenticationProvider implements AuthenticationProvider, Se
         } catch (Exception e) {
             log.error("Could not get customer data from Magento", e);
         }
-
 
         // Never authenticate. The next mechanism will pick up the user we have created (if any).
         return null;
