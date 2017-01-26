@@ -27,23 +27,20 @@
             <column name="primary_color" type="varchar(7)">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="secundary_color" type="varchar(7)">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="page_background_color" type="varchar(7)">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="text_color" type="varchar(7)">
                 <constraints nullable="true" />
             </column>
-            
-            <column name="name" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-                        <column name="logo_image_id" type="bigint">
+
+            <column name="logo_image_id" type="bigint">
                 <constraints unique="true" nullable="true" />
             </column>
             <column name="created_by" type="varchar(50)">
@@ -56,6 +53,6 @@
             <column name="last_modified_date" type="timestamp"/>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
 </databaseChangeLog>

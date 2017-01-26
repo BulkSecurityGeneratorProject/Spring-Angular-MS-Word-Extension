@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="wouter (generated)" id="1485415342852-1">
+      <addColumn tableName="branding">
+         <column name="name" type="varchar(255)"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="wouter (generated)" id="1485415342852-2">
+      <addUniqueConstraint columnNames="filename"
+                           constraintName="UC_IMAGEFILENAME_COL"
+                           tableName="image"/>
+   </changeSet>
+   <changeSet author="wouter (generated)" id="1485415342852-3">
+      <addUniqueConstraint columnNames="source, im_document_id"
+                           constraintName="UK5xlnitx31wl6je5oqsx9oeax6"
+                           tableName="image_source_path"/>
+   </changeSet>
+   <changeSet author="wouter (generated)" id="1485415342852-4">
+      <dropNotNullConstraint columnDataType="bigint"
+                             columnName="uploaded_by_user_id"
+                             tableName="image"/>
+   </changeSet>
+   <changeSet author="wouter (generated)" id="1485415342852-5">
+      <dropNotNullConstraint columnDataType="bigint"
+                             columnName="user_id"
+                             tableName="im_document"/>
+   </changeSet>
+</databaseChangeLog>
