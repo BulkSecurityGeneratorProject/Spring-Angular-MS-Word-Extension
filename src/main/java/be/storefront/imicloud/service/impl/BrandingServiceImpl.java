@@ -1,6 +1,7 @@
 package be.storefront.imicloud.service.impl;
 
 import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.Organization;
 import be.storefront.imicloud.domain.UserInfo;
 import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.service.BrandingService;
@@ -139,7 +140,9 @@ public class BrandingServiceImpl implements BrandingService{
     public BrandingDTO findByUserId(Long userId) {
         if(userId != null){
             UserInfo ui = userInfoRepository.findByUserId(userId);
-            BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(ui.getOrganization().getBranding());
+            Organization organization = ui.getOrganization();
+            Branding branding = organization.getBranding();
+            BrandingDTO brandingDTO = brandingMapper.brandingToBrandingDTO(branding);
             brandingDTO.setUrlHelperService(urlHelperService);
             return brandingDTO;
         }else{
