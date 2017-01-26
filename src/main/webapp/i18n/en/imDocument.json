@@ -28,7 +28,8 @@
             "uploadComplete": "Upload Complete",
             "folder": "Folder",
             "map": "Map",
-            "user": "User"
+            "user": "User",
+			"branding": "Branding"
         }
     }
 }

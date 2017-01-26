@@ -1,5 +1,10 @@
 package be.storefront.imicloud.service;
 
+import be.storefront.imicloud.domain.Organization;
+import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.domain.UserInfo;
+import be.storefront.imicloud.security.MyUserDetails;
+import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.dto.OrganizationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +25,7 @@ public interface OrganizationService {
 
     /**
      *  Get all the organizations.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -45,9 +50,15 @@ public interface OrganizationService {
      * Search for the organization corresponding to the query.
      *
      *  @param query the query of the search
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     Page<OrganizationDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get the Organization of the current user
+     * @return
+     */
+    Organization getCurrentOrganization();
 }

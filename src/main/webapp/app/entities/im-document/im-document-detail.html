@@ -42,6 +42,10 @@
             {{vm.imDocument.userEmail}}
         </dd>
         -->
+		<dt><span data-translate="imicloudApp.imDocument.branding">Branding</span></dt>
+		<dd>
+			<a ui-sref="branding-detail({id:vm.imDocument.brandingId})">{{vm.imDocument.brandingName}}</a>
+		</dd>
     </dl>
 
     <button type="submit"

@@ -63,6 +63,9 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
 
     @ManyToOne
     private Folder folder;
+	
+	@ManyToOne
+	private Branding branding;
 
     @OneToMany(mappedBy = "imDocument", cascade=CascadeType.ALL)
     @OrderBy("position ASC")
@@ -267,6 +270,19 @@ public class ImDocument extends AbstractAuditingEntity implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+	
+	public Branding getBranding() {
+		return branding;
+	}
+
+    public ImDocument branding(Branding branding) {
+        this.branding = branding;
+        return this;
+    }
+
+    public void setBranding(Branding branding) {
+        this.branding = branding;
     }
 
     @Override

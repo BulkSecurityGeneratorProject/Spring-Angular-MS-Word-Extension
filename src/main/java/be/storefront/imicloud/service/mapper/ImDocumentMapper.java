@@ -15,6 +15,8 @@ public interface ImDocumentMapper {
     @Mapping(source = "folder.id", target = "folderId")
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.email", target = "userEmail")
+    @Mapping(source = "branding.id", target = "brandingId")
+    @Mapping(source = "branding.name", target = "brandingName")
     ImDocumentDTO imDocumentToImDocumentDTO(ImDocument imDocument);
 
     List<ImDocumentDTO> imDocumentsToImDocumentDTOs(List<ImDocument> imDocuments);
@@ -22,6 +24,7 @@ public interface ImDocumentMapper {
     @Mapping(source = "folderId", target = "folder")
     @Mapping(target = "maps", ignore = true)
     @Mapping(source = "userId", target = "user")
+    @Mapping(source = "brandingId", target = "branding")
     ImDocument imDocumentDTOToImDocument(ImDocumentDTO imDocumentDTO);
 
     List<ImDocument> imDocumentDTOsToImDocuments(List<ImDocumentDTO> imDocumentDTOs);
@@ -33,5 +36,14 @@ public interface ImDocumentMapper {
         Folder folder = new Folder();
         folder.setId(id);
         return folder;
+    }
+
+    default Branding brandingFromId(Long id) {
+        if (id == null) {
+            return null;
+        }
+        Branding branding = new Branding();
+        branding.setId(id);
+        return branding;
     }
 }

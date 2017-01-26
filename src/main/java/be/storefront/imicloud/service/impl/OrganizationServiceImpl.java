@@ -1,9 +1,15 @@
 package be.storefront.imicloud.service.impl;
 
+import be.storefront.imicloud.domain.User;
+import be.storefront.imicloud.domain.UserInfo;
+import be.storefront.imicloud.repository.UserInfoRepository;
+import be.storefront.imicloud.security.MyUserDetails;
+import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.OrganizationService;
 import be.storefront.imicloud.domain.Organization;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.search.OrganizationSearchRepository;
+import be.storefront.imicloud.service.UserInfoService;
 import be.storefront.imicloud.service.dto.OrganizationDTO;
 import be.storefront.imicloud.service.mapper.OrganizationMapper;
 import org.slf4j.Logger;
@@ -26,10 +32,10 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  */
 @Service
 @Transactional
-public class OrganizationServiceImpl implements OrganizationService{
+public class OrganizationServiceImpl implements OrganizationService {
 
     private final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
-    
+
     @Inject
     private OrganizationRepository organizationRepository;
 
@@ -38,6 +44,9 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Inject
     private OrganizationSearchRepository organizationSearchRepository;
+
+    @Inject
+    private UserInfoRepository userInfoRepository;
 
     /**
      * Save a organization.
@@ -55,12 +64,12 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     /**
-     *  Get all the organizations.
-     *  
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * Get all the organizations.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<OrganizationDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Organizations");
         Page<Organization> result = organizationRepository.findAll(pageable);
@@ -68,12 +77,12 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     /**
-     *  Get one organization by id.
+     * Get one organization by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public OrganizationDTO findOne(Long id) {
         log.debug("Request to get Organization : {}", id);
         Organization organization = organizationRepository.findOne(id);
@@ -82,9 +91,9 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     /**
-     *  Delete the  organization by id.
+     * Delete the  organization by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Organization : {}", id);
@@ -95,13 +104,30 @@ public class OrganizationServiceImpl implements OrganizationService{
     /**
      * Search for the organization corresponding to the query.
      *
-     *  @param query the query of the search
-     *  @return the list of entities
+     * @param query the query of the search
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<OrganizationDTO> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Organizations for query {}", query);
         Page<Organization> result = organizationSearchRepository.search(queryStringQuery(query), pageable);
         return result.map(organization -> organizationMapper.organizationToOrganizationDTO(organization));
+    }
+
+    @Override
+    public Organization getCurrentOrganization() {
+        MyUserDetails userDetails = SecurityUtils.getCurrentUser();
+        if (userDetails == null) {
+            // User is not logged in
+            return null;
+
+        } else {
+
+            // User is logged in
+            UserInfo userInfo = userInfoRepository.findByUserId(userDetails.getId());
+            Organization myOrg = userInfo.getOrganization();
+
+            return myOrg;
+        }
     }
 }

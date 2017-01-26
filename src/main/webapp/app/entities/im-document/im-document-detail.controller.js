@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('ImDocumentDetailController', ImDocumentDetailController);
 
-    ImDocumentDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'DataUtils', 'entity', 'ImDocument', 'Folder', 'ImMap', 'User'];
+    ImDocumentDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'DataUtils', 'entity', 'ImDocument', 'Folder', 'ImMap', 'User', 'Branding'];
 
-    function ImDocumentDetailController($scope, $rootScope, $stateParams, previousState, DataUtils, entity, ImDocument, Folder, ImMap, User) {
+    function ImDocumentDetailController($scope, $rootScope, $stateParams, previousState, DataUtils, entity, ImDocument, Folder, ImMap, User, Branding) {
         var vm = this;
 
         vm.imDocument = entity;

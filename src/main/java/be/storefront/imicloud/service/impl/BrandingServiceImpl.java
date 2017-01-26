@@ -129,7 +129,6 @@ public class BrandingServiceImpl implements BrandingService{
         }else{
             return null;
         }
-
     }
 
     @Override
@@ -142,6 +141,14 @@ public class BrandingServiceImpl implements BrandingService{
         }else{
             return null;
         }
+    }
+
+    public List<BrandingDTO> findByOrganizationId(Long id){
+        List<BrandingDTO> r = brandingRepository.findByOrganizationId(id).stream()
+            .map(brandingMapper::brandingToBrandingDTO)
+            .collect(Collectors.toCollection(LinkedList::new));
+
+        return r;
     }
 
 }

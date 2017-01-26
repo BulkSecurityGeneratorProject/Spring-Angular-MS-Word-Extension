@@ -51,4 +51,6 @@ public interface BrandingService {
     Object findByDocument(ImDocument imDocument);
 
     BrandingDTO findByUserId(Long userId);
+
+    List<BrandingDTO> findByOrganizationId(Long id);
 }

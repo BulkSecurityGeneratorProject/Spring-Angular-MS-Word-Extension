@@ -5,9 +5,9 @@
         .module('imicloudApp')
         .controller('ImDocumentDialogController', ImDocumentDialogController);
 
-    ImDocumentDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'DataUtils', 'entity', 'ImDocument', 'Folder', 'ImMap', 'User'];
+    ImDocumentDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'DataUtils', 'entity', 'ImDocument', 'Folder', 'ImMap', 'User', 'Branding'];
 
-    function ImDocumentDialogController ($timeout, $scope, $stateParams, $uibModalInstance, DataUtils, entity, ImDocument, Folder, ImMap, User) {
+    function ImDocumentDialogController ($timeout, $scope, $stateParams, $uibModalInstance, DataUtils, entity, ImDocument, Folder, ImMap, User, Branding) {
         var vm = this;
 
         vm.imDocument = entity;
@@ -18,6 +18,7 @@
         vm.folders = Folder.query();
         vm.immaps = ImMap.query();
         vm.users = User.query();
+        vm.brandings = Branding.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

@@ -1,5 +1,13 @@
 package be.storefront.imicloud.web.rest;
 
+import be.storefront.imicloud.domain.Branding;
+import be.storefront.imicloud.domain.Organization;
+import be.storefront.imicloud.domain.UserInfo;
+import be.storefront.imicloud.repository.UserInfoRepository;
+import be.storefront.imicloud.security.MyUserDetails;
+import be.storefront.imicloud.security.SecurityUtils;
+import be.storefront.imicloud.service.OrganizationService;
+import be.storefront.imicloud.service.dto.OrganizationDTO;
 import com.codahale.metrics.annotation.Timed;
 import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
@@ -32,9 +40,38 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class BrandingResource {
 
     private final Logger log = LoggerFactory.getLogger(BrandingResource.class);
-        
+
     @Inject
     private BrandingService brandingService;
+
+    @Inject
+    private UserInfoRepository userInfoRepository;
+
+    @Inject
+    private OrganizationService organizationService;
+
+
+    protected boolean checkInput(BrandingDTO brandingDTO) {
+        Organization myOrg = organizationService.getCurrentOrganization();
+
+        MyUserDetails userDetails = SecurityUtils.getCurrentUser();
+        if (myOrg == null) {
+            // User is not logged in or does not have an organization
+            return false;
+
+        } else {
+            if (brandingDTO.getOrganizationId() == null) {
+                // Fill empty organization with my organization
+                brandingDTO.setOrganizationId(myOrg.getId());
+
+            } else if (!brandingDTO.getOrganizationId().equals(myOrg.getId())) {
+                // User tried to create a branding for someone else
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     /**
      * POST  /brandings : Create a new branding.
@@ -50,10 +87,15 @@ public class BrandingResource {
         if (brandingDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("branding", "idexists", "A new branding cannot already have an ID")).body(null);
         }
-        BrandingDTO result = brandingService.save(brandingDTO);
-        return ResponseEntity.created(new URI("/api/brandings/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("branding", result.getId().toString()))
-            .body(result);
+
+        if (checkInput(brandingDTO)) {
+            BrandingDTO result = brandingService.save(brandingDTO);
+            return ResponseEntity.created(new URI("/api/brandings/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert("branding", result.getId().toString()))
+                .body(result);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -72,10 +114,15 @@ public class BrandingResource {
         if (brandingDTO.getId() == null) {
             return createBranding(brandingDTO);
         }
-        BrandingDTO result = brandingService.save(brandingDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("branding", brandingDTO.getId().toString()))
-            .body(result);
+
+        if (checkInput(brandingDTO)) {
+            BrandingDTO result = brandingService.save(brandingDTO);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert("branding", brandingDTO.getId().toString()))
+                .body(result);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -87,7 +134,14 @@ public class BrandingResource {
     @Timed
     public List<BrandingDTO> getAllBrandings() {
         log.debug("REST request to get all Brandings");
-        return brandingService.findAll();
+
+        Organization myOrg = organizationService.getCurrentOrganization();
+        if (myOrg == null) {
+            return null;
+        } else {
+            return brandingService.findByOrganizationId(myOrg.getId());
+        }
+
     }
 
     /**
@@ -100,12 +154,22 @@ public class BrandingResource {
     @Timed
     public ResponseEntity<BrandingDTO> getBranding(@PathVariable Long id) {
         log.debug("REST request to get Branding : {}", id);
+
+        // TODO check user access limitations
+
+        Organization myOrg = organizationService.getCurrentOrganization();
         BrandingDTO brandingDTO = brandingService.findOne(id);
-        return Optional.ofNullable(brandingDTO)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+        if (brandingDTO != null && brandingDTO.getOrganizationId() != null && brandingDTO.getOrganizationId().equals(myOrg.getId())) {
+            // This is one of my brandings
+            return Optional.ofNullable(brandingDTO)
+                .map(result -> new ResponseEntity<>(
+                    result,
+                    HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -118,23 +182,31 @@ public class BrandingResource {
     @Timed
     public ResponseEntity<Void> deleteBranding(@PathVariable Long id) {
         log.debug("REST request to delete Branding : {}", id);
-        brandingService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("branding", id.toString())).build();
+
+        BrandingDTO brandingDto = brandingService.findOne(id);
+        Organization myOrg = organizationService.getCurrentOrganization();
+
+        if(brandingDto.getOrganizationId() != null && brandingDto.getOrganizationId().equals(myOrg.getId())){
+            brandingService.delete(id);
+            return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("branding", id.toString())).build();
+        }else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
-    /**
-     * SEARCH  /_search/brandings?query=:query : search for the branding corresponding
-     * to the query.
-     *
-     * @param query the query of the branding search 
-     * @return the result of the search
-     */
-    @GetMapping("/_search/brandings")
-    @Timed
-    public List<BrandingDTO> searchBrandings(@RequestParam String query) {
-        log.debug("REST request to search Brandings for query {}", query);
-        return brandingService.search(query);
-    }
+//    /**
+//     * SEARCH  /_search/brandings?query=:query : search for the branding corresponding
+//     * to the query.
+//     *
+//     * @param query the query of the branding search
+//     * @return the result of the search
+//     */
+//    @GetMapping("/_search/brandings")
+//    @Timed
+//    public List<BrandingDTO> searchBrandings(@RequestParam String query) {
+//        log.debug("REST request to search Brandings for query {}", query);
+//        return brandingService.search(query);
+//    }
 
 
 }

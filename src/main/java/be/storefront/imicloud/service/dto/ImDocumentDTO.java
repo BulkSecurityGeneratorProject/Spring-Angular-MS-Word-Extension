@@ -43,11 +43,14 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
 
     private Long folderId;
-    
+
     private Long userId;
-    
+
 
     private String userEmail;
+
+    private Long brandingId;
+    private String brandingName;
 
 
 
@@ -166,6 +169,22 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
         }else {
             return urlHelperService.getDocumentPublicUrl(this);
         }
+    }
+
+    public Long getBrandingId() {
+        return brandingId;
+    }
+
+    public void setBrandingId(Long brandingId) {
+        this.brandingId = brandingId;
+    }
+
+    public String getBrandingName() {
+        return brandingName;
+    }
+
+    public void setBrandingName(String brandingName) {
+        this.brandingName = brandingName;
     }
 
     @Override
