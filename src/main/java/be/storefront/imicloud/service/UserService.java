@@ -273,14 +273,14 @@ public class UserService {
         if(ui == null){
             // Create default organization
             Organization o = new Organization();
-            o.setName(u.getFirstName() + "'s organization");
+            o.setName("My organization");
             o.setMagentoCustomerId(magentoCustomerId);
             organizationRepository.save(o);
 
 
             // Create default branding
             Branding b = new Branding();
-            b.setName("Default branding");
+            b.setName("My branding");
             b.setPageBackgroundColor("#FFFFFF");
             b.setTextColor("#222222");
             b.setPrimaryColor("#009edf");
