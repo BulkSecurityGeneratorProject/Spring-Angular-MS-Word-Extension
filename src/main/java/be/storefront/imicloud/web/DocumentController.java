@@ -36,6 +36,7 @@ import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -77,12 +78,12 @@ public class DocumentController {
 
 
     @GetMapping("/document/{documentId}/{secret}")
-    public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret) throws IOException, SAXException, ParserConfigurationException {
+    public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret) throws IOException, SAXException, ParserConfigurationException, TransformerException {
         return processView(documentId, secret, null);
     }
 
     @GetMapping("/document/{documentId}/{secret}/{template}")
-    public ModelAndView viewWithTemplate(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret, @PathVariable("template") String template) throws IOException, SAXException, ParserConfigurationException {
+    public ModelAndView viewWithTemplate(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret, @PathVariable("template") String template) throws IOException, SAXException, ParserConfigurationException, TransformerException {
         return processView(documentId, secret, template);
     }
 
@@ -99,7 +100,7 @@ public class DocumentController {
         return "redirect:"+urlHelperService.getDocumentPublicUrl(imDocument, templateCode);
     }
 
-    protected ModelAndView processView(Long documentId, String secret, String templateCode) throws ParserConfigurationException, SAXException, IOException {
+    protected ModelAndView processView(Long documentId, String secret, String templateCode) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         ImDocumentDTO imDocumentDto = imDocumentService.findOne(documentId);
         if (imDocumentDto != null) {
             if (secret != null && secret.equals(imDocumentDto.getSecret())) {

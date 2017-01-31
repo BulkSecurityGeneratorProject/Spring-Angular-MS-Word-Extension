@@ -1,5 +1,6 @@
 package be.storefront.imicloud.domain.util;
 
+import org.joox.Match;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -10,8 +11,15 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * Created by wouter on 30/01/2017.
@@ -67,4 +75,26 @@ public class XmlDocument {
 
         return null;
     }
+
+    public static String nodeToString(Node node) throws TransformerException {
+        StringWriter sw = new StringWriter();
+
+        Transformer t = TransformerFactory.newInstance().newTransformer();
+        t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        t.transform(new DOMSource(node), new StreamResult(sw));
+
+        return sw.toString();
+    }
+
+    public static Match renameAttr(Match m, String oldName, String newName) {
+        if (m.size() > 0) {
+            for (Match item : m.each()) {
+                String src = item.attr(oldName);
+                item.attr(newName, src);
+                item.removeAttr(oldName);
+            }
+        }
+        return m;
+    }
+
 }

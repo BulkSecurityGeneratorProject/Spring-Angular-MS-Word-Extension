@@ -2,6 +2,7 @@ package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.domain.document.ImDocumentStructure;
 import be.storefront.imicloud.domain.util.XmlDocument;
 import be.storefront.imicloud.repository.*;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
@@ -356,10 +357,10 @@ public class UploadController {
                         if (contentNodes.getLength() > 0) {
                             Element contentElement = (Element) contentNodes.item(0);
 
-                            contentText = nodeToString(contentElement).trim();
+                            contentText = XmlDocument.nodeToString(contentElement).trim();
                         }
 
-                        contentText = transformContentToHtml(contentText);
+                        contentText = ImDocumentStructure.transformContentToHtml(contentText);
 
                         // Save all blocks
                         ImBlockDTO newBlockDto = new ImBlockDTO();
@@ -396,148 +397,10 @@ public class UploadController {
     }
 
 
-    private String transformContentToHtml(String contentText) {
-        Match root = $(contentText);
-
-        root.find("paragraph").rename("p");
-        // Nested text in hyperlink
-        root.find("hyperlink > text").rename("span");
-
-        // All other text should be <p>
-        root.find("text").rename("p");
-
-        root.find("format[formattype=bold]").rename("strong").removeAttr("formattype");
-        root.find("list[numbered=false]").rename("ul").removeAttr("numbered");
-        root.find("list[numbered=true]").rename("ol").removeAttr("numbered");
-        root.find("listitem").rename("li");
-
-        renameAttr(root.find("hyperlink").rename("a"), "address", "href");
-
-        renameAttr(root.find("image").rename("img"), "source", "data-source");
 
 
-//        List<Match> imgs = root.find("image").rename("img").each();
-//
-//        // Rename image attr
-//        for (Match img : imgs) {
-//            renameAttr(img, "source", "src");
-//        }
-
-        // Rename table type to class
-        renameAttr(root.find("table[type]"), "type", "class");
-
-        root.find("headerrow cell").rename("th");
-        root.find("row cell").rename("td");
-
-        // Convert header rows into <thead>
-        Match headerRows = root.find("headerrow");
-        headerRows.wrap("thead");
-        headerRows.rename("tr");
-
-        // Add a <tbody> and more normal rows inside it
-        Match allTables = root.find("table");
-
-        // Rename to <tr>
-        root.find("row").rename("tr");
-
-        // Move all direct child rows into <tbody>
-        for (Match table : allTables.each()) {
-            table.append("<tbody></tbody>");
-            Match childRows = table.children("tr");
-            Match tbody = table.find("tbody");
-
-            // Add the rows to the <tbody>
-            tbody.append(childRows);
-
-            // Remove the original wrongly positioned rows
-            //childRows.remove();
-        }
-
-        // If table cells only contain a single <p>, unwrap it
 
 
-        //.wrap("tbody");
-
-        // We need <li> around a sub-list
-        root.find("ul > ul").wrap("li");
-        root.find("ol > ol").wrap("li");
-        root.find("ol > ul").wrap("li");
-        root.find("ul > ol").wrap("li");
-
-        // Unwrap nested <p><p>
-        root.find("p > p").rename("span");
-
-        contentText = root.toString();
-
-        // Remove <content> and </content>
-        contentText = contentText.replaceAll("<content>", "");
-        contentText = contentText.replaceAll("</content>", "");
-
-        // Remove whitespace between tags
-        contentText = contentText.replaceAll(">\\s+<", "><");
-
-
-        // Remove meaningless <p><p>... paragraph in paragraph
-        // WOUTER: This can cause problems, for example <p bookmark="..."><p> is not handled
-//        while (contentText.indexOf("<p><p>") != -1) {
-//            contentText = contentText.replaceAll("<p><p>", "<p>");
-//        }
-//        while (contentText.indexOf("</p></p>") != -1) {
-//            contentText = contentText.replaceAll("</p></p>", "</p>");
-//        }
-
-        // Remove meaningless <p/><p/><p/><p/>...
-        while (contentText.indexOf("<p/><p/>") != -1) {
-            contentText = contentText.replaceAll("<p/><p/>", "<p/>");
-        }
-
-        // Remove meaningless <p/><p>...
-        while (contentText.indexOf("<p/><p>") != -1) {
-            contentText = contentText.replaceAll("<p/><p>", "<p>");
-        }
-
-        // Remove meaningless </strong><strong>...
-        while (contentText.indexOf("</strong><strong>") != -1) {
-            contentText = contentText.replaceAll("</strong><strong>", "");
-        }
-
-        // Final trim
-        contentText = contentText.trim();
-
-
-        // Remove meaningless <p/> at the beginning
-        while (contentText.length() > 4 && "<p/>".equals(contentText.substring(0, 4))) {
-            contentText = contentText.substring(4);
-        }
-
-        // Remove meaningless <p/> at the end
-        while (contentText.length() > 4 && "<p/>".equals(contentText.substring(contentText.length() - 4))) {
-            contentText = contentText.substring(0, contentText.length() - 4);
-        }
-
-        return contentText;
-    }
-
-    private Match renameAttr(Match m, String oldName, String newName) {
-        if (m.size() > 0) {
-            for (Match item : m.each()) {
-                String src = item.attr(oldName);
-                item.attr(newName, src);
-                item.removeAttr(oldName);
-            }
-        }
-        return m;
-    }
-
-    private String nodeToString(Node node) throws TransformerException {
-        StringWriter sw = new StringWriter();
-
-        Transformer t = TransformerFactory.newInstance().newTransformer();
-        t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        t.transform(new DOMSource(node), new StreamResult(sw));
-
-        return sw.toString();
-    }
 
 
 

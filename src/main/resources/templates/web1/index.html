@@ -190,21 +190,43 @@ END INTRO: FULL SCREEN OVERLAY-->
         <nav>
             <ul>
                 <li>
-                    <!--
+
                     <a href="#">
-                    -->
                         <span th:text="${ImDocument.documentName}">Document name</span>
-                        <!--
                         <i class="icon-plus"></i>
-                        -->
-                    <!--
                     </a>
-                    -->
+
                     <ul class="sub-nav">
-                        <li th:each="map,iterStat : ${ImDocument.getMaps()}">
-                            <a href="#" data-th-attr="data-viewid=${iterStat.index}" data-viewid="001" th:text="${map.label}">
+                        <li th:each="level1,iterStat1 : ${ImDocumentStructure.getRootTreeNode().getChildren()}">
+                            <a href="#" data-th-attr="data-viewid=${level1.getGuid()}" data-viewid="001" th:text="${level1.getTitle()}">
                                 Map label
+                                <i class="icon-plus"></i>
                             </a>
+
+                            <ul class="sub-nav" th:if="${level1.getChildren().size() > 0}">
+                                <li th:each="level2,iterStat2 : ${level1.getChildren()}">
+                                    <a href="#" data-th-attr="data-viewid=${level2.getGuid()}" data-viewid="001" th:text="${level2.getTitle()}">
+                                        Map label
+                                        <i class="icon-plus"></i>
+                                    </a>
+                                    <ul class="sub-nav" th:if="${level2.getChildren().size() > 0}">
+                                        <li th:each="level3,iterStat3 : ${level2.getChildren()}">
+                                            <a href="#" data-th-attr="data-viewid=${level3.getGuid()}" data-viewid="001" th:text="${level3.getTitle()}">
+                                                Map label
+                                                <i class="icon-plus"></i>
+                                            </a>
+                                            <ul class="sub-nav" th:if="${level3.getChildren().size() > 0}">
+                                                <li th:each="level4,iterStat4 : ${level3.getChildren()}">
+                                                    <a href="#" data-th-attr="data-viewid=${level4.getGuid()}" data-viewid="001" th:text="${level4.getTitle()}">
+                                                        Map label
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
                         </li>
                     </ul>
                 </li>
@@ -222,11 +244,11 @@ END INTRO: FULL SCREEN OVERLAY-->
     <div class="wrapper">
 
 
-       <section class="view" th:each="map,mapIter : ${ImDocument.getMaps()}" data-th-attr="data-viewid=${mapIter.index}">
-            <div class="view-content" data-th-attr="data-viewid=${mapIter.index + '-overview'}">
+       <section class="view" th:each="map,mapIter : ${ImDocumentStructure.getAllMaps()}" data-th-attr="data-viewid=${map.getGuid()}">
+            <div class="view-content" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
                 <div class="container">
                     <div class="sixteen">
-                        <h2 th:text="${map.label}">About Publishing in FS Pro  2013</h2>
+                        <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
                     </div>
                     <div class="clear"></div>
 
@@ -235,12 +257,12 @@ END INTRO: FULL SCREEN OVERLAY-->
 
                        <a th:each="block,blockIter : ${map.getBlocks()}"
                            href="..."
-                           th:href="${'#'+mapIter.index + '|'+ blockIter.index}"
-                           data-th-attr="data-viewid=${mapIter.index + '-content'}"
+                           th:href="${'#'+block.getGuid()}"
+                           data-th-attr="data-viewid=${map.getGuid() + '-content'}"
                            class="part"
-                           th:style="|background-image: url('${urlHelperService.getImageUrl(block.labelImage)}')|"
+                           th:style="|background-image: url('${urlHelperService.getImageUrl(block.labelImageId)}')|"
                        >
-                            <span th:text="${block.label}">Block label</span>
+                            <span th:text="${block.getLabel()}">Block label</span>
                         </a>
 
                     </div>
@@ -248,7 +270,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                     <!-- Show the contents immediately if only 1 block -->
                     <div th:if="${map.getBlocks().size()} == 1" class="view-content-slider owl-carousel">
                         <div class="sixteen">
-                            <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
+                            <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${block.getGuid()}">
                                 <h3 th:text="${block.label}">The Benefits</h3>
                                 <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode)}">
 
@@ -262,17 +284,17 @@ END INTRO: FULL SCREEN OVERLAY-->
                 </div>
             </div>
 
-            <div class="view-content" data-th-attr="data-viewid=${mapIter.index + '-content'}">
+            <div class="view-content" data-th-attr="data-viewid=${map.getGuid() + '-content'}">
                 <div class="container">
                     <div class="sixteen">
-                        <a href="#" class="button back" data-th-attr="data-viewid=${mapIter.index + '-overview'}">
+                        <a href="#" class="button back" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
                             <i class="icon-arrow-left"></i>
                         </a>
-                        <h2 th:text="${map.label}">About Publishing in FS Pro  2013</h2>
+                        <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
 
                         <div class="view-content-slider owl-carousel">
-                            <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${mapIter.index + '|'+ blockIter.index}">
-                                <h3 th:text="${block.label}">The Benefits</h3>
+                            <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${block.getGuid()}">
+                                <h3 th:text="${block.getLabel()}">The Benefits</h3>
                                 <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode)}">
 
                                 </div>
@@ -315,6 +337,6 @@ END INTRO: FULL SCREEN OVERLAY-->
 ============================================================================================================================================== -->
 <script src="//code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 <script th:src="@{/content/templates/web1/js/plugins.min.js}" src="content/templates/web1/js/plugins.min.js" type="text/javascript"></script>
-<script th:src="@{/content/templates/web1/js/scripts.min.js}" src="content/templates/web1/js/scripts.min.js" type="text/javascript"></script>
+<script th:src="@{/content/templates/web1/js/scripts.js}" src="content/templates/web1/js/scripts.js" type="text/javascript"></script>
 </body>
 </html>

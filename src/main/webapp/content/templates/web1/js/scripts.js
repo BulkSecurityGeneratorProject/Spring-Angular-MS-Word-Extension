@@ -13,12 +13,12 @@ $(document).ready(function () {
     });
 
 //LEFT SIDE SCROLLBAR ========================================
-    /*De left side is fixed, dus als ze hoger wordt dan het scherm wordt een scrollbar getoond, 
+    /*De left side is fixed, dus als ze hoger wordt dan het scherm wordt een scrollbar getoond,
      perffectScrollbar zorgt voor visueel mooiere scrollbar ipv standaard scrollbar*/
     var leftSide = $('#left-side');
     leftSide.perfectScrollbar();
 
-//DESKTOP MENU TOGGLE ======================================== 
+//DESKTOP MENU TOGGLE ========================================
     // Toggle mobile nav (Slidebars)
     var btnToggleDesktopNav = $('body').find('.hamburger.desktop');
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
 
     });
 
-//MOBILE MENU OVERLAY ========================================    
+//MOBILE MENU OVERLAY ========================================
     mobileNavController = new slidebars();
     mobileNavController.init();
     // Add close class to canvas container when Slidebar is opened
@@ -74,23 +74,23 @@ $(document).ready(function () {
 //LEFT NAV TOGGLE OR SWITCH BETWEEN VIEWS =====================================================
     var leftNav = $('#left-side .left-nav nav'); //nav wrapper
 
-    var leftToggleNav = leftNav.find('>ul > li > a'); //alle 1e level nav items
+    var leftToggleNav = leftNav.find('a'); //alle 1e level nav items
     var viewSwitchers = leftNav.find('.sub-nav > li > a'); //alle 2e level nav items
 
     var mobileNav = $('.mobile-nav nav'); //nav wrapper
 
-    var mobileToggleNav = mobileNav.find('>ul > li > a'); //alle 1e level nav items
+    var mobileToggleNav = mobileNav.find('a'); //alle 1e level nav items
     var mobileViewSwitchers = mobileNav.find('.sub-nav > li > a'); //alle 2e level nav items
 
     var viewWrapper = $('#right-side'); //view wrapper
 
     var views = viewWrapper.find('.view'); //alle views
 
-    var firstView;    
+    var firstView;
 
     //desktop
     //start view bepalen en actief zetten
-    if (leftNav.find('>ul > li').first().has(".sub-nav").length != 0) {
+    if (leftNav.find('> ul > li').first().has(".sub-nav").length != 0) {
         /*eerste item heeft sub navigatie*/
         firstView = viewSwitchers.first().data('viewid'); //id eerste item
         viewSwitchers.first().addClass('active'); //eerst item active plaatsen
@@ -123,21 +123,24 @@ $(document).ready(function () {
     //desktop
     //click-event 1e level navigatie items
     leftToggleNav.on('click', function (e) {
-        e.preventDefault();        
+        e.preventDefault();
 
-        if ($(this).parent().has(".sub-nav").length != 0) {
+        var aNode = $(this);
+        var liNode = aNode.parent();
+
+        if (liNode.has(".sub-nav").length != 0) {
             /*heeft sub navigatie*/
-            if ($(this).parent().find(".sub-nav").hasClass('open')) {
-                $(this).find('i').removeClass('icon-minus').addClass('icon-plus');
+            if (liNode.children(".sub-nav").hasClass('open')) {
+                aNode.find('i').removeClass('icon-minus').addClass('icon-plus');
             } else {
-                $(this).find('i').addClass('icon-minus').removeClass('icon-plus');  
+                aNode.find('i').addClass('icon-minus').removeClass('icon-plus');
             }
-            $(this).parent().find(".sub-nav").stop().slideToggle(300).toggleClass('open');
+            liNode.children(".sub-nav").stop().slideToggle(300).toggleClass('open');
         } else {
             /*heeft geen sub navigatie*/
             leftNav.removeClass('active');
-            $(this).addClass('active');
-            switchView(views, $(this).data('viewid'));
+            aNode.addClass('active');
+            switchView(views, aNode.data('viewid'));
         }
     });
 
@@ -164,7 +167,7 @@ $(document).ready(function () {
             }
         }
     });
-    
+
 
     //desktop
     //click-event 2e level navigatie items
@@ -194,7 +197,7 @@ $(document).ready(function () {
 //SWITCH BETWEEN CONTENT VIEWS =====================================================
     var contentNav = $('.view .view-content'); //nav wrapper
 
-    var contentViewSwitchers = contentNav.find('.part'); //nav items  
+    var contentViewSwitchers = contentNav.find('.part'); //nav items
 
     var anchorViewSwitchers = contentNav.find('.anchor'); //alle anchor links
 
@@ -212,7 +215,7 @@ $(document).ready(function () {
     //click-event navigatie items
     contentViewSwitchers.on('click', function (e) {
         switchView(contentViews, $(this).data('viewid'));
-        contentSlider = $('.view .view-content.active .view-content-slider.owl-carousel');        
+        contentSlider = $('.view .view-content.active .view-content-slider.owl-carousel');
         URLhash = $(this).index();
         contentSlider.owlCarousel({
             items: 1,
@@ -227,12 +230,12 @@ $(document).ready(function () {
             navSpeed: 300,
             navRewind: false
         });
-        
+
     });
     //click-event anchor links
     anchorViewSwitchers.on('click', function (e) {
         switchAnchorView(contentViews, $(this).data('viewid'));
-        contentSlider = $('.view .view-content.active .view-content-slider.owl-carousel');        
+        contentSlider = $('.view .view-content.active .view-content-slider.owl-carousel');
         URLhash = $(this).index();
         contentSlider.owlCarousel({
             items: 1,
@@ -290,7 +293,7 @@ $(document).ready(function () {
             }
             popups.push({
                 src: $(this)
-            });           
+            });
         });
 
         $.magnificPopup.open({
@@ -333,7 +336,7 @@ $(window).on('load resize', function () {
 function switchView(views, viewID) {
 
     views.hide().removeClass('active');
-    
+
     views.each(function () {
         if ($(this).data('viewid') === viewID) {
             $(this).fadeIn(400).addClass('active');
@@ -341,7 +344,7 @@ function switchView(views, viewID) {
                 //view => plaats eerste view-content zichtbaar
                 $(this).find('.view-content').hide().removeClass('active');
                 $(this).find('.view-content').first().fadeIn(400).addClass('active');
-            }            
+            }
             return false;
         } else {
             if ($(this).is(':visible')) {
@@ -354,7 +357,7 @@ function switchView(views, viewID) {
 function switchAnchorView(views, viewID) {
 
     views.hide().removeClass('active');
-    
+
 
     views.each(function () {
         if ($(this).data('viewid') === viewID) {
@@ -378,7 +381,7 @@ function updateLeftNav(views, viewContentID) {
     var mobileNav = $('.mobile-nav nav'); //nav wrapper
 
     var leftToggleNav = leftNav.find('>ul > li > a'); //alle 1e level nav items
-    var leftSubNav = leftNav.find('.sub-nav > li > a'); //alle 2e level nav items    
+    var leftSubNav = leftNav.find('.sub-nav > li > a'); //alle 2e level nav items
 
     var mobileToggleNav = mobileNav.find('>ul > li > a'); //alle 1e level nav items
     var mobileSubNav = mobileNav.find('.sub-nav > li > a'); //alle 2e level nav items
@@ -409,7 +412,7 @@ function updateLeftNav(views, viewContentID) {
             if ($(this).parent().parent().hasClass("sub-nav")) {
                 /*sub navigatie*/
                 $(this).addClass('active');
-                $(this).parent().parent().parent().find('> a').addClass('active').find('i').removeClass('icon-plus').addClass('icon-minus');                
+                $(this).parent().parent().parent().find('> a').addClass('active').find('i').removeClass('icon-plus').addClass('icon-minus');
                 $(this).parent().parent().stop().slideDown(0).addClass('open');
             } else {
                 /*geen sub navigatie*/
@@ -433,6 +436,6 @@ function updateLeftNav(views, viewContentID) {
             return false;
         }
     });
-    
-    
+
+
 }

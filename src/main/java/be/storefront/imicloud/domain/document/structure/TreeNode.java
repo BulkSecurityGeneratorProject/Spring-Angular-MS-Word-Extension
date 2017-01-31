@@ -1,5 +1,7 @@
 package be.storefront.imicloud.domain.document.structure;
 
+import be.storefront.imicloud.service.dto.ImBlockDTO;
+
 import java.util.ArrayList;
 
 /**
@@ -34,4 +36,6 @@ abstract public class TreeNode {
     public void setGuid(String guid) {
         this.guid = guid;
     }
+
+
 }

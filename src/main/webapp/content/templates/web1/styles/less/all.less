@@ -416,6 +416,11 @@ ol{
 nav{
     display:block;
     width:100%;
+
+    & > ul > li > ul.sub-nav{
+        margin-left: 0;
+    }
+
     ul{
         margin:0;
         padding:0;
@@ -447,10 +452,11 @@ nav{
                     }
                 }
             }
+
             .sub-nav{
                 display:none;
                 padding:5px 0 10px 0;
-                margin:0;
+                margin:0 0 0 1.3em;
                 li{
                     margin:0 0 5px 0;
                     font-size:@font-size - 2px;
