@@ -3,6 +3,7 @@ package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.document.ImDocumentStructure;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
@@ -31,8 +32,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -73,12 +77,12 @@ public class DocumentController {
 
 
     @GetMapping("/document/{documentId}/{secret}")
-    public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret) {
+    public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret) throws IOException, SAXException, ParserConfigurationException {
         return processView(documentId, secret, null);
     }
 
     @GetMapping("/document/{documentId}/{secret}/{template}")
-    public ModelAndView viewWithTemplate(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret, @PathVariable("template") String template) {
+    public ModelAndView viewWithTemplate(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret, @PathVariable("template") String template) throws IOException, SAXException, ParserConfigurationException {
         return processView(documentId, secret, template);
     }
 
@@ -95,7 +99,7 @@ public class DocumentController {
         return "redirect:"+urlHelperService.getDocumentPublicUrl(imDocument, templateCode);
     }
 
-    protected ModelAndView processView(Long documentId, String secret, String templateCode) {
+    protected ModelAndView processView(Long documentId, String secret, String templateCode) throws ParserConfigurationException, SAXException, IOException {
         ImDocumentDTO imDocumentDto = imDocumentService.findOne(documentId);
         if (imDocumentDto != null) {
             if (secret != null && secret.equals(imDocumentDto.getSecret())) {
@@ -144,7 +148,7 @@ public class DocumentController {
                     viewMap.put("templateCode", template);
 
                     if (accessGranted) {
-
+                        viewMap.put("ImDocumentStructure", new ImDocumentStructure(imDocument));
                         viewMap.put("ImDocumentDTO", imDocumentDto);
                         viewMap.put("ImDocument", imDocument);
                         viewMap.put("HtmlContentProcessor", htmlContentProcessor);

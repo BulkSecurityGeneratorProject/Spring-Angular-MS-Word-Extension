@@ -2,13 +2,13 @@ package be.storefront.imicloud.web;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
+import be.storefront.imicloud.domain.util.XmlDocument;
 import be.storefront.imicloud.repository.*;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.security.MyUserDetails;
 import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.*;
-import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.dto.ImMapDTO;
@@ -35,17 +35,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import static org.joox.JOOX.*;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -53,12 +49,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.math.BigInteger;
-import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 
 @Controller
@@ -254,7 +246,7 @@ public class UploadController {
         }
 
         // Test XML document
-        Document xmlDoc = getXmlDocumentFromString(xmlString);
+        Document xmlDoc = XmlDocument.getXmlDocumentFromString(xmlString);
 
         // Look for existing document
         List<ImDocument> existingDocs = imDocumentRepository.findByUserAndDocumentName(user.getId(), documentName);
@@ -299,17 +291,7 @@ public class UploadController {
         return (docs.size() > 0);
     }
 
-    private Document getXmlDocumentFromString(String xml) throws IOException, SAXException, ParserConfigurationException {
-        // Check the XML
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        InputSource is = new InputSource(new StringReader(xml));
-        Document xmlDoc = dBuilder.parse(is);
-        //optional, but recommended, read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-        xmlDoc.getDocumentElement().normalize();
 
-        return xmlDoc;
-    }
 
     @Transactional
     private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
@@ -321,7 +303,7 @@ public class UploadController {
         doc.setMaps(null);
 
         // Process what's in the XML
-        Document xmlDoc = getXmlDocumentFromString(doc.getOriginalXml());
+        Document xmlDoc = XmlDocument.getXmlDocumentFromString(doc.getOriginalXml());
 
         //removeNodesByType(xmlDoc, "overviewmap");
 
@@ -334,12 +316,12 @@ public class UploadController {
                 Element oneMapElement = (Element) oneMap;
 
                 String mapGuid = oneMapElement.getAttribute("guid");
-                String mapLabel = getText(oneMap, "label");
+                String mapLabel = XmlDocument.getText(oneMap, "label");
 
                 // Is the map in an overviewmap? Use that label instead...
                 Node parentNode = oneMap.getParentNode();
                 if("overviewmap".equals(parentNode.getNodeName())){
-                    String overviewMapTitle = getText(parentNode, "title");
+                    String overviewMapTitle = XmlDocument.getText(parentNode, "title");
 
                     if(mapLabel.length() == 0){
                         mapLabel = overviewMapTitle;
@@ -365,8 +347,8 @@ public class UploadController {
                         Element oneBlockElement = (Element) oneBlock;
 
                         String blockGuid = oneBlockElement.getAttribute("guid");
-                        String blockLabel = getText(oneBlock, "label");
-                        String blockImageSource = getAttributeFromNode(oneBlock, "image", "source");
+                        String blockLabel = XmlDocument.getText(oneBlock, "label");
+                        String blockImageSource = XmlDocument.getAttributeFromChildNode(oneBlock, "image", "source");
 
                         String contentText = null;
 
@@ -557,29 +539,7 @@ public class UploadController {
         return sw.toString();
     }
 
-    protected String getText(Node node, String childNodeName) {
-        NodeList nodeList = node.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node childNode = nodeList.item(i);
 
-            if (childNode.getNodeType() == Node.ELEMENT_NODE && childNodeName.equals(childNode.getNodeName())) {
-                return childNode.getTextContent().trim();
-            }
-        }
-        return null;
-    }
-
-    protected String getAttributeFromNode(Node node, String childNodeName, String attrName) {
-        NodeList nodeList = node.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node childNode = nodeList.item(i);
-
-            if (childNode.getNodeType() == Node.ELEMENT_NODE && childNodeName.equals(childNode.getNodeName())) {
-                return childNode.getAttributes().getNamedItem(attrName).getNodeValue();
-            }
-        }
-        return null;
-    }
 
     @PostMapping("/image/")
     @Timed
