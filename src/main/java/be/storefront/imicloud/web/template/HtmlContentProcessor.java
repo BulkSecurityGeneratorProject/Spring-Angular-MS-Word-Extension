@@ -132,7 +132,7 @@ public class HtmlContentProcessor {
                     // Can link
                     reference.rename("a").attr("data-viewid", guidToLinkTo).attr("href", "#");
                 }
-                
+
             }
 
             tocTable.find("tr > th p").rename("span");

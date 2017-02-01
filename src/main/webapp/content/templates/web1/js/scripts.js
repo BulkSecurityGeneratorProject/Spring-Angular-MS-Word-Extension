@@ -107,7 +107,7 @@ $(document).ready(function () {
 
     //desktop
     //click-event 1e level navigatie items
-    navLinkNodes.on('click', function (e) {
+    $('nav a').on('click', function (e) {
         e.preventDefault();
 
         var aNode = $(this);
@@ -127,8 +127,6 @@ $(document).ready(function () {
 
         switchView(views, aNode.data('viewid'));
     });
-
-    //mobile
 
 
 

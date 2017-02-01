@@ -361,6 +361,9 @@ public class ImDocumentStructure {
         if (r == null) {
             r = XmlDocument.getText(e, "label");
         }
+
+
+
         return r;
     }
 
