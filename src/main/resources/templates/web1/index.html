@@ -87,6 +87,14 @@
         .mobile-nav .close-mobile-nav:hover{
             color: [[${branding.primaryColor}]];
         }
+
+        nav ul li a i,
+        nav ul li a.active,
+        nav ul li a.active i,
+        nav ul li a:hover,
+        nav ul li a:hover i{
+            color: [[${branding.primaryColor}]];
+        }
     </style>
 
     <!--[if lt IE 9]>
@@ -198,26 +206,26 @@ END INTRO: FULL SCREEN OVERLAY-->
 
                     <ul class="sub-nav">
                         <li th:each="level1,iterStat1 : ${ImDocumentStructure.getRootTreeNode().getChildren()}">
-                            <a href="#" data-th-attr="data-viewid=${level1.getGuid()}" data-viewid="001" th:text="${level1.getTitle()}">
+                            <a href="#" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001" th:text="${level1.getTitle()}">
                                 Map label
                                 <i class="icon-plus"></i>
                             </a>
 
                             <ul class="sub-nav" th:if="${level1.getChildren().size() > 0}">
                                 <li th:each="level2,iterStat2 : ${level1.getChildren()}">
-                                    <a href="#" data-th-attr="data-viewid=${level2.getGuid()}" data-viewid="001" th:text="${level2.getTitle()}">
+                                    <a href="#" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001" th:text="${level2.getTitle()}">
                                         Map label
                                         <i class="icon-plus"></i>
                                     </a>
                                     <ul class="sub-nav" th:if="${level2.getChildren().size() > 0}">
                                         <li th:each="level3,iterStat3 : ${level2.getChildren()}">
-                                            <a href="#" data-th-attr="data-viewid=${level3.getGuid()}" data-viewid="001" th:text="${level3.getTitle()}">
+                                            <a href="#" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001" th:text="${level3.getTitle()}">
                                                 Map label
                                                 <i class="icon-plus"></i>
                                             </a>
                                             <ul class="sub-nav" th:if="${level3.getChildren().size() > 0}">
                                                 <li th:each="level4,iterStat4 : ${level3.getChildren()}">
-                                                    <a href="#" data-th-attr="data-viewid=${level4.getGuid()}" data-viewid="001" th:text="${level4.getTitle()}">
+                                                    <a href="#" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001" th:text="${level4.getTitle()}">
                                                         Map label
                                                     </a>
                                                 </li>
@@ -244,7 +252,7 @@ END INTRO: FULL SCREEN OVERLAY-->
     <div class="wrapper">
 
 
-       <section class="view" th:each="map,mapIter : ${ImDocumentStructure.getAllMaps()}" data-th-attr="data-viewid=${map.getGuid()}">
+       <section class="view one-map" th:each="map,mapIter : ${ImDocumentStructure.getAllMaps()}" data-th-attr="data-viewid=${map.getGuid()}">
             <div class="view-content" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
                 <div class="container">
                     <div class="sixteen">
@@ -272,7 +280,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                         <div class="sixteen">
                             <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${block.getGuid()}">
                                 <h3 th:text="${block.label}">The Benefits</h3>
-                                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode)}">
+                                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode, ImDocumentStructure)}">
 
                                 </div>
                             </div>
@@ -288,14 +296,14 @@ END INTRO: FULL SCREEN OVERLAY-->
                 <div class="container">
                     <div class="sixteen">
                         <a href="#" class="button back" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
-                            <i class="icon-arrow-left"></i>
+                            <i class="icon-arrow-up"></i>
                         </a>
                         <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
 
                         <div class="view-content-slider owl-carousel">
                             <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${block.getGuid()}">
                                 <h3 th:text="${block.getLabel()}">The Benefits</h3>
-                                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode)}">
+                                <div class="block" th:utext="${HtmlContentProcessor.process(block.getContent(), templateCode, ImDocumentStructure)}">
 
                                 </div>
                             </div>

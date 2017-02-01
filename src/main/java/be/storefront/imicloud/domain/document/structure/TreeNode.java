@@ -1,6 +1,5 @@
 package be.storefront.imicloud.domain.document.structure;
 
-import be.storefront.imicloud.service.dto.ImBlockDTO;
 
 import java.util.ArrayList;
 
@@ -10,8 +9,10 @@ import java.util.ArrayList;
 abstract public class TreeNode {
     abstract public String getCode();
     private ArrayList<TreeNode> children = new ArrayList<>();
+    private ArrayList<StructureMap> contentMaps = new ArrayList<>();
     private String title = null;
     private String guid = null;
+    private String contentGuid = null;
 
     public void addChild(TreeNode child) {
         this.children.add(child);
@@ -37,5 +38,34 @@ abstract public class TreeNode {
         this.guid = guid;
     }
 
+    public String getContentGuid() {
+        return contentGuid;
+    }
 
+    public void setContentGuid(String contentGuid) {
+        this.contentGuid = contentGuid;
+    }
+
+    public void addContentMap(StructureMap map) {
+        this.contentMaps.add(map);
+    }
+
+    public ArrayList<StructureMap> getContentMaps(){
+        return this.contentMaps;
+    }
+
+    public StructureMap findFirstMap() {
+        return findFirstMapInNode(this);
+    }
+
+    private StructureMap findFirstMapInNode(TreeNode treeNode){
+        if(treeNode instanceof StructureMap){
+            return (StructureMap) treeNode;
+        }else{
+            for(TreeNode child : treeNode.getChildren()){
+                return findFirstMapInNode(child);
+            }
+        }
+        return null;
+    }
 }

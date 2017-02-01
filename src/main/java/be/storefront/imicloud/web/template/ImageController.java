@@ -39,7 +39,12 @@ public class ImageController {
         if (secret != null && secret.equals(imageDTO.getSecret())) {
             File file = fileStorageService.loadFile(imageDTO.getFilename());
 
-            InputStream in = new FileInputStream(file);
+            InputStream in;
+            try {
+                in = new FileInputStream(file);
+            }catch(Exception ex){
+                throw new NotFoundException();
+            }
 
 //            final HttpHeaders headers = new HttpHeaders();
 //            headers.setContentType(MediaType.IMAGE_PNG);

@@ -61,6 +61,7 @@ public class ImDocumentStructure {
 
             TreeNode current = null;
             String mapType = XmlDocument.getAttribute(e, "maptype");
+            String currentGuid = XmlDocument.getAttribute(e, "guid");
 
             if ("overviewmap".equals(e.getNodeName()) && "publication".equals(mapType)) {
                 // Start new publication
@@ -174,6 +175,11 @@ public class ImDocumentStructure {
                 // Add the blocks to the map
                 createBlocksAndAddToMap(currentMap, e);
 
+                // For maps the content is always in the map
+                currentMap.setContentGuid(currentMap.getGuid());
+
+                currentMap.setContentGuid(currentGuid);
+
 
             } else {
                 // Unsupported type => Do nothing
@@ -182,7 +188,7 @@ public class ImDocumentStructure {
 
 
             current.setTitle(getTitleFromElement(e));
-            current.setGuid(XmlDocument.getAttribute(e, "guid"));
+            current.setGuid(currentGuid);
         }
 
         return top;
@@ -259,6 +265,12 @@ public class ImDocumentStructure {
 
     }
 
+    /**
+     * Search for maps in the current tree node (publication, part, chapter, section)
+     * @param treeNode
+     * @param e
+     * @throws TransformerException
+     */
     private void createMapsAndAddToList(TreeNode treeNode, Element e) throws TransformerException {
 
         NodeList mapList = e.getElementsByTagName("map");
@@ -274,10 +286,13 @@ public class ImDocumentStructure {
                 map.setTitle(getTitleFromElement(e));
                 map.setGuid(XmlDocument.getAttribute(oneMapElement, "guid"));
 
-                treeNode.addChild(map);
+                treeNode.addContentMap(map);
+
+                if(treeNode.getContentGuid() == null){
+                    treeNode.setContentGuid(map.getGuid());
+                }
 
                 createBlocksAndAddToMap(map, oneMapElement);
-
             }
         }
 
@@ -381,6 +396,11 @@ public class ImDocumentStructure {
     }
 
     private void scanChildrenAndAddMapsToArray(TreeNode parent, ArrayList<StructureMap> r ){
+        if(parent.getContentMaps().size() > 0){
+            for(StructureMap contentMap : parent.getContentMaps()){
+                r.add(contentMap);
+            }
+        }
         if(parent.getChildren().size() > 0){
             for(TreeNode child : parent.getChildren()){
                 scanChildrenAndAddMapsToArray(child, r);
@@ -519,4 +539,21 @@ public class ImDocumentStructure {
         return contentText;
     }
 
+    public TreeNode getByGuid(String guid) {
+        return findByGuid(guid, getRootTreeNode());
+    }
+
+    private TreeNode findByGuid(String guid, TreeNode treeNode){
+        if(guid != null && guid.equals(treeNode.getGuid())){
+            return treeNode;
+        }else{
+            for(TreeNode child : treeNode.getChildren()){
+                TreeNode found = findByGuid(guid, child);
+                if(found != null){
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
 }

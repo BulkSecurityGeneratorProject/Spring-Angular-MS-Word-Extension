@@ -2,6 +2,9 @@ package be.storefront.imicloud.web.template;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.Image;
+import be.storefront.imicloud.domain.document.ImDocumentStructure;
+import be.storefront.imicloud.domain.document.structure.StructureMap;
+import be.storefront.imicloud.domain.document.structure.TreeNode;
 import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.service.UrlHelperService;
 import be.storefront.imicloud.web.dom.DomHelper;
@@ -31,7 +34,7 @@ public class HtmlContentProcessor {
     @Inject
     private UrlHelperService urlHelperService;
 
-    public String process(String html, String templateCode) {
+    public String process(String html, String templateCode, ImDocumentStructure imDocumentStructure) {
 
         // Resolve URLs to images
         Match root = DomHelper.getDomRoot(html);
@@ -86,9 +89,56 @@ public class HtmlContentProcessor {
         }
 
 
-        // Make links open in new tab
+        // Make links to external sites open in new tab
         for (Match a : root.find("a").each()) {
             a.attr("target", "_blank");
+        }
+
+        // Clean up table of contents
+        for (Match tocTable : root.find("table.topic-seepage").each()) {
+            tocTable.find("tr > th:last-child").remove();
+            tocTable.find("tr > td:last-child").remove();
+
+            for (Match reference : tocTable.find("reference").each()) {
+                Match td = reference.parentsUntil("td");
+                String guidToLinkTo = reference.attr("address");
+
+                // This guid can be a map, or not
+                TreeNode treeNode = imDocumentStructure.getByGuid(guidToLinkTo);
+
+                if(treeNode == null) {
+                    // We cannot link to non-existant GUID
+                    guidToLinkTo = null;
+
+                }else{
+                    guidToLinkTo = treeNode.getContentGuid();
+//                    if (treeNode instanceof StructureMap) {
+//                        // We can link to this
+//                    } else {
+//                        // We can not link to this GUID, find the nearest map inside it
+//                        StructureMap firstMap = treeNode.findFirstMap();
+//                        if (firstMap != null) {
+//                            guidToLinkTo = firstMap.getGuid();
+//                        }
+//                    }
+                }
+
+                if(guidToLinkTo == null){
+                    // Cannot link
+                    reference.rename("span");
+                }else{
+                    // Can link
+                    reference.rename("a").attr("data-viewid", guidToLinkTo).attr("href", "#");
+                }
+
+                //reference.removeAttr("address");
+
+                Match pAroundReference = reference.parent("p");
+                //pAroundReference.remove();
+
+                //td.find("p").rename("a").attr("href", guidToLinkTo);
+                //pAroundReference.unwrap();
+            }
         }
 
         String r = DomHelper.domToString(root);
