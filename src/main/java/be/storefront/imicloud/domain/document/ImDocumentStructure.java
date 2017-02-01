@@ -362,7 +362,10 @@ public class ImDocumentStructure {
             r = XmlDocument.getText(e, "label");
         }
 
-
+        if(r != null){
+            // Add space after numbering
+            r = r.replaceAll("^([0-9\\.]+)(.*)$", "$1 $2");
+        }
 
         return r;
     }
