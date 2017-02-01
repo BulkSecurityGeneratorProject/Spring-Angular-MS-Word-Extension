@@ -99,6 +99,8 @@ public class HtmlContentProcessor {
             tocTable.find("tr > th:last-child").remove();
             tocTable.find("tr > td:last-child").remove();
 
+
+
             for (Match reference : tocTable.find("reference").each()) {
                 Match td = reference.parentsUntil("td");
                 String guidToLinkTo = reference.attr("address");
@@ -130,15 +132,12 @@ public class HtmlContentProcessor {
                     // Can link
                     reference.rename("a").attr("data-viewid", guidToLinkTo).attr("href", "#");
                 }
-
-                //reference.removeAttr("address");
-
-                Match pAroundReference = reference.parent("p");
-                //pAroundReference.remove();
-
-                //td.find("p").rename("a").attr("href", guidToLinkTo);
-                //pAroundReference.unwrap();
+                
             }
+
+            tocTable.find("tr > th p").rename("span");
+            tocTable.find("tr > td p").rename("span");
+
         }
 
         String r = DomHelper.domToString(root);
