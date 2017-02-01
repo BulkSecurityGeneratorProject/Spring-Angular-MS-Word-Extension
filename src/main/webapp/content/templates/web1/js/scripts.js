@@ -93,7 +93,7 @@ $(document).ready(function () {
         /*eerste item heeft sub navigatie*/
         firstView = viewSwitchers.first().data('viewid'); //id eerste item
         viewSwitchers.first().addClass('active'); //eerst item active plaatsen
-        viewSwitchers.first().parent().parent().parent().find('> a').addClass('active').find('i').removeClass('icon-plus').addClass('icon-minus'); //parent item ook active plaatsen
+        viewSwitchers.first().parent().parent().parent().find('> a').addClass('active'); //parent item ook active plaatsen
         viewSwitchers.first().parent().parent().stop().slideDown(0).addClass('open'); //de subnav open plaatsen
 
     } else {
@@ -115,11 +115,7 @@ $(document).ready(function () {
 
         if (liNode.has(".sub-nav").length != 0) {
             /*heeft sub navigatie*/
-            if (liNode.children(".sub-nav").hasClass('open')) {
-                aNode.find('i').removeClass('icon-minus').addClass('icon-plus');
-            } else {
-                aNode.find('i').addClass('icon-minus').removeClass('icon-plus');
-            }
+
             liNode.children(".sub-nav").stop().slideToggle(300).toggleClass('open');
 
         } else {
@@ -133,28 +129,7 @@ $(document).ready(function () {
     });
 
     //mobile
-    //click-event 1e level navigatie items
-    mobileToggleNav.on('click', function (e) {
-        e.preventDefault();
 
-        if ($(this).parent().has(".sub-nav").length != 0) {
-            /*heeft sub navigatie*/
-            if ($(this).parent().find(".sub-nav").hasClass('open')) {
-                $(this).find('i').removeClass('icon-minus').addClass('icon-plus');
-            } else {
-                $(this).find('i').addClass('icon-minus').removeClass('icon-plus');
-            }
-            $(this).parent().find(".sub-nav").stop().slideToggle(300).toggleClass('open');
-        } else {
-            /*heeft geen sub navigatie*/
-            mobileNav.removeClass('active');
-            $(this).addClass('active');
-            switchView(views, $(this).data('viewid'));
-            if (mobileNavController.getActiveSlidebar()) {
-                mobileNavController.close();
-            }
-        }
-    });
 
 
     $('a[data-viewid]').click(function(e){
@@ -322,6 +297,23 @@ $(window).on('load resize', function () {
     }
 });
 
+function refreshPlusMinusIcons(){
+    $('.sub-nav').each(function(i, node){
+        node = $(node);
+
+        var parentLi = node.closest('li');
+        var icon = parentLi.children('a').find('i');
+
+        if(node.hasClass('open')){
+            // Show minus
+            icon.removeClass('icon-plus').addClass('icon-minus');
+        }else{
+            // Show plus
+            icon.removeClass('icon-minus').addClass('icon-plus');
+        }
+    });
+}
+
 function switchView(views, viewID) {
     console.log('switchView, viewID = '+viewID);
 
@@ -335,11 +327,14 @@ function switchView(views, viewID) {
         activeLink.addClass('active');
 
         // Open all levels above the current
-        activeLink.parents('.sub-nav').addClass('open');
+        activeLink.parents('.sub-nav').addClass('open').attr('style', '');
 
         // Show section
         $('section[data-viewid="'+guid+'"]').show();
     }
+
+    // Fix the plus/minus icons of all parent levels
+    refreshPlusMinusIcons();
 
     views.hide().removeClass('active');
 
@@ -401,14 +396,10 @@ function updateLeftNav(views, viewContentID) {
         }
     });
 
-    //leftToggleNav.removeClass('active').find('i').removeClass('icon-minus').addClass('icon-plus');
-    //leftSubNav.removeClass('active').parent().parent().stop().slideUp(0).removeClass('open');
 
     leftToggleNav.removeClass('active');
     leftSubNav.removeClass('active');
 
-    //mobileToggleNav.removeClass('active').find('i').removeClass('icon-minus').addClass('icon-plus');
-    //mobileSubNav.removeClass('active').parent().parent().stop().slideUp(0).removeClass('open');
 
     mobileToggleNav.removeClass('active');
     mobileSubNav.removeClass('active');
@@ -418,7 +409,7 @@ function updateLeftNav(views, viewContentID) {
             if ($(this).parent().parent().hasClass("sub-nav")) {
                 /*sub navigatie*/
                 $(this).addClass('active');
-                $(this).parent().parent().parent().find('> a').addClass('active').find('i').removeClass('icon-plus').addClass('icon-minus');
+                $(this).parent().parent().parent().find('> a').addClass('active');
                 $(this).parent().parent().stop().slideDown(0).addClass('open');
             } else {
                 /*geen sub navigatie*/
@@ -428,20 +419,7 @@ function updateLeftNav(views, viewContentID) {
         }
     });
 
-    $(mobileNav.find('a')).each(function () {
-        if ($(this).data('viewid') === viewID) {
-            if ($(this).parent().parent().hasClass("sub-nav")) {
-                /*sub navigatie*/
-                $(this).addClass('active');
-                $(this).parent().parent().parent().find('> a').addClass('active').find('i').removeClass('icon-plus').addClass('icon-minus');
-                $(this).parent().parent().stop().slideDown(0).addClass('open');
-            } else {
-                /*geen sub navigatie*/
-                $(this).addClass('active');
-            }
-            return false;
-        }
-    });
+    refreshPlusMinusIcons();
 
 
 }
