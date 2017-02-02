@@ -110,7 +110,7 @@ public class BrandingDTO extends AbstractAuditingDTO implements Serializable {
         if(urlHelperService == null){
             return null;
         }else {
-            return urlHelperService.getImageUrl(getLogoImageFilename());
+            return urlHelperService.getImageUrlByFilename(getLogoImageFilename());
         }
     }
 

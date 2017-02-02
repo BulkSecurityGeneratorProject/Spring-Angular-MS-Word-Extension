@@ -118,9 +118,10 @@
         <section data-transition="slide">
             <h2 th:text="#{document_view.thanks_for_watching}">Thanks for watching</h2>
             <p>
-                <a href="#" th:href="${allDocumentsUrl}"><span th:text="#{document_view.back_to_documents}">Back to publications</span></a>
+                <a href="#" th:href="${allDocumentsUrl}">
+                    <span th:text="#{document_view.back_to_documents}">Back to publications</span>
+                </a>
             </p>
-
         </section>
 
     </div>

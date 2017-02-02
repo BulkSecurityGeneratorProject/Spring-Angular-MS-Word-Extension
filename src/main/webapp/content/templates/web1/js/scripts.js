@@ -1,16 +1,6 @@
 var mobileNavController;
 $(document).ready(function () {
-//INTRO OVERLAY CLOSE ========================================
-    var intro = $('.intro');
-    var btnIntroClose = intro.find('.close-intro');
-    btnIntroClose.on('click', function (e) {
 
-        e.preventDefault(); //stopt standaard gedrag van de button
-        e.stopPropagation(); //stopt bubbling
-
-        intro.toggleClass('intro-closed');
-
-    });
 
 //LEFT SIDE SCROLLBAR ========================================
     /*De left side is fixed, dus als ze hoger wordt dan het scherm wordt een scrollbar getoond,
@@ -107,7 +97,7 @@ $(document).ready(function () {
 
     //desktop
     //click-event 1e level navigatie items
-    $('nav a').on('click', function (e) {
+    $('nav a').click(function (e) {
         e.preventDefault();
 
         var aNode = $(this);
@@ -131,8 +121,6 @@ $(document).ready(function () {
 
 
     $('a[data-viewid]').click(function(e){
-        e.preventDefault();
-
         var viewID = $(this).data('viewid');
 
         // Check if this content exists

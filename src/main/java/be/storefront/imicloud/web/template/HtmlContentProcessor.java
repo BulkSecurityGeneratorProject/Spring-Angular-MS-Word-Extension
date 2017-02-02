@@ -2,10 +2,12 @@ package be.storefront.imicloud.web.template;
 
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.Image;
+import be.storefront.imicloud.domain.ImageSourcePath;
 import be.storefront.imicloud.domain.document.ImDocumentStructure;
 import be.storefront.imicloud.domain.document.structure.StructureMap;
 import be.storefront.imicloud.domain.document.structure.TreeNode;
 import be.storefront.imicloud.repository.ImageRepository;
+import be.storefront.imicloud.repository.ImageSourcePathRepository;
 import be.storefront.imicloud.service.UrlHelperService;
 import be.storefront.imicloud.web.dom.DomHelper;
 import org.joox.Match;
@@ -18,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.joox.JOOX.$;
@@ -33,6 +36,8 @@ public class HtmlContentProcessor {
 
     @Inject
     private UrlHelperService urlHelperService;
+
+    @Inject private ImageSourcePathRepository imageSourcePathRepository;
 
     public String process(String html, String templateCode, ImDocumentStructure imDocumentStructure) {
 
@@ -94,12 +99,21 @@ public class HtmlContentProcessor {
             a.attr("target", "_blank");
         }
 
+        // Link images
+        for (Match img : root.find("img[data-source]").each()) {
+            String imageSource = img.attr("data-source");
+            String src = urlHelperService.getImageUrlBySourceAndDocumentId(imageSource, imDocumentStructure.getImDocument().getId());
+            if(src != null){
+                img.attr("src", src);
+            }
+        }
+
+
+
         // Clean up table of contents
         for (Match tocTable : root.find("table.topic-seepage").each()) {
             tocTable.find("tr > th:last-child").remove();
             tocTable.find("tr > td:last-child").remove();
-
-
 
             for (Match reference : tocTable.find("reference").each()) {
                 Match td = reference.parentsUntil("td");

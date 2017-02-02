@@ -177,10 +177,11 @@
                 </ul>
             </li>
         </ul>
-        <p>
-            <a href="#" th:href="${allDocumentsUrl}">&larr; <span th:text="#{document_view.back_to_documents}">Back to publications</span></a>
-        </p>
     </nav>
+
+    <p>
+        <a href="#" th:href="${allDocumentsUrl}">&larr; <span th:text="#{document_view.back_to_documents}">Back to publications</span></a>
+    </p>
 </div>
 
 
@@ -225,33 +226,33 @@ END INTRO: FULL SCREEN OVERLAY-->
             <ul>
                 <li>
 
-                    <a href="#">
+                    <a href="">
                         <span th:text="${ImDocument.documentName}">Document name</span>
                         <i class="icon-plus"></i>
                     </a>
 
                     <ul class="sub-nav">
                         <li th:each="level1,iterStat1 : ${ImDocumentStructure.getRootTreeNode().getChildren()}">
-                            <a href="#" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001">
+                            <a href="" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001">
                                 <span th:text="${level1.getTitle()}">Map label</span>
                                 <i class="icon-plus" th:if="${level1.getChildren().size() > 0}"></i>
                             </a>
 
                             <ul class="sub-nav" th:if="${level1.getChildren().size() > 0}">
                                 <li th:each="level2,iterStat2 : ${level1.getChildren()}">
-                                    <a href="#" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001">
+                                    <a href="" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001">
                                         <span th:text="${level2.getTitle()}">Map label</span>
                                         <i class="icon-plus" th:if="${level2.getChildren().size() > 0}"></i>
                                     </a>
                                     <ul class="sub-nav" th:if="${level2.getChildren().size() > 0}">
                                         <li th:each="level3,iterStat3 : ${level2.getChildren()}">
-                                            <a href="#" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001">
+                                            <a href="" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001">
                                                 <span th:text="${level3.getTitle()}">Map label</span>
                                                 <i class="icon-plus" th:if="${level3.getChildren().size() > 0}"></i>
                                             </a>
                                             <ul class="sub-nav" th:if="${level3.getChildren().size() > 0}">
                                                 <li th:each="level4,iterStat4 : ${level3.getChildren()}">
-                                                    <a href="#" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001">
+                                                    <a href="" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001">
                                                         <span th:text="${level4.getTitle()}">Map label</span>
                                                     </a>
                                                 </li>
@@ -265,10 +266,10 @@ END INTRO: FULL SCREEN OVERLAY-->
                     </ul>
                 </li>
             </ul>
-            <p>
-                <a href="#" th:href="${allDocumentsUrl}">&larr; <span th:text="#{document_view.back_to_documents}">Back to publications</span></a>
-            </p>
         </nav>
+        <p>
+            <a href="#" th:href="${allDocumentsUrl}">&larr; <span th:text="#{document_view.back_to_documents}">Back to publications</span></a>
+        </p>
     </div>
 </section>
 <!--END LEFT-SIDE-->
@@ -294,7 +295,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                            th:href="${'#'+block.getGuid()}"
                            data-th-attr="data-viewid=${map.getGuid() + '-content'}"
                            class="part"
-                           th:style="|background-image: url('${urlHelperService.getImageUrl(block.labelImageId)}')|"
+                           th:style="|background-image: url('${urlHelperService.getImageUrlByFilename(block.labelImageFilename)}')|"
                        >
                             <span th:text="${block.getLabel()}">Block label</span>
                         </a>

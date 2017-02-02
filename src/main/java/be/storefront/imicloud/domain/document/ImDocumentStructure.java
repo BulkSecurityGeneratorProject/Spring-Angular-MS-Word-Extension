@@ -1,8 +1,10 @@
 package be.storefront.imicloud.domain.document;
 
-import be.storefront.imicloud.domain.ImDocument;
+import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.domain.document.structure.*;
 import be.storefront.imicloud.domain.util.XmlDocument;
+import be.storefront.imicloud.repository.ImageSourcePathRepository;
+import be.storefront.imicloud.service.UrlHelperService;
 import be.storefront.imicloud.service.dto.ImBlockDTO;
 import org.joox.Match;
 import org.w3c.dom.Document;
@@ -15,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.joox.JOOX.$;
 
@@ -25,9 +28,11 @@ public class ImDocumentStructure {
 
     private ImDocument imDocument;
     private TreeNode rootTreeNode;
+    private ImageSourcePathRepository imageSourcePathRepository;
 
-    public ImDocumentStructure(ImDocument imDocument) throws IOException, SAXException, ParserConfigurationException, TransformerException {
+    public ImDocumentStructure(ImDocument imDocument, ImageSourcePathRepository imageSourcePathRepository) throws IOException, SAXException, ParserConfigurationException, TransformerException {
         this.imDocument = imDocument;
+        this.imageSourcePathRepository = imageSourcePathRepository;
         this.rootTreeNode = generateTree(imDocument.getOriginalXml());
     }
 
@@ -153,10 +158,6 @@ public class ImDocumentStructure {
                 currentMap = new StructureMap();
                 current = currentMap;
 
-                if (top == null) {
-                    top = currentMap;
-                }
-
                 // add this map to the section
                 if (currentSection != null) {
                     currentSection.addChild(currentMap);
@@ -169,6 +170,16 @@ public class ImDocumentStructure {
 
                 }else if(currentPublication != null){
                     currentPublication.addChild(currentMap);
+                }else{
+                    if(top == null){
+                        // We only have maps, and no hierarchy -> create a dummy structure above the maps
+                        StructureSection dummySection = new StructureSection();
+                        dummySection.setTitle("");
+                        top = dummySection;
+                        currentSection = dummySection;
+
+                        currentSection.addChild(currentMap);
+                    }
                 }
 
 
@@ -325,16 +336,20 @@ public class ImDocumentStructure {
 
                 // Save all blocks
                 ImBlockDTO newBlockDto = new ImBlockDTO();
-                //newBlockDto.setImMapId(newMapDto.getId());
                 newBlockDto.setLabel(blockLabel);
                 newBlockDto.setGuid(blockGuid);
                 newBlockDto.setPosition((float) j);
                 newBlockDto.setContent(contentText);
                 newBlockDto.setLabelImageSource(blockImageSource);
 
-                currentMap.addBlock(newBlockDto);
+                List<ImageSourcePath> isps = imageSourcePathRepository.findByDocumentIdAndSource(imDocument.getId(),blockImageSource);
 
-                //newBlockDto = imBlockService.save(newBlockDto);
+                if(isps.size() > 0) {
+                    // Add label image
+                    newBlockDto.setLabelImageFilename(isps.get(0).getImage().getFilename());
+                }
+
+                currentMap.addBlock(newBlockDto);
             }
         }
     }
@@ -365,6 +380,12 @@ public class ImDocumentStructure {
         if(r != null){
             // Add space after numbering
             r = r.replaceAll("^([0-9\\.]+)(.*)$", "$1 $2");
+
+            r = r.trim();
+
+            if(r.length() == 0){
+                r = "???";
+            }
         }
 
         return r;
@@ -561,5 +582,9 @@ public class ImDocumentStructure {
             }
         }
         return null;
+    }
+
+    public ImDocument getImDocument(){
+        return this.imDocument;
     }
 }

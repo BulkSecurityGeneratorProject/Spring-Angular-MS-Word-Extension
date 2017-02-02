@@ -5,6 +5,7 @@ import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.domain.document.ImDocumentStructure;
 import be.storefront.imicloud.repository.ImDocumentRepository;
+import be.storefront.imicloud.repository.ImageSourcePathRepository;
 import be.storefront.imicloud.security.DocumentPasswordEncoder;
 import be.storefront.imicloud.security.ImCloudSecurity;
 import be.storefront.imicloud.security.MyUserDetails;
@@ -75,6 +76,8 @@ public class DocumentController {
     @Inject private BrandingService brandingService;
 
     private PasswordEncoder documentPasswordEncoder = new DocumentPasswordEncoder();
+
+    @Inject private ImageSourcePathRepository imageSourcePathRepository;
 
 
     @GetMapping("/document/{documentId}/{secret}")
@@ -149,7 +152,7 @@ public class DocumentController {
                     viewMap.put("templateCode", template);
 
                     if (accessGranted) {
-                        viewMap.put("ImDocumentStructure", new ImDocumentStructure(imDocument));
+                        viewMap.put("ImDocumentStructure", new ImDocumentStructure(imDocument,imageSourcePathRepository));
                         viewMap.put("ImDocumentDTO", imDocumentDto);
                         viewMap.put("ImDocument", imDocument);
                         viewMap.put("HtmlContentProcessor", htmlContentProcessor);

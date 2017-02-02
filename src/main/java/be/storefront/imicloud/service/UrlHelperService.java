@@ -3,6 +3,7 @@ package be.storefront.imicloud.service;
 import be.storefront.imicloud.config.ImCloudProperties;
 import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.repository.ImageRepository;
+import be.storefront.imicloud.repository.ImageSourcePathRepository;
 import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.service.dto.BrandingDTO;
@@ -12,6 +13,7 @@ import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class UrlHelperService {
@@ -30,6 +32,9 @@ public class UrlHelperService {
     private ImDocumentMapper imDocumentMapper;
 
     @Inject private ImageRepository imageRepository;
+
+    @Inject private ImageSourcePathRepository imageSourcePathRepository;
+
     private String allDocumentsUrl;
 
     public String getDocumentPublicUrl(ImDocument imDocument) {
@@ -62,8 +67,17 @@ public class UrlHelperService {
         return imCloudProperties.getBaseUrl() + "document/password/";
     }
 
-    public String getImageUrl(String imageFilename) {
+    public String getImageUrlByFilename(String imageFilename) {
         return getImageUrl(imageRepository.findByFilename(imageFilename));
+    }
+
+    public String getImageUrlBySourceAndDocumentId(String source, Long documentId){
+        List<ImageSourcePath> isps = imageSourcePathRepository.findByDocumentIdAndSource(documentId, source);
+
+        if (isps.size() > 0) {
+            return getImageUrl(isps.get(0).getImage());
+        }
+        return "";
     }
 
     public String getAllDocumentsUrl() {

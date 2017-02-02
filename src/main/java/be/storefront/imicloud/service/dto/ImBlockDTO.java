@@ -35,6 +35,8 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long labelImageId;
 
+    private String labelImageFilename;
+
     @JsonIgnore
     private Set<Image> images = new HashSet<>();
 
@@ -142,5 +144,13 @@ public class ImBlockDTO extends AbstractAuditingDTO implements Serializable {
             ", guid='" + guid + "'" +
             ", labelImageSource='" + labelImageSource + "'" +
             '}';
+    }
+
+    public void setLabelImageFilename(String labelImageFilename) {
+        this.labelImageFilename = labelImageFilename;
+    }
+
+    public String getLabelImageFilename() {
+        return this.labelImageFilename;
     }
 }
