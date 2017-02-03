@@ -280,7 +280,7 @@ public class UserService {
 
             // Create default branding
             Branding b = new Branding();
-            b.setName("My branding");
+            b.setName("My theme");
             b.setPageBackgroundColor("#FFFFFF");
             b.setTextColor("#222222");
             b.setPrimaryColor("#009edf");

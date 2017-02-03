@@ -2,19 +2,19 @@
     "imicloudApp": {
         "branding" : {
             "home": {
-                "title": "Branding",
-                "createLabel": "Create Branding",
-                "createOrEditLabel": "Edit branding",
-                "search": "Search for Branding"
+                "title": "Theme",
+                "createLabel": "Create Theme",
+                "createOrEditLabel": "Edit theme",
+                "search": "Search for Theme"
             },
-            "created": "Branding created",
-            "updated": "Branding updated",
-            "deleted": "Branding deleted",
+            "created": "Theme created",
+            "updated": "Theme updated",
+            "deleted": "Theme deleted",
             "delete": {
-                "question": "Are you sure you want to delete this branding?"
+                "question": "Are you sure you want to delete this theme?"
             },
             "detail": {
-                "title": "Branding Details"
+                "title": "Theme Details"
             },
 			"name": "Name",
 			"organization": "Organization",

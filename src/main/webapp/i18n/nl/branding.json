@@ -2,9 +2,9 @@
     "imicloudApp": {
         "branding" : {
             "home": {
-                "title": "Brandings",
-                "createLabel": "Maak een nieuwe Branding",
-                "createOrEditLabel": "Maak of wijzig een Branding",
+                "title": "Thema",
+                "createLabel": "Maak een nieuw thema",
+                "createOrEditLabel": "Maak of wijzig een thema",
                 "search": "Search for Branding"
             },
             "created": "A new Branding is created with identifier {{ param }}",

@@ -8,7 +8,7 @@
                 "search": "Search for a publication"
             },
             "noDocumentsExist": "You haven't published any documents yet.",
-            "editBranding": "Edit branding",
+            "editBranding": "Edit theme",
             "customizeYourTemplate": "Customize your template",
             "created": "New publication created",
             "updated": "Publication updated",
@@ -29,7 +29,7 @@
             "folder": "Folder",
             "map": "Map",
             "user": "User",
-			"branding": "Branding"
+			"branding": "Theme"
         }
     }
 }

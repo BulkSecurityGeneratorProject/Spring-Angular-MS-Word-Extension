@@ -19,7 +19,7 @@
             "name": "Name",
             "magentoCustomerId": "Magento Customer Id",
             "folder": "Folder",
-            "branding": "Branding"
+            "branding": "Theme"
         }
     }
 }
