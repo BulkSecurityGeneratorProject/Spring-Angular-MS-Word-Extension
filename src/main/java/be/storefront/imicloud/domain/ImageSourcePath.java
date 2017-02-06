@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "image_source_path", uniqueConstraints={
-    @UniqueConstraint(columnNames = {"source", "im_document_id"})
+    @UniqueConstraint(columnNames = {"source", "im_document_id", "upload_complete"})
 })
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "imagesourcepath")

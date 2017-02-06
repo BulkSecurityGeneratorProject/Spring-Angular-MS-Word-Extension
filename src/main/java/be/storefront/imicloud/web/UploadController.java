@@ -441,7 +441,6 @@ public class UploadController {
                     if (documentDto.getUserId().equals(uploadingUser.getId())) {
                         // Owner is uploading more images
 
-
                         Image savedImage = processUploadedImage(file, source, document, contentType, uploadingUser);
 
                         return ResponseEntity.ok()
@@ -521,6 +520,9 @@ public class UploadController {
         isp.setImage(image);
         isp.setImDocument(document);
         isp.setSource(source);
+
+        // Mark incomplete so it is kept alongside the completed, currently in use image.
+        // When the upload is done, the new image will replace the old.
         isp.setUploadComplete(false);
 
         isp = imageSourcePathRepository.save(isp);

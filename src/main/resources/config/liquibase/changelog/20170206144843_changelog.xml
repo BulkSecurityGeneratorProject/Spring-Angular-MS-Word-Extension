@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="wouter (generated)" id="1486392543742-1">
+      <addUniqueConstraint columnNames="source, im_document_id, upload_complete"
+                           constraintName="UK7h6d715m92tyxmt4t5u3de4xv"
+                           tableName="image_source_path"/>
+   </changeSet>
+   <changeSet author="wouter (generated)" id="1486392543742-2">
+      <dropUniqueConstraint constraintName="UK5xlnitx31wl6je5oqsx9oeax6"
+                            tableName="image_source_path"/>
+   </changeSet>
+   <changeSet author="wouter (generated)" id="1486392543742-3">
+      <dropDefaultValue columnDataType="blob"
+                        columnName="modified_date"
+                        tableName="jhi_entity_audit_event"/>
+   </changeSet>
+</databaseChangeLog>
