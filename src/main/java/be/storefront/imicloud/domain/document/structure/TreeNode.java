@@ -8,14 +8,25 @@ import java.util.ArrayList;
  */
 abstract public class TreeNode {
     abstract public String getCode();
+
+    private TreeNode parent = null;
     private ArrayList<TreeNode> children = new ArrayList<>();
     private ArrayList<StructureMap> contentMaps = new ArrayList<>();
     private String title = null;
     private String guid = null;
     private String contentGuid = null;
 
+    public TreeNode getParent() {
+        return parent;
+    }
+
+    public void setParent(TreeNode parent) {
+        this.parent = parent;
+    }
+
     public void addChild(TreeNode child) {
         this.children.add(child);
+        child.setParent(this);
     }
 
     public ArrayList<TreeNode> getChildren(){

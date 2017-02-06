@@ -295,7 +295,12 @@ END INTRO: FULL SCREEN OVERLAY-->
             <div class="view-content" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
                 <div class="container">
                     <div class="sixteen">
-                        <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
+                        <div class="block-title-bar">
+                            <div class="breadcrumbs" th:if="${map.getParent() != null}">
+                                <a href="" th:text="${map.getParent().getTitle()}">Parent link</a>
+                            </div>
+                            <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
+                        </div>
                     </div>
                     <div class="clear"></div>
 

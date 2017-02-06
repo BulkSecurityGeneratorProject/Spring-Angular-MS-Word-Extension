@@ -464,26 +464,7 @@ nav{
                     line-height:@line-height - 2px;
                     font-weight:@normal;
 
-                    a.link{
-                        padding-left:15px;
 
-                        &:before{
-                            content:'\E81F';
-                            display:block;
-                            font-family:icons;
-                            position:absolute;
-                            left:0;
-                            top:0;
-                            font-size:9px;
-                            .transition();
-                        }
-
-                        &:hover{
-                            &:before{
-                                left:2px;
-                            }
-                        }
-                    }
 
                     a.menu-toggle{
                         position:absolute !important;
@@ -500,6 +481,31 @@ nav{
         }
     }
 }
+
+/* Arrow before link effect */
+.sub-nav li a.link,
+.breadcrumbs a{
+    padding-left:15px;
+    position: relative;
+
+    &:before{
+        content:'\E81F';
+        display:block;
+        font-family:icons;
+        position:absolute;
+        left:0;
+        top:0;
+        font-size:9px;
+        .transition();
+    }
+
+    &:hover{
+        &:before{
+            left:2px;
+        }
+    }
+}
+
 
 /*mobile nav*/
 .mobile-nav{
@@ -528,6 +534,14 @@ nav{
     a{
         text-decoration: none;
         font-size: 13px;
+    }
+}
+
+.breadcrumbs{
+    margin-bottom: 0.5em;
+    
+    a{
+        text-decoration: none;
     }
 }
 
@@ -1163,7 +1177,7 @@ button.mfp-arrow {
         height:auto;
         border-right:0;
         border-bottom:solid 1px darken(@background-grey,15%);
-        padding:15px 1%;
+        padding: 10px;
     }
     /*left-header*/
     .left-header{
@@ -1178,9 +1192,7 @@ button.mfp-arrow {
 
     /*logo*/
     .logo{
-        img{
-            max-height:50px;
-        }
+        max-height:45px;
     }
 
     /*left-nav*/
