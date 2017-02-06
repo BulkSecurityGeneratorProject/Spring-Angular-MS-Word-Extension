@@ -587,4 +587,12 @@ public class ImDocumentStructure {
     public ImDocument getImDocument(){
         return this.imDocument;
     }
+
+    public boolean canShowBreadcrumbs(TreeNode treeNode){
+        if(treeNode.getParent() != null && treeNode.getParent().getTitle() != null && treeNode.getParent().getTitle().length() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
