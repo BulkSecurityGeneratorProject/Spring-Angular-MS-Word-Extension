@@ -28,7 +28,9 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                     <th jh-sort-by="documentName"><span data-translate="imicloudApp.imDocument.documentName">Document Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <!--
                     <th jh-sort-by="password"><span data-translate="imicloudApp.imDocument.password">Password</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
                     <th jh-sort-by="defaultTemplate"><span data-translate="imicloudApp.imDocument.defaultTemplate">Default Template</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="branding.name"><span data-translate="imicloudApp.imDocument.branding">Branding</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <!--
@@ -41,7 +43,9 @@
             <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="imDocument in vm.imDocuments track by imDocument.id">
                     <td><a target="_blank" ng-href="{{imDocument.publicViewUrl}}">{{imDocument.documentName}}</a></td>
+                    <!--
                     <td>{{imDocument.password}}</td>
+                    -->
                     <td ng-switch="imDocument.defaultTemplate">
                         <span ng-switch-when="web1">
                             Website 1
