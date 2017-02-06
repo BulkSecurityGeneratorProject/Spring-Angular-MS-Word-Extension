@@ -77,7 +77,7 @@ public class HtmlContentProcessor {
                             aNode.attr("id", ""+id);
 
                             // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
-                            String youtubeEmbed = "<iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/"+videoId+"\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe>";
+                            String youtubeEmbed = "<div class='embed-container'><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/"+videoId+"\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
 
                             aNode.before(youtubeEmbed);
 

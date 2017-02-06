@@ -334,10 +334,12 @@ END INTRO: FULL SCREEN OVERLAY-->
             <div class="view-content" data-th-attr="data-viewid=${map.getGuid() + '-content'}">
                 <div class="container">
                     <div class="sixteen">
-                        <a href="#" class="button back" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
-                            <i class="icon-arrow-up"></i>
-                        </a>
-                        <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
+                        <div class="slider-title-bar">
+                            <a href="#" class="button back" data-th-attr="data-viewid=${map.getGuid() + '-overview'}">
+                                <i class="icon-arrow-up"></i>
+                            </a>
+                            <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
+                        </div>
 
                         <div class="view-content-slider owl-carousel">
                             <div class="slider-item" th:each="block,blockIter : ${map.getBlocks()}" data-th-attr="data-hash=${block.getGuid()}">

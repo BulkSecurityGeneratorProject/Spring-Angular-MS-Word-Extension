@@ -934,6 +934,12 @@ button.mfp-arrow {
     }
 }
 
+.slider-title-bar{
+    h2{
+        padding-right: 90px;
+    }
+}
+
 /*Small desktop*/
 @media only screen and (max-width: 1149px) {
     h1{
@@ -1404,6 +1410,17 @@ button.mfp-arrow {
             width:48%;
         }
     }
+
+    body, html{
+        /* On mobile, we want scrollbars and not divide the page in sections that scroll individually */
+        overflow: auto;
+    }
+
+    [canvas=container]{
+        overflow: auto;
+        height:auto;
+    }
+
 }
 
 /*Small Phone*/
@@ -1457,5 +1474,24 @@ button.mfp-arrow {
                 }
             }
         }
+    }
+}
+
+/* Responsive embed for YouTube and other iframes/embeds */
+.embed-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+
+    iframe,
+    object,
+    embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 }
