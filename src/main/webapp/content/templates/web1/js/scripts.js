@@ -223,62 +223,6 @@ $(document).ready(function () {
         switchView(contentViews, $(this).data('viewid'));
     });
 
-//POPUP =====================================================
-    var btnPopup = $('.popup'),
-        popup = $('.popup-overlay'),
-        openID,
-        clickedID,
-        videoID,
-        iframeURL;
-
-    btnPopup.on('click', function (e) {
-        e.preventDefault();
-
-        var popups = [];
-
-        clickedID = $(this).data('popupid');
-
-        if (clickedID === "youtube") {
-            videoID = $(this).data('ytid');
-        }
-
-        if (clickedID === "information_mapping_tutorial") {
-            iframeURL = $(this).attr('href');
-        }
-
-        popup.each(function () {
-            if ($(this).data('popupid') === clickedID) {
-                openID = popup.index(this);
-                if (clickedID === "youtube") {
-                    $(this).find('.video').html("<iframe src='https://www.youtube.com/embed/" + videoID + "?rel=0&amp;showinfo=0amp;enablejsapi=1&amp;playerapiid=ytplayer' allowfullscreen frameborder='0'></iframe>");
-                }
-                if (clickedID = "information_mapping_tutorial") {
-                    $(this).find('.iframe').html("<iframe src='" + iframeURL + "' frameborder='0'></iframe>");
-                }
-            }
-            popups.push({
-                src: $(this)
-            });
-        });
-
-        $.magnificPopup.open({
-            items: popups,
-            gallery: {
-                enabled: false
-            },
-            callbacks: {
-                beforeOpen: function beforeOpen() {
-                    this.st.mainClass = 'mfp-move-vertical';
-                },
-                change: function change() {
-                    if (this.isOpen) {
-                        this.st.mainClass = 'mfp-move-vertical';
-                    }
-                }
-            }
-        }, openID);
-    });
-
 
 });
 
@@ -346,17 +290,22 @@ function switchView(views, viewID) {
     views.hide().removeClass('active');
 
     views.each(function () {
-        if ($(this).data('viewid') === viewID) {
-            $(this).fadeIn(400).addClass('active');
-            if ($(this).has(".view-content").length != 0) {
+        var t = $(this);
+        if (t.data('viewid') === viewID) {
+            t.show().addClass('active');
+
+            if (t.has(".view-content").length != 0) {
                 //view => plaats eerste view-content zichtbaar
-                $(this).find('.view-content').hide().removeClass('active');
-                $(this).find('.view-content').first().fadeIn(400).addClass('active');
+                t.find('.view-content').hide().removeClass('active');
+
+                var firstViewContent = t.find('.view-content:first');
+                firstViewContent.show();
+                firstViewContent.addClass('active');
             }
             return false;
         } else {
-            if ($(this).is(':visible')) {
-                $(this).hide().removeClass('active');
+            if (t.is(':visible')) {
+                t.hide().removeClass('active');
             }
         }
     });
@@ -371,9 +320,9 @@ function switchAnchorView(views, viewID) {
         if ($(this).data('viewid') === viewID) {
             if (!$(this).parent().hasClass('active')) {
                 views.not($(this)).parent().hide().removeClass('active');
-                $(this).parent().fadeIn(400).addClass('active');
+                $(this).parent().show().addClass('active');
             }
-            $(this).fadeIn(400).addClass('active');
+            $(this).show().addClass('active');
             updateLeftNav(views,viewID)
             return false;
         } else {
