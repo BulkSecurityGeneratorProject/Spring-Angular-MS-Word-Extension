@@ -77,27 +77,21 @@ $(document).ready(function () {
 
     var firstView;
 
-    //desktop
     //start view bepalen en actief zetten
     if (leftNav.find('> ul > li').first().has(".sub-nav").length != 0) {
         /*eerste item heeft sub navigatie*/
         firstView = viewSwitchers.first().data('viewid'); //id eerste item
-        viewSwitchers.first().addClass('active'); //eerst item active plaatsen
-        viewSwitchers.first().parent().parent().parent().find('> a').addClass('active'); //parent item ook active plaatsen
-        viewSwitchers.first().parent().parent().stop().slideDown(0).addClass('open'); //de subnav open plaatsen
 
     } else {
         /*eerste item heeft geen sub navigatie*/
         firstView = navLinkNodes.first().data('viewid'); //id eerste item
-        navLinkNodes.first().addClass('active'); //eerst item active plaatsen
     }
 
     //view die bij eerste item hoort zichtbaar maken
     switchView(views, firstView);
 
-    //desktop
-    //click-event 1e level navigatie items
-    $('nav a').click(function (e) {
+
+    $('nav a.link').click(function (e) {
         e.preventDefault();
 
         var aNode = $(this);
@@ -106,19 +100,40 @@ $(document).ready(function () {
         if (liNode.has(".sub-nav").length != 0) {
             /*heeft sub navigatie*/
 
-            liNode.children(".sub-nav").stop().slideToggle(300).toggleClass('open');
+            openMenuTree(aNode);
 
         } else {
             /*heeft geen sub navigatie*/
             leftNav.removeClass('active');
             aNode.addClass('active');
-
         }
 
         switchView(views, aNode.data('viewid'));
     });
 
 
+    $('nav a.menu-toggle').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var aNode = $(this);
+
+        toggleMenuTree(aNode);
+    });
+
+    function openMenuTree(aNode){
+        var liNode = aNode.parent();
+        liNode.children(".sub-nav").stop().slideDown(300).addClass('open');
+
+        refreshPlusMinusIcons();
+    }
+
+    function toggleMenuTree(aNode){
+        var liNode = aNode.parent();
+        liNode.children(".sub-nav").stop().slideToggle(300).toggleClass('open');
+
+        refreshPlusMinusIcons();
+    }
 
     $('a[data-viewid]').click(function(e){
         var viewID = $(this).data('viewid');
@@ -288,7 +303,7 @@ function refreshPlusMinusIcons(){
         node = $(node);
 
         var parentLi = node.closest('li');
-        var icon = parentLi.children('a').find('i');
+        var icon = parentLi.children('a.menu-toggle').find('i');
 
         if(node.hasClass('open')){
             // Show minus
@@ -302,6 +317,12 @@ function refreshPlusMinusIcons(){
 
 function switchView(views, viewID) {
     console.log('switchView, viewID = '+viewID);
+
+    // Close mobile menu
+    if (mobileNavController.getActiveSlidebar()) {
+        // Close mobile menu if open
+        mobileNavController.close();
+    }
 
     // Update active class on menu
     if(viewID){

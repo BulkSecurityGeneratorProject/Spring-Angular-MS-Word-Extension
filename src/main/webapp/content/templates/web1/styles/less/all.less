@@ -431,18 +431,19 @@ nav{
             margin:0 0 10px 0;
             padding:0;
             display:block;
+            position: relative;
+
             a{
                 text-decoration:none;
-                color:@secondary-color;
                 position:relative;
                 .box-sizing(border-box);
                 display:block;
-                padding-right:30px;
-                i{
-                    position:absolute;
-                    top:2px;
-                    right:0;
-                    color:@font-white;
+
+                &.link{
+                    padding-right:30px;
+                }
+
+                &.menu-toggle{
                     .transition();
                 }
                 &:hover,&.active{
@@ -462,7 +463,8 @@ nav{
                     font-size:@font-size - 2px;
                     line-height:@line-height - 2px;
                     font-weight:@normal;
-                    a{
+
+                    a.link{
                         padding-left:15px;
 
                         &:before{
@@ -475,17 +477,20 @@ nav{
                             font-size:9px;
                             .transition();
                         }
-                        &:hover,&.active{
-                            color:@secondary-color;
-                            i{
-                                color:@secondary-color;
-                            }
-                        }
+
                         &:hover{
                             &:before{
                                 left:2px;
                             }
                         }
+                    }
+
+                    a.menu-toggle{
+                        position:absolute !important;
+                        right: -10px;
+                        top: -10px;
+                        padding: 10px;
+                        z-index: 1;
                     }
                 }
                 &.open{

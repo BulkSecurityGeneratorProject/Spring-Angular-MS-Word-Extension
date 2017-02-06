@@ -137,34 +137,40 @@
         <ul>
             <li>
 
-                <a href="#">
-                    <span th:text="${ImDocument.documentName}">Document name</span>
-                    <i class="icon-plus"></i>
+                <a href="" th:text="${ImDocument.documentName}">
+                    Document name
                 </a>
 
                 <ul class="sub-nav">
                     <li th:each="level1,iterStat1 : ${ImDocumentStructure.getRootTreeNode().getChildren()}">
-                        <a href="#" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001">
-                            <span th:text="${level1.getTitle()}">Map label</span>
-                            <i class="icon-plus" th:if="${level1.getChildren().size() > 0}"></i>
+                        <a class="link" href="" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001" th:text="${level1.getTitle()}">
+                            Map label
+                        </a>
+                        <a class="menu-toggle" href="" th:if="${level1.getChildren().size() > 0}">
+                            <i class="icon-plus"></i>
                         </a>
 
                         <ul class="sub-nav" th:if="${level1.getChildren().size() > 0}">
                             <li th:each="level2,iterStat2 : ${level1.getChildren()}">
-                                <a href="#" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001">
-                                    <span th:text="${level2.getTitle()}">Map label</span>
-                                    <i class="icon-plus" th:if="${level2.getChildren().size() > 0}"></i>
+                                <a class="link" href="" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001" th:text="${level2.getTitle()}">
+                                    Map label
+                                </a>
+                                <a class="menu-toggle" href="" th:if="${level2.getChildren().size() > 0}">
+                                    <i class="icon-plus"></i>
                                 </a>
                                 <ul class="sub-nav" th:if="${level2.getChildren().size() > 0}">
                                     <li th:each="level3,iterStat3 : ${level2.getChildren()}">
-                                        <a href="#" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001">
-                                            <span th:text="${level3.getTitle()}">Map label</span>
-                                            <i class="icon-plus" th:if="${level3.getChildren().size() > 0}"></i>
+                                        <a class="link" href="" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001" th:text="${level3.getTitle()}">
+                                            Map label
                                         </a>
+                                        <a class="menu-toggle" href="" th:if="${level3.getChildren().size() > 0}">
+                                            <i class="icon-plus"></i>
+                                        </a>
+
                                         <ul class="sub-nav" th:if="${level3.getChildren().size() > 0}">
                                             <li th:each="level4,iterStat4 : ${level3.getChildren()}">
-                                                <a href="#" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001">
-                                                    <span th:text="${level4.getTitle()}">Map label</span>
+                                                <a class="link" href="" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001" th:text="${level4.getTitle()}">
+                                                    Map label
                                                 </a>
                                             </li>
                                         </ul>
@@ -226,34 +232,40 @@ END INTRO: FULL SCREEN OVERLAY-->
             <ul>
                 <li>
 
-                    <a href="">
-                        <span th:text="${ImDocument.documentName}">Document name</span>
-                        <i class="icon-plus"></i>
+                    <a href="" th:text="${ImDocument.documentName}">
+                        Document name
                     </a>
 
                     <ul class="sub-nav">
                         <li th:each="level1,iterStat1 : ${ImDocumentStructure.getRootTreeNode().getChildren()}">
-                            <a href="" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001">
-                                <span th:text="${level1.getTitle()}">Map label</span>
-                                <i class="icon-plus" th:if="${level1.getChildren().size() > 0}"></i>
+                            <a class="link" href="" data-th-attr="data-viewid=${level1.getContentGuid()},data-guid=${level1.getGuid()}" data-viewid="001" th:text="${level1.getTitle()}">
+                                Map label
+                            </a>
+                            <a class="menu-toggle" href="" th:if="${level1.getChildren().size() > 0}">
+                                <i class="icon-plus"></i>
                             </a>
 
                             <ul class="sub-nav" th:if="${level1.getChildren().size() > 0}">
                                 <li th:each="level2,iterStat2 : ${level1.getChildren()}">
-                                    <a href="" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001">
-                                        <span th:text="${level2.getTitle()}">Map label</span>
-                                        <i class="icon-plus" th:if="${level2.getChildren().size() > 0}"></i>
+                                    <a class="link" href="" data-th-attr="data-viewid=${level2.getContentGuid()},data-guid=${level2.getGuid()}" data-viewid="001" th:text="${level2.getTitle()}">
+                                        Map label
+                                    </a>
+                                    <a class="menu-toggle" href="" th:if="${level2.getChildren().size() > 0}">
+                                        <i class="icon-plus"></i>
                                     </a>
                                     <ul class="sub-nav" th:if="${level2.getChildren().size() > 0}">
                                         <li th:each="level3,iterStat3 : ${level2.getChildren()}">
-                                            <a href="" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001">
-                                                <span th:text="${level3.getTitle()}">Map label</span>
-                                                <i class="icon-plus" th:if="${level3.getChildren().size() > 0}"></i>
+                                            <a class="link" href="" data-th-attr="data-viewid=${level3.getContentGuid()},data-guid=${level3.getGuid()}" data-viewid="001" th:text="${level3.getTitle()}">
+                                                Map label
                                             </a>
+                                            <a class="menu-toggle" href="" th:if="${level3.getChildren().size() > 0}">
+                                                <i class="icon-plus"></i>
+                                            </a>
+
                                             <ul class="sub-nav" th:if="${level3.getChildren().size() > 0}">
                                                 <li th:each="level4,iterStat4 : ${level3.getChildren()}">
-                                                    <a href="" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001">
-                                                        <span th:text="${level4.getTitle()}">Map label</span>
+                                                    <a class="link" href="" data-th-attr="data-viewid=${level4.getContentGuid()},data-guid=${level4.getGuid()}" data-viewid="001" th:text="${level4.getTitle()}">
+                                                        Map label
                                                     </a>
                                                 </li>
                                             </ul>
