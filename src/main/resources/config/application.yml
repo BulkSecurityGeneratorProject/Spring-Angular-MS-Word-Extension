@@ -41,6 +41,10 @@ spring:
                     prepStmtCacheSize: 250
                     prepStmtCacheSqlLimit: 2048
                     useServerPrepStmts: true
+    http:
+        multipart:
+            max-request-size: 5MB
+
     profiles:
         # The commented value for `active` can be replaced with valid Spring profiles to load.
         # Otherwise, it will be filled in by maven when building the WAR file
