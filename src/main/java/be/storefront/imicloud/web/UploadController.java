@@ -111,9 +111,11 @@ public class UploadController {
     @Inject
     private UserRepository userRepository;
 
-    @Inject private BrandingRepository brandingRepository;
+    @Inject
+    private BrandingRepository brandingRepository;
 
-    @Inject private UserInfoRepository userInfoRepository;
+    @Inject
+    private UserInfoRepository userInfoRepository;
 
     //@Inject private PasswordEncoder passwordEncoder;
 
@@ -184,7 +186,7 @@ public class UploadController {
         return r;
     }
 
-    protected String reprocessXml(ImDocument doc){
+    protected String reprocessXml(ImDocument doc) {
         String r = "";
         try {
             doc = processXmlSavedInDocument(doc);
@@ -272,7 +274,7 @@ public class UploadController {
             doc.setSecret(SecurityUtils.generateSecret());
         }
 
-        if(doc.getBranding() == null){
+        if (doc.getBranding() == null) {
             UserInfo ui = userInfoRepository.findByUserId(doc.getUser().getId());
             Organization organization = ui.getOrganization();
             Branding defaultBranding = organization.getBranding();
@@ -293,8 +295,8 @@ public class UploadController {
     }
 
 
-
     @Transactional
+    @Timed
     private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
         // Delete old maps - if any
@@ -321,13 +323,13 @@ public class UploadController {
 
                 // Is the map in an overviewmap? Use that label instead...
                 Node parentNode = oneMap.getParentNode();
-                if("overviewmap".equals(parentNode.getNodeName())){
+                if ("overviewmap".equals(parentNode.getNodeName())) {
                     String overviewMapTitle = XmlDocument.getText(parentNode, "title");
 
-                    if(mapLabel.length() == 0){
+                    if (mapLabel.length() == 0) {
                         mapLabel = overviewMapTitle;
-                    }else{
-                        mapLabel = overviewMapTitle + " - "+mapLabel;
+                    } else {
+                        mapLabel = overviewMapTitle + " - " + mapLabel;
                     }
                 }
 
@@ -395,13 +397,6 @@ public class UploadController {
             parent.removeChild(target);
         }
     }
-
-
-
-
-
-
-
 
 
     @PostMapping("/image/")
@@ -506,10 +501,10 @@ public class UploadController {
         List<ImageSourcePath> existingSourcePaths = imageSourcePathRepository.findByDocumentIdAndSource(document.getId(), source);
 
         // Delete all previously incomplete uploads
-        for(ImageSourcePath isp : existingSourcePaths){
-            if(isp.isUploadComplete()){
+        for (ImageSourcePath isp : existingSourcePaths) {
+            if (isp.isUploadComplete()) {
                 // This image is now in use -> keep it
-            }else{
+            } else {
                 // This is an other upload that was not completed -> delete it, we have a new one
                 imageSourcePathRepository.delete(isp);
             }
@@ -533,6 +528,7 @@ public class UploadController {
     }
 
     @Transactional
+    @Timed
     private ImDocument markDocumentComplete(ImDocument imDocument) throws ParserConfigurationException, TransformerException, SAXException, IOException {
 
         imDocument.setOriginalXml(imDocument.getTempXml());
@@ -543,11 +539,11 @@ public class UploadController {
         // Delete all previously ok images
         List<ImageSourcePath> existingSourcePaths = imageSourcePathRepository.findByDocumentId(imDocument.getId());
 
-        for(ImageSourcePath isp : existingSourcePaths){
-            if(isp.isUploadComplete()){
+        for (ImageSourcePath isp : existingSourcePaths) {
+            if (isp.isUploadComplete()) {
                 // This image is old -> remove it
                 imageSourcePathRepository.delete(isp);
-            }else{
+            } else {
                 // This is the new image -> keep it
                 isp.setUploadComplete(true);
                 imageSourcePathRepository.save(isp);
@@ -559,16 +555,10 @@ public class UploadController {
         return imDocument;
     }
 
+    @Timed
     private void processImagesInDocument(ImDocument doc) {
-        List<ImageSourcePath> sourcePaths = imageSourcePathRepository.findByDocumentId(doc.getId());
-        for (ImageSourcePath sourcePath : sourcePaths) {
-            Image image = sourcePath.getImage();
-            String source = sourcePath.getSource();
-            processImageInDocument(doc, source, image);
-        }
-    }
+        List<ImageSourcePath> sourcePaths = imageSourcePathRepository.findByDocumentIdAndUploadComplete(doc.getId());
 
-    private void processImageInDocument(ImDocument doc, String source, Image image) {
         if (doc.getMaps() == null) {
             // Reload before processing image, because the "maps" can be null due to earlier processing
             doc = imDocumentRepository.findOne(doc.getId());
@@ -577,48 +567,59 @@ public class UploadController {
         for (ImMap map : doc.getMaps()) {
             for (ImBlock block : map.getBlocks()) {
 
-                // Check block image label
-                boolean imageIsUsedAsLabel = false;
-                if (source.equals(block.getLabelImageSource())) {
-                    block.setLabelImage(image);
-                    block.setLabelImageSource(null);
-
-                    imageIsUsedAsLabel = true;
-                }
+                boolean isBlockChanged = false;
 
                 String blockContent = block.getContent();
-
-                // Check images in content
-                boolean imageIsUsedInBlock = false;
-
                 Match root = DomHelper.getDomRoot(blockContent);
-                for (Match img : root.find("img[data-source]").each()) {
+                Match imagesInBlock = root.find("img[data-source]");
 
-                    String imgSource = img.attr("data-source");
-                    if (source.equals(imgSource)) {
-                        // This is the right image
-                        img.attr("data-id", "" + image.getId());
-                        img.removeAttr("data-source");
+                // Loop all image sources
+                for (ImageSourcePath isp : sourcePaths) {
+                    Image image = isp.getImage();
+                    String source = isp.getSource();
 
-                        imageIsUsedInBlock = true;
+                    // Check block image label
+                    if (source.equals(block.getLabelImageSource())) {
+                        block.setLabelImage(image);
+                        //block.setLabelImageSource(null);
+
+                        isBlockChanged = true;
+                    }
+
+                    // Check images in content
+                    for (Match img : imagesInBlock.each()) {
+                        String imgSource = img.attr("data-source");
+                        if (source.equals(imgSource)) {
+                            // This is the right image
+
+                            img.attr("data-id", "" + image.getId());
+                            //img.removeAttr("data-source");
+
+                            isBlockChanged = true;
+
+                            // This block needs this image
+                            block.addImage(image);
+                        }
                     }
                 }
 
-                if (imageIsUsedInBlock) {
+
+                if (isBlockChanged) {
+                    // Save is needed
+
                     blockContent = DomHelper.domToString(root);
                     block.setContent(blockContent);
-                }
 
-                if(imageIsUsedInBlock || imageIsUsedAsLabel){
-                    // This block needs this image
-                    block.addImage(image);
-
-                    // Save is needed
                     imBlockRepository.save(block);
                 }
+
+
             }
         }
+
+
     }
+
 
     private ResponseEntity accessDeniedResponse() {
         return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("accessdenied", "Access denied")).body(null);

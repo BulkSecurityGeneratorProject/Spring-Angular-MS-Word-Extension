@@ -18,4 +18,7 @@ public interface ImageSourcePathRepository extends JpaRepository<ImageSourcePath
 
     @Query("select imageSourcePath from ImageSourcePath imageSourcePath where imageSourcePath.imDocument.id = :documentId")
     List<ImageSourcePath> findByDocumentId(@Param("documentId") Long id);
+
+    @Query("select imageSourcePath from ImageSourcePath imageSourcePath where imageSourcePath.imDocument.id = :documentId and imageSourcePath.uploadComplete = 1")
+    List<ImageSourcePath> findByDocumentIdAndUploadComplete(@Param("documentId") Long id);
 }
