@@ -342,11 +342,13 @@ public class ImDocumentStructure {
                 newBlockDto.setContent(contentText);
                 newBlockDto.setLabelImageSource(blockImageSource);
 
-                List<ImageSourcePath> isps = imageSourcePathRepository.findByDocumentIdAndSource(imDocument.getId(),blockImageSource);
+                if(blockImageSource != null && blockImageSource.length() > 0) {
+                    ImageSourcePath isp = imageSourcePathRepository.findByDocumentIdAndSourceAndUploadComplete(imDocument.getId(), blockImageSource);
 
-                if(isps.size() > 0) {
-                    // Add label image
-                    newBlockDto.setLabelImageFilename(isps.get(0).getImage().getFilename());
+                    if (isp != null) {
+                        // Add label image
+                        newBlockDto.setLabelImageFilename(isp.getImage().getFilename());
+                    }
                 }
 
                 currentMap.addBlock(newBlockDto);

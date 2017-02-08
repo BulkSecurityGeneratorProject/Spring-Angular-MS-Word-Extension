@@ -297,7 +297,7 @@ public class UploadController {
 
     @Transactional
     @Timed
-    private ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    protected ImDocument processXmlSavedInDocument(ImDocument doc) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
         // Delete old maps - if any
         for (ImMap m : doc.getMaps()) {
@@ -529,7 +529,7 @@ public class UploadController {
 
     @Transactional
     @Timed
-    private ImDocument markDocumentComplete(ImDocument imDocument) throws ParserConfigurationException, TransformerException, SAXException, IOException {
+    protected ImDocument markDocumentComplete(ImDocument imDocument) throws ParserConfigurationException, TransformerException, SAXException, IOException {
 
         imDocument.setOriginalXml(imDocument.getTempXml());
         imDocument.setPassword(imDocument.getTempPassword());
@@ -556,7 +556,7 @@ public class UploadController {
     }
 
     @Timed
-    private void processImagesInDocument(ImDocument doc) {
+    protected void processImagesInDocument(ImDocument doc) {
         List<ImageSourcePath> sourcePaths = imageSourcePathRepository.findByDocumentIdAndUploadComplete(doc.getId());
 
         if (doc.getMaps() == null) {
