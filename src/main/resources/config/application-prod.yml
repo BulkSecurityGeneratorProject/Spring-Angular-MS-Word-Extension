@@ -46,6 +46,8 @@ spring:
     cache:
         jcache:
             config: ehcache.xml
+
+
 #    data:
 #        elasticsearch:
 #            cluster-name:
