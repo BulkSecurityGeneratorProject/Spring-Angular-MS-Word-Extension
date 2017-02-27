@@ -8,6 +8,8 @@
 @max-width-wrapper: 100%;
 @max-width-content: 1200px;
 
+@blur-overlay-size: 5px;
+
 /*COLORS
 ============================================================================================*/
 @background-white:#fff;
@@ -29,7 +31,7 @@
 @normal:400;
 @semiBold:600;
 @bold:700;
-@font-size:15px;
+@font-size:16px;
 @line-height:20px;
 
 /*URL
@@ -343,7 +345,11 @@ ol{
 
     a{
         text-decoration: none;
-        font-size: 13px;
+        font-size: 14px;
+
+        &.document-name{
+            font-size: 100%;
+        }
     }
 }
 /*left-header*/
@@ -494,7 +500,6 @@ nav{
         font-family:icons;
         position:absolute;
         left:0;
-        top:0;
         font-size:9px;
         .transition();
     }
@@ -509,7 +514,6 @@ nav{
 
 /*mobile nav*/
 .mobile-nav{
-    background:@primary-color;
     width:40%;
     .box-sizing(border-box);
     padding:25px;
@@ -572,6 +576,11 @@ nav{
         padding:25px 0;
     }
 
+    .wrapper{
+        margin: 0; /* don't center horinzontally */
+        max-width: 700px; /* Limit all content for readability */
+    }
+
     /*view*/
     .view{
         width:100%;
@@ -615,7 +624,7 @@ nav{
     .part{
         display:block;
         .left();
-        width:18%;
+        width:23%;
         margin:0 1% 20px 1%;
         color:@font-white;
         background:@primary-color;
@@ -686,6 +695,7 @@ nav{
             .box-sizing(border-box);
             padding-left:1px;
             width:100%;
+
             img{
                 width:auto;
                 max-width:100%;
@@ -705,7 +715,7 @@ nav{
                 height:0;
                 .owl-nav{
                     position:absolute;
-                    top:-55px;
+                    top:-50px;
                     right:0;
                     .owl-prev, .owl-next{
                         display:inline-block !important;
@@ -964,6 +974,7 @@ button.mfp-arrow {
 .slider-title-bar{
     h2{
         padding-right: 90px;
+        padding-bottom: 0.7em;
     }
 }
 
@@ -1519,4 +1530,63 @@ button.mfp-arrow {
         width: 100%;
         height: 100%;
     }
+}
+
+.desktop-nav{
+
+    nav ul li .sub-nav li a.menu-toggle{
+        top: -8px;
+    }
+
+    li a.link {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+}
+
+.mobile-nav{
+
+
+    nav ul li .sub-nav li a.menu-toggle{
+        top: -5px;
+    }
+
+    a.document-name{
+        font-size: 130%;
+    }
+
+    li a.link{
+        padding-top: 7px;
+        padding-bottom: 7px;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        font-size: 110%;
+    }
+
+    /*
+    &:after{
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+
+        filter: blur(@blur-overlay-size);
+        -webkit-filter: blur(@blur-overlay-size);
+        -moz-filter: blur(@blur-overlay-size);
+        -o-filter: blur(@blur-overlay-size);
+        -ms-filter: blur(@blur-overlay-size);
+
+
+fallback to SVG filter
+filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='svgMask'><feGaussianBlur stdDeviation='10' /></filter></svg>#svgMask");
+
+    }
+    */
+
+
+
+
 }

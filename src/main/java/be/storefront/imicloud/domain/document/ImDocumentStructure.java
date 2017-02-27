@@ -49,9 +49,11 @@ public class ImDocumentStructure {
 
         ArrayList<Element> childElements = getChildElements(fsprodocumentElement);
 
-        TreeNode top = null;
+        StructurePublication dummyTopPublication = new StructurePublication();
+        dummyTopPublication.setTitle("");
+        TreeNode top = dummyTopPublication;
 
-        StructurePublication currentPublication = null;
+        StructurePublication currentPublication = dummyTopPublication;
         StructurePart currentPart = null;
         StructureChapter currentChapter = null;
         StructureSection currentSection = null;
@@ -73,6 +75,7 @@ public class ImDocumentStructure {
                 currentPublication = new StructurePublication();
                 current = currentPublication;
 
+                // Replace the default top with the actual publication
                 top = currentPublication;
 
                 // Add the maps under this level
@@ -110,10 +113,6 @@ public class ImDocumentStructure {
                 currentSection = null;
                 currentMap = null;
 
-                if (top == null) {
-                    top = currentChapter;
-                }
-
                 // Add this chapter to the part
                 if (currentPart != null) {
                     currentPart.addChild(currentChapter);
@@ -135,9 +134,6 @@ public class ImDocumentStructure {
                 // Reset all lower levels
                 currentMap = null;
 
-                if (top == null) {
-                    top = currentSection;
-                }
 
                 // Add this section to the chapter
                 if (currentChapter != null) {
@@ -170,18 +166,11 @@ public class ImDocumentStructure {
 
                 }else if(currentPublication != null){
                     currentPublication.addChild(currentMap);
+
                 }else{
-                    if(top == null){
-                        // We only have maps, and no hierarchy -> create a dummy structure above the maps
-                        StructureSection dummySection = new StructureSection();
-                        dummySection.setTitle("");
-                        top = dummySection;
-                        currentSection = dummySection;
-
-                        currentSection.addChild(currentMap);
-                    }
+                    // We only have maps, and no hierarchy -> put this under the default dummy "top"
+                    top.addChild(currentMap);
                 }
-
 
                 // Add the blocks to the map
                 createBlocksAndAddToMap(currentMap, e);
@@ -202,8 +191,12 @@ public class ImDocumentStructure {
             current.setGuid(currentGuid);
         }
 
-        return top;
+        if(top.getChildren().size() == 1 && top.getChildren().get(0) == dummyTopPublication){
+            return top.getChildren().get(0);
 
+        }else{
+            return top;
+        }
 
 //        NodeList mapList = xmlDoc.getElementsByTagName("map");
 //
@@ -334,24 +327,26 @@ public class ImDocumentStructure {
 
                 contentText = transformContentToHtml(contentText);
 
-                // Save all blocks
-                ImBlockDTO newBlockDto = new ImBlockDTO();
-                newBlockDto.setLabel(blockLabel);
-                newBlockDto.setGuid(blockGuid);
-                newBlockDto.setPosition((float) j);
-                newBlockDto.setContent(contentText);
-                newBlockDto.setLabelImageSource(blockImageSource);
+                if(contentText != null) {
 
-                if(blockImageSource != null && blockImageSource.length() > 0) {
-                    ImageSourcePath isp = imageSourcePathRepository.findByDocumentIdAndSourceAndUploadComplete(imDocument.getId(), blockImageSource);
+                    ImBlockDTO newBlockDto = new ImBlockDTO();
+                    newBlockDto.setLabel(blockLabel);
+                    newBlockDto.setGuid(blockGuid);
+                    newBlockDto.setPosition((float) j);
+                    newBlockDto.setContent(contentText);
+                    newBlockDto.setLabelImageSource(blockImageSource);
 
-                    if (isp != null) {
-                        // Add label image
-                        newBlockDto.setLabelImageFilename(isp.getImage().getFilename());
+                    if (blockImageSource != null && blockImageSource.length() > 0) {
+                        ImageSourcePath isp = imageSourcePathRepository.findByDocumentIdAndSourceAndUploadComplete(imDocument.getId(), blockImageSource);
+
+                        if (isp != null) {
+                            // Add label image
+                            newBlockDto.setLabelImageFilename(isp.getImage().getFilename());
+                        }
                     }
-                }
 
-                currentMap.addBlock(newBlockDto);
+                    currentMap.addBlock(newBlockDto);
+                }
             }
         }
     }
@@ -551,10 +546,6 @@ public class ImDocumentStructure {
             contentText = contentText.replaceAll("</strong><strong>", "");
         }
 
-        // Final trim
-        contentText = contentText.trim();
-
-
         // Remove meaningless <p/> at the beginning
         while (contentText.length() > 4 && "<p/>".equals(contentText.substring(0, 4))) {
             contentText = contentText.substring(4);
@@ -563,6 +554,17 @@ public class ImDocumentStructure {
         // Remove meaningless <p/> at the end
         while (contentText.length() > 4 && "<p/>".equals(contentText.substring(contentText.length() - 4))) {
             contentText = contentText.substring(0, contentText.length() - 4);
+        }
+
+        // Remove all non-breaking spaces
+        contentText = contentText.replaceAll("\\h", " ");
+
+        // Final trim
+        contentText = contentText.trim();
+
+        if("<p/>".equals(contentText)){
+            // There is no real content
+            contentText = null;
         }
 
         return contentText;

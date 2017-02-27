@@ -6,7 +6,7 @@
             "message": "You are logged in as user \"{{username}}\"."
         },
         "login":{
-            "message": "Sign in"
+            "message": "Sign in to my IM Account"
         }
     }
 }
