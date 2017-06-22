@@ -500,17 +500,25 @@ public class ImDocumentStructure {
 
         // If table cells only contain a single <p>, unwrap it
 
+        // Sublists should be put inside the previous list item
+        for (Match subList : root.find("ul > ul, ol > ol, ol > ul, ul > ol").each()){
+            Match previousLi = subList.prev();
+            if(previousLi.is("li")){
+                previousLi.append(subList);
+            }
+        }
 
-        //.wrap("tbody");
-
-        // We need <li> around a sub-list
-        root.find("ul > ul").wrap("li");
-        root.find("ol > ol").wrap("li");
-        root.find("ol > ul").wrap("li");
-        root.find("ul > ol").wrap("li");
+        root.find("li > p").rename("span");
 
         // Unwrap nested <p><p>
         root.find("p > p").rename("span");
+
+        // Remove empty LIs, so there are no "loose" bullets
+        for (Match listItem : root.find("li").each()){
+            if(listItem.isEmpty() || listItem.text().trim().length() == 0){
+                listItem.remove();
+            }
+        }
 
         contentText = root.toString();
 
