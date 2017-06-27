@@ -10,6 +10,7 @@ import be.storefront.imicloud.repository.ImageRepository;
 import be.storefront.imicloud.repository.ImageSourcePathRepository;
 import be.storefront.imicloud.service.UrlHelperService;
 import be.storefront.imicloud.web.dom.DomHelper;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.joox.Match;
 import org.springframework.stereotype.Service;
 
@@ -63,9 +64,22 @@ public class HtmlContentProcessor {
         // Embed youtube instead of links - but only for websites...
         if (templateCode.startsWith("web")) {
             for (Match aNode : root.find("a[href]").each()) {
+                String newHtml = null;
+
                 String href = aNode.attr("href");
 
-                if (href.startsWith("https://www.youtube.com") || href.startsWith("http://www.youtube.com")) {
+                String domain = href;
+                domain = domain.toLowerCase();
+                domain = domain.replace("http://", "");
+                domain = domain.replace("https://", "");
+                domain = domain.replace("www.", "");
+                int slashIndex = domain.indexOf("/");
+                if(slashIndex > 0){
+                    domain = domain.substring(0, slashIndex);
+                }
+
+                if ("youtube.com".equals(domain)) {
+                    // All links to youtube should be embedded in iframes
                     try {
                         String youtubeUrl = href;
                         Map<String, String> youtubeParams = splitUrlQuery(youtubeUrl);
@@ -73,24 +87,37 @@ public class HtmlContentProcessor {
                         if(youtubeParams.containsKey("v")){
                             String videoId = youtubeParams.get("v");
 
-                            long id = Math.round(Math.random() * 1000000);
-                            aNode.attr("id", ""+id);
-
                             // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
-                            String youtubeEmbed = "<div class='embed-container'><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/"+videoId+"\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
-
-                            aNode.before(youtubeEmbed);
-
-                            // Remove the original "a" node
-                            aNode = root.find("#"+id);
-                            aNode.remove();
+                            newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/"+videoId+"\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
                         }
 
                     }catch(Exception ex){
                         // Continue like nothing happened
                     }
+
+                }else if("draw.io".equals(domain)){
+                    // All links to draw.io should be embedded in iframes
+                    String iframeSrc = StringEscapeUtils.escapeHtml4(href);
+                    //iframeSrc = "https://www.storefront.be/nl/";
+                    newHtml = "<div class=\"embed-container\"><iframe width=\"100%\" height=\"640\" src=\""+iframeSrc+"\" frameborder=\"0\"><span /></iframe></div>";
+                    newHtml += "<p><a href=\""+iframeSrc+"\" target=\"_blank\">Open the diagram in a new window</a></p>";
+
+                }
+
+                if(newHtml != null){
+                    // Mark the original a-node with a random ID, so we can remove it later. We need to mark it BEFORE the HTML is added.
+                    long id = Math.round(Math.random() * 1000000);
+                    aNode.attr("id", ""+id);
+
+                    // Add the new HTML
+                    aNode.before(newHtml);
+
+                    // Remove the original "a" node
+                    aNode = root.find("#"+id);
+                    aNode.remove();
                 }
             }
+
         }
 
 
