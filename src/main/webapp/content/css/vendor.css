@@ -5828,3 +5828,12 @@ a:active,
 .btn:active {
   /* Hide ugly dotted line on IE */
   outline: none !important; }
+
+html.input-color-supported .input-color-fallback {
+  display: none; }
+
+html.input-color-not-supported input[type=color] {
+  display: none; }
+
+html.input-color-not-supported .input-color-fallback {
+  display: block; }

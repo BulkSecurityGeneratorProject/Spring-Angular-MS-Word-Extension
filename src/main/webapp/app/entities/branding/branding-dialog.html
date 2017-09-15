@@ -48,6 +48,9 @@
         <div class="form-group">
             <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.primaryColor" for="field_primaryColor">Primary Color</label>
             <div class="col-sm-2">
+                <div class="input-color-fallback">
+                    <span style="display: inline-block; width: 100%; height: 2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': vm.branding.primaryColor}"></span>
+                </div>
                 <input type="color" class="form-control" id="field_primaryColor"
                         ng-model="vm.branding.primaryColor"
                         ng-maxlength="7" required />
@@ -92,6 +95,9 @@
         <div class="form-group">
             <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.pageBackgroundColor" for="field_pageBackgroundColor">Page Background</label>
             <div class="col-sm-2">
+                <div class="input-color-fallback">
+                    <span style="display: inline-block; width: 100%; height: 2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': vm.branding.pageBackgroundColor}"></span>
+                </div>
                 <input type="color" class="form-control" id="field_pageBackgroundColor"
                         ng-model="vm.branding.pageBackgroundColor"
                         ng-maxlength="7" required />
@@ -119,6 +125,9 @@
         <div class="form-group">
             <label class="col-sm-4 col-md-3 control-label" data-translate="imicloudApp.branding.textColor" for="field_textColor">Text Color</label>
             <div class="col-sm-2">
+                <div class="input-color-fallback">
+                    <span style="display: inline-block; width: 100%; height: 2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': vm.branding.textColor}"></span>
+                </div>
                 <input type="color" class="form-control" id="field_textColor"
                         ng-model="vm.branding.textColor"
                         ng-maxlength="7" required />
