@@ -4,6 +4,3 @@ if (!String.prototype.startsWith) {
         return this.indexOf(searchString, position) === position;
     };
 }
-
-
-console.log('POLYFILLLS LOADED!');
