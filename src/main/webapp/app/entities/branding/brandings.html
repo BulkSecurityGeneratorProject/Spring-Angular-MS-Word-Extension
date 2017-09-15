@@ -54,21 +54,21 @@
                 <tr ng-repeat="branding in vm.brandings track by branding.id">
                     <td><a ui-sref="branding.edit({id:branding.id})">{{branding.name}}</a></td>
                     <td>
-                        <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.primaryColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
+                        <span style="display: inline-block; width: 1.2em; height: 1.2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': branding.primaryColor}"></span>
                         {{branding.primaryColor}}
                     </td>
                     <!--
                     <td>
-                        <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.secundaryColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
+                        <span style="display: inline-block; width: 1.2em; height: 1.2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': branding.secundaryColor}"></span>
                         {{branding.secundaryColor}}
                     </td>
                     -->
                     <td>
-                        <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.pageBackgroundColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
+                        <span style="display: inline-block; width: 1.2em; height: 1.2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': branding.pageBackgroundColor}"></span>
                         {{branding.pageBackgroundColor}}
                     </td>
                     <td>
-                        <span style="display: inline-block; width: 1.2em; height: 1.2em; background: {{branding.textColor}}; border: 1px solid #CCC; position: relative; top: 0.2em;"></span>
+                        <span style="display: inline-block; width: 1.2em; height: 1.2em; border: 1px solid #CCC; position: relative; top: 0.2em;" ng-style="{'background': branding.textColor}"></span>
                         {{branding.textColor}}
                     </td>
 
