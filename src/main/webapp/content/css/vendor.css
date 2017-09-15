@@ -5819,3 +5819,12 @@ button.close {
 /* endinject */
 /* bower:sass */
 /* endinject */
+a,
+a:hover,
+a:focus,
+a:active,
+.btn:hover,
+.btn:focus,
+.btn:active {
+  /* Hide ugly dotted line on IE */
+  outline: none !important; }

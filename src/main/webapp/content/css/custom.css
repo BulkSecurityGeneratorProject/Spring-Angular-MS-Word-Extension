@@ -1,3 +1,9 @@
-a {
+a,
+a:hover,
+a:focus,
+a:active,
+.btn:hover,
+.btn:focus,
+.btn:active {
   /* Hide ugly dotted line on IE */
-  outline: none; }
+  outline: none !important; }
