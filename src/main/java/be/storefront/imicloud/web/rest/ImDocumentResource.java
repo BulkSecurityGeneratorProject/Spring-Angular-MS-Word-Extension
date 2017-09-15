@@ -119,12 +119,23 @@ public class ImDocumentResource {
 
             for (ImDocumentDTO imDocumentDTO : page.getContent()) {
                 imDocumentDTO.setUrlHelperService(urlHelperService);
+
+                cleanUpImDocumentDto(imDocumentDTO);
             }
 
             return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+    }
+
+    private void cleanUpImDocumentDto(ImDocumentDTO imDocumentDTO){
+        // TODO instead of cleaning up unneeded fields, find a better solution (create a separate minimal DTO?!?)
+        // Clean up unneeded data
+        imDocumentDTO.setOriginalXml(null);
+        imDocumentDTO.setTempXml(null);
+        imDocumentDTO.setTempPassword(null);
+        imDocumentDTO.setTempTemplate(null);
     }
 
     /**
@@ -144,6 +155,8 @@ public class ImDocumentResource {
         if (imDocumentDTO.getUserId() != null && imDocumentDTO.getUserId().equals(myUserDetails.getId())) {
             // Access granted
             imDocumentDTO.setUrlHelperService(urlHelperService);
+
+            cleanUpImDocumentDto(imDocumentDTO);
 
             return Optional.ofNullable(imDocumentDTO)
                 .map(result -> new ResponseEntity<>(
