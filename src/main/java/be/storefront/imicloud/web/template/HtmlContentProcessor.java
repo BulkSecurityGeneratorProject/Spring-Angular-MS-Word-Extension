@@ -38,7 +38,8 @@ public class HtmlContentProcessor {
     @Inject
     private UrlHelperService urlHelperService;
 
-    @Inject private ImageSourcePathRepository imageSourcePathRepository;
+    @Inject
+    private ImageSourcePathRepository imageSourcePathRepository;
 
     public String process(String html, String templateCode, ImDocumentStructure imDocumentStructure) {
 
@@ -74,7 +75,7 @@ public class HtmlContentProcessor {
                 domain = domain.replace("https://", "");
                 domain = domain.replace("www.", "");
                 int slashIndex = domain.indexOf("/");
-                if(slashIndex > 0){
+                if (slashIndex > 0) {
                     domain = domain.substring(0, slashIndex);
                 }
 
@@ -84,36 +85,59 @@ public class HtmlContentProcessor {
                         String youtubeUrl = href;
                         Map<String, String> youtubeParams = splitUrlQuery(youtubeUrl);
 
-                        if(youtubeParams.containsKey("v")){
+                        if (youtubeParams.containsKey("v")) {
                             String videoId = youtubeParams.get("v");
 
                             // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
-                            newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/"+videoId+"\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
+                            newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/" + videoId + "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
                         }
 
-                    }catch(Exception ex){
+                    } catch (Exception ex) {
                         // Continue like nothing happened
                     }
 
-                }else if("draw.io".equals(domain)){
+                } else if ("vimeo.com".equals(domain)) {
+                    // All links to vimeo should be embedded in iframes
+                    try {
+                        String vimeoUrl = href;
+
+                        String videoId = vimeoUrl;
+                        videoId = videoId.replace("http://", "");
+                        videoId = videoId.replace("https://", "");
+                        videoId = videoId.replace("//", "");
+                        videoId = videoId.replace("vimeo.com/", "");
+
+                        if(videoId.indexOf("/") > 0){
+                            videoId = videoId.substring(0, videoId.indexOf("/") - 1);
+                        }
+
+                        // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
+                        newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"https://player.vimeo.com/video/" + videoId + "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
+
+
+                    } catch (Exception ex) {
+                        // Continue like nothing happened
+                    }
+
+                } else if ("draw.io".equals(domain)) {
                     // All links to draw.io should be embedded in iframes
                     String iframeSrc = StringEscapeUtils.escapeHtml4(href);
                     //iframeSrc = "https://www.storefront.be/nl/";
-                    newHtml = "<div class=\"embed-container\"><iframe width=\"100%\" height=\"640\" src=\""+iframeSrc+"\" frameborder=\"0\"><span /></iframe></div>";
-                    newHtml += "<p><a href=\""+iframeSrc+"\" target=\"_blank\">Open the diagram in a new window</a></p>";
+                    newHtml = "<div class=\"embed-container\"><iframe width=\"100%\" height=\"640\" src=\"" + iframeSrc + "\" frameborder=\"0\"><span /></iframe></div>";
+                    newHtml += "<p><a href=\"" + iframeSrc + "\" target=\"_blank\">Open the diagram in a new window</a></p>";
 
                 }
 
-                if(newHtml != null){
+                if (newHtml != null) {
                     // Mark the original a-node with a random ID, so we can remove it later. We need to mark it BEFORE the HTML is added.
                     long id = Math.round(Math.random() * 1000000);
-                    aNode.attr("id", ""+id);
+                    aNode.attr("id", "" + id);
 
                     // Add the new HTML
                     aNode.before(newHtml);
 
                     // Remove the original "a" node
-                    aNode = root.find("#"+id);
+                    aNode = root.find("#" + id);
                     aNode.remove();
                 }
             }
@@ -130,11 +154,10 @@ public class HtmlContentProcessor {
         for (Match img : root.find("img[data-source]").each()) {
             String imageSource = img.attr("data-source");
             String src = urlHelperService.getImageUrlBySourceAndDocumentId(imageSource, imDocumentStructure.getImDocument().getId());
-            if(src != null){
+            if (src != null) {
                 img.attr("src", src);
             }
         }
-
 
 
         // Clean up table of contents
@@ -149,11 +172,11 @@ public class HtmlContentProcessor {
                 // This guid can be a map, or not
                 TreeNode treeNode = imDocumentStructure.getByGuid(guidToLinkTo);
 
-                if(treeNode == null) {
+                if (treeNode == null) {
                     // We cannot link to non-existant GUID
                     guidToLinkTo = null;
 
-                }else{
+                } else {
                     guidToLinkTo = treeNode.getContentGuid();
 //                    if (treeNode instanceof StructureMap) {
 //                        // We can link to this
@@ -166,10 +189,10 @@ public class HtmlContentProcessor {
 //                    }
                 }
 
-                if(guidToLinkTo == null){
+                if (guidToLinkTo == null) {
                     // Cannot link
                     reference.rename("span");
-                }else{
+                } else {
                     // Can link
                     reference.rename("a").attr("data-viewid", guidToLinkTo).attr("href", "#");
                 }
