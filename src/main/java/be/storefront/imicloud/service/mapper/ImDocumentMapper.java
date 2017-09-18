@@ -3,6 +3,7 @@ package be.storefront.imicloud.service.mapper;
 import be.storefront.imicloud.domain.*;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
 
+import be.storefront.imicloud.service.dto.ReducedImDocumentDTO;
 import org.mapstruct.*;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public interface ImDocumentMapper {
     @Mapping(source = "userId", target = "user")
     @Mapping(source = "brandingId", target = "branding")
     ImDocument imDocumentDTOToImDocument(ImDocumentDTO imDocumentDTO);
+
+
 
     List<ImDocument> imDocumentDTOsToImDocuments(List<ImDocumentDTO> imDocumentDTOs);
 

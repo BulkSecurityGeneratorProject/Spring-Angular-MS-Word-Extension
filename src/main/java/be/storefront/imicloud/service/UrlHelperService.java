@@ -8,8 +8,10 @@ import be.storefront.imicloud.repository.OrganizationRepository;
 import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.service.dto.BrandingDTO;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
+import be.storefront.imicloud.service.dto.ReducedImDocumentDTO;
 import be.storefront.imicloud.service.mapper.BrandingMapper;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -35,6 +37,9 @@ public class UrlHelperService {
 
     @Inject private ImageSourcePathRepository imageSourcePathRepository;
 
+    @Autowired
+    private ImDocumentService imDocumentService;
+
     private String allDocumentsUrl;
 
     public String getDocumentPublicUrl(ImDocument imDocument) {
@@ -45,6 +50,12 @@ public class UrlHelperService {
         ImDocument imDocument = imDocumentMapper.imDocumentDTOToImDocument(imDocumentDto);
         return getDocumentPublicUrl(imDocument);
     }
+
+    public String getDocumentPublicUrl(ReducedImDocumentDTO reducedImDocumentDTO) {
+        ImDocumentDTO imDocumentDto = imDocumentService.findOne(reducedImDocumentDTO.getId());
+        return getDocumentPublicUrl(imDocumentDto);
+    }
+
 
     public Object getDocumentPublicUrl(ImDocument imDocument, String templateCode) {
         return getDocumentPublicUrl(imDocument) + templateCode;
@@ -83,4 +94,6 @@ public class UrlHelperService {
     public String getAllDocumentsUrl() {
         return imCloudProperties.getBaseUrl() + "#/im-documentroute";
     }
+
+
 }

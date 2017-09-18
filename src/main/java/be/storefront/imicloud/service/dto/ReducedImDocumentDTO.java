@@ -3,18 +3,16 @@ package be.storefront.imicloud.service.dto;
 import be.storefront.imicloud.service.UrlHelperService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
 import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
  * A DTO for the ImDocument entity.
  */
-public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
+public class ReducedImDocumentDTO implements Serializable {
 
     private Long id;
 
@@ -22,50 +20,42 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
 
     private String password;
 
-    private String tempPassword;
-
     @NotNull
     private String documentName;
 
-    @Lob
-    private String originalXml;
-
-    @Lob
-    private String tempXml;
-
-    @NotNull
-    private String secret;
-
     private String defaultTemplate;
-
-    private String tempTemplate;
-
-    private Boolean uploadComplete;
-
 
     private Long folderId;
 
     private Long userId;
-
 
     private String userEmail;
 
     private Long brandingId;
     private String brandingName;
 
-
-
+    @JsonIgnore
     private UrlHelperService urlHelperService;
 
+    public ReducedImDocumentDTO(){
 
+    }
+
+    public ReducedImDocumentDTO(ImDocumentDTO imDocumentDTO) {
+        this.setBrandingId(imDocumentDTO.getBrandingId());
+        this.setBrandingName(imDocumentDTO.getBrandingName());
+        this.setDefaultTemplate(imDocumentDTO.getDefaultTemplate());
+        this.setDocumentName(imDocumentDTO.getDocumentName());
+        this.setId(imDocumentDTO.getId());
+        this.setLanguage(imDocumentDTO.getLanguage());
+        this.setPassword(imDocumentDTO.getPassword());
+        this.setUrlHelperService(imDocumentDTO.getUrlHelperService());
+        this.setUserEmail(imDocumentDTO.getUserEmail());
+        this.setUserId(imDocumentDTO.getUserId());
+    }
 
     public void setUrlHelperService(UrlHelperService urlHelperService){
         this.urlHelperService = urlHelperService;
-    }
-
-    @JsonIgnore
-    public UrlHelperService getUrlHelperService(){
-        return this.urlHelperService;
     }
 
     public Long getId() {
@@ -89,13 +79,9 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getTempPassword() {
-        return tempPassword;
-    }
 
-    public void setTempPassword(String tempPassword) {
-        this.tempPassword = tempPassword;
-    }
+
+
     public String getDocumentName() {
         return documentName;
     }
@@ -103,27 +89,7 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     public void setDocumentName(String documentName) {
         this.documentName = documentName;
     }
-    public String getOriginalXml() {
-        return originalXml;
-    }
 
-    public void setOriginalXml(String originalXml) {
-        this.originalXml = originalXml;
-    }
-    public String getTempXml() {
-        return tempXml;
-    }
-
-    public void setTempXml(String tempXml) {
-        this.tempXml = tempXml;
-    }
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
     public String getDefaultTemplate() {
         return defaultTemplate;
     }
@@ -131,28 +97,8 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
     public void setDefaultTemplate(String defaultTemplate) {
         this.defaultTemplate = defaultTemplate;
     }
-    public String getTempTemplate() {
-        return tempTemplate;
-    }
 
-    public void setTempTemplate(String tempTemplate) {
-        this.tempTemplate = tempTemplate;
-    }
-    public Boolean getUploadComplete() {
-        return uploadComplete;
-    }
 
-    public void setUploadComplete(Boolean uploadComplete) {
-        this.uploadComplete = uploadComplete;
-    }
-
-    public Long getFolderId() {
-        return folderId;
-    }
-
-    public void setFolderId(Long folderId) {
-        this.folderId = folderId;
-    }
 
     public Long getUserId() {
         return userId;
@@ -204,7 +150,7 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
             return false;
         }
 
-        ImDocumentDTO imDocumentDTO = (ImDocumentDTO) o;
+        ReducedImDocumentDTO imDocumentDTO = (ReducedImDocumentDTO) o;
 
         if ( ! Objects.equals(id, imDocumentDTO.id)) return false;
 
@@ -222,14 +168,8 @@ public class ImDocumentDTO extends AbstractAuditingDTO implements Serializable {
             "id=" + id +
             ", language='" + language + "'" +
             ", password='" + password + "'" +
-            ", tempPassword='" + tempPassword + "'" +
             ", documentName='" + documentName + "'" +
-            ", originalXml='" + originalXml + "'" +
-            ", tempXml='" + tempXml + "'" +
-            ", secret='" + secret + "'" +
             ", defaultTemplate='" + defaultTemplate + "'" +
-            ", tempTemplate='" + tempTemplate + "'" +
-            ", uploadComplete='" + uploadComplete + "'" +
             '}';
     }
 }

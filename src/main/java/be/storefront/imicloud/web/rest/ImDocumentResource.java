@@ -3,6 +3,7 @@ package be.storefront.imicloud.web.rest;
 import be.storefront.imicloud.security.MyUserDetails;
 import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.UrlHelperService;
+import be.storefront.imicloud.service.dto.ReducedImDocumentDTO;
 import com.codahale.metrics.annotation.Timed;
 import be.storefront.imicloud.service.ImDocumentService;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +65,7 @@ public class ImDocumentResource {
     /**
      * PUT  /im-documents : Updates an existing imDocument.
      *
-     * @param imDocumentDTO the imDocumentDTO to update
+     * @param reducedImDocumentDTO the imDocumentDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated imDocumentDTO,
      * or with status 400 (Bad Request) if the imDocumentDTO is not valid,
      * or with status 500 (Internal Server Error) if the imDocumentDTO couldnt be updated
@@ -71,24 +73,24 @@ public class ImDocumentResource {
      */
     @PutMapping("/im-documents")
     @Timed
-    public ResponseEntity<ImDocumentDTO> updateImDocument(@Valid @RequestBody ImDocumentDTO imDocumentDTO) throws URISyntaxException {
-        log.debug("REST request to update ImDocument : {}", imDocumentDTO);
-        if (imDocumentDTO.getId() == null) {
+    public ResponseEntity<ImDocumentDTO> updateImDocument(@Valid @RequestBody ReducedImDocumentDTO reducedImDocumentDTO) throws URISyntaxException {
+        log.debug("REST request to update ImDocument : {}", reducedImDocumentDTO);
+        if (reducedImDocumentDTO.getId() == null) {
             return ResponseEntity.badRequest().body(null);
         }
 
         MyUserDetails userDetails = SecurityUtils.getCurrentUser();
 
-        if (imDocumentDTO.getUserId() == null) {
+        if (reducedImDocumentDTO.getUserId() == null || userDetails == null) {
             // User ID is required => Access denied
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        } else if (imDocumentDTO.getUserId().equals(userDetails.getId())) {
+        } else if (reducedImDocumentDTO.getUserId().equals(userDetails.getId())) {
             // This is my document
 
-            ImDocumentDTO result = imDocumentService.save(imDocumentDTO);
+            ImDocumentDTO result = imDocumentService.save(reducedImDocumentDTO);
             return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert("imDocument", imDocumentDTO.getId().toString()))
+                .headers(HeaderUtil.createEntityUpdateAlert("imDocument", reducedImDocumentDTO.getId().toString()))
                 .body(result);
 
         } else {
@@ -107,7 +109,7 @@ public class ImDocumentResource {
      */
     @GetMapping("/im-documents")
     @Timed
-    public ResponseEntity<List<ImDocumentDTO>> getAllImDocuments(@ApiParam Pageable pageable)
+    public ResponseEntity<List<ReducedImDocumentDTO>> getAllImDocuments(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of ImDocuments");
 
@@ -117,25 +119,23 @@ public class ImDocumentResource {
             Page<ImDocumentDTO> page = imDocumentService.findByUserId(myUserDetails.getId(), pageable);
             HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/im-documents");
 
+            ArrayList<ReducedImDocumentDTO> list = new ArrayList<>();
             for (ImDocumentDTO imDocumentDTO : page.getContent()) {
                 imDocumentDTO.setUrlHelperService(urlHelperService);
 
-                cleanUpImDocumentDto(imDocumentDTO);
+                ReducedImDocumentDTO reducedImDocumentDTO = reduceDtoData(imDocumentDTO);
+                list.add(reducedImDocumentDTO);
             }
 
-            return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+            return new ResponseEntity<>(list, headers, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
-    private void cleanUpImDocumentDto(ImDocumentDTO imDocumentDTO){
-        // TODO instead of cleaning up unneeded fields, find a better solution (create a separate minimal DTO?!?)
-        // Clean up unneeded data
-        imDocumentDTO.setOriginalXml(null);
-        imDocumentDTO.setTempXml(null);
-        imDocumentDTO.setTempPassword(null);
-        imDocumentDTO.setTempTemplate(null);
+    private ReducedImDocumentDTO reduceDtoData(ImDocumentDTO imDocumentDTO){
+        ReducedImDocumentDTO newDto = new ReducedImDocumentDTO(imDocumentDTO);
+        return newDto;
     }
 
     /**
@@ -156,7 +156,7 @@ public class ImDocumentResource {
             // Access granted
             imDocumentDTO.setUrlHelperService(urlHelperService);
 
-            cleanUpImDocumentDto(imDocumentDTO);
+            //reduceDtoData(imDocumentDTO);
 
             return Optional.ofNullable(imDocumentDTO)
                 .map(result -> new ResponseEntity<>(

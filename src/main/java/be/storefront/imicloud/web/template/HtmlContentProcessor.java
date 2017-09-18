@@ -141,9 +141,7 @@ public class HtmlContentProcessor {
                     aNode.remove();
                 }
             }
-
         }
-
 
         // Make links to external sites open in new tab
         for (Match a : root.find("a").each()) {

@@ -5,6 +5,7 @@ import be.storefront.imicloud.domain.ImDocument;
 import be.storefront.imicloud.repository.ImDocumentRepository;
 import be.storefront.imicloud.repository.search.ImDocumentSearchRepository;
 import be.storefront.imicloud.service.dto.ImDocumentDTO;
+import be.storefront.imicloud.service.dto.ReducedImDocumentDTO;
 import be.storefront.imicloud.service.mapper.ImDocumentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  */
 @Service
 @Transactional
-public class ImDocumentServiceImpl implements ImDocumentService{
+public class ImDocumentServiceImpl implements ImDocumentService {
 
     private final Logger log = LoggerFactory.getLogger(ImDocumentServiceImpl.class);
 
@@ -55,10 +56,10 @@ public class ImDocumentServiceImpl implements ImDocumentService{
     }
 
     /**
-     *  Get all the imDocuments.
+     * Get all the imDocuments.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<ImDocumentDTO> findAll(Pageable pageable) {
@@ -68,23 +69,23 @@ public class ImDocumentServiceImpl implements ImDocumentService{
     }
 
     /**
-     *  Get all the imDocuments.
+     * Get all the imDocuments.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<ImDocumentDTO> findByUserId(Long userId, Pageable pageable){
+    public Page<ImDocumentDTO> findByUserId(Long userId, Pageable pageable) {
         log.debug("Request to get all ImDocuments for user {}", userId);
         Page<ImDocument> result = imDocumentRepository.findByUserId(userId, pageable);
         return result.map(imDocument -> imDocumentMapper.imDocumentToImDocumentDTO(imDocument));
     }
 
     /**
-     *  Get one imDocument by id.
+     * Get one imDocument by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
     public ImDocumentDTO findOne(Long id) {
@@ -95,9 +96,9 @@ public class ImDocumentServiceImpl implements ImDocumentService{
     }
 
     /**
-     *  Delete the  imDocument by id.
+     * Delete the  imDocument by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete ImDocument : {}", id);
@@ -108,13 +109,31 @@ public class ImDocumentServiceImpl implements ImDocumentService{
     /**
      * Search for the imDocument corresponding to the query.
      *
-     *  @param query the query of the search
-     *  @return the list of entities
+     * @param query the query of the search
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<ImDocumentDTO> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of ImDocuments for query {}", query);
         Page<ImDocument> result = imDocumentSearchRepository.search(queryStringQuery(query), pageable);
         return result.map(imDocument -> imDocumentMapper.imDocumentToImDocumentDTO(imDocument));
+    }
+
+    @Override
+    public ImDocumentDTO save(ReducedImDocumentDTO reducedImDocumentDTO) {
+
+        ImDocumentDTO fullDoc = findOne(reducedImDocumentDTO.getId());
+
+        // Apply the data from the reduced DTO to the full DTO
+        //reducedImDocumentDTO.getUserId();
+        fullDoc.setBrandingId(reducedImDocumentDTO.getBrandingId());
+        fullDoc.setBrandingName(reducedImDocumentDTO.getBrandingName());
+        fullDoc.setDefaultTemplate(reducedImDocumentDTO.getDefaultTemplate());
+        fullDoc.setDocumentName(reducedImDocumentDTO.getDocumentName());
+        fullDoc.setLanguage(reducedImDocumentDTO.getLanguage());
+        fullDoc.setPassword(reducedImDocumentDTO.getPassword());
+
+        save(fullDoc);
+        return null;
     }
 }
