@@ -66,6 +66,8 @@ public class HtmlContentProcessor {
         if (templateCode.startsWith("web")) {
             for (Match aNode : root.find("a[href]").each()) {
                 String newHtml = null;
+                String iframeSrc = null;
+                String newHtmlSuffix = "";
 
                 String href = aNode.attr("href");
 
@@ -74,6 +76,7 @@ public class HtmlContentProcessor {
                 domain = domain.replace("http://", "");
                 domain = domain.replace("https://", "");
                 domain = domain.replace("www.", "");
+
                 int slashIndex = domain.indexOf("/");
                 if (slashIndex > 0) {
                     domain = domain.substring(0, slashIndex);
@@ -88,8 +91,7 @@ public class HtmlContentProcessor {
                         if (youtubeParams.containsKey("v")) {
                             String videoId = youtubeParams.get("v");
 
-                            // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
-                            newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/" + videoId + "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
+                            iframeSrc ="https://www.youtube.com/embed/" + videoId;
                         }
 
                     } catch (Exception ex) {
@@ -112,20 +114,40 @@ public class HtmlContentProcessor {
                         }
 
                         // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
-                        newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"https://player.vimeo.com/video/" + videoId + "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
+                        iframeSrc = "https://player.vimeo.com/video/" + videoId;
+
+                    } catch (Exception ex) {
+                        // Continue like nothing happened
+                    }
+
+                } else if (href.contains("/portals/hub/_layouts/")) {
+                    // All links to MS Stream should be embedded in iframes
+                    try {
+                        String msStreamUrl = href;
+                        msStreamUrl = msStreamUrl.replace("http://", "//");
+                        msStreamUrl = msStreamUrl.replace("https://", "//");
+
+                        iframeSrc = msStreamUrl;
 
 
                     } catch (Exception ex) {
                         // Continue like nothing happened
                     }
 
+
                 } else if ("draw.io".equals(domain)) {
                     // All links to draw.io should be embedded in iframes
-                    String iframeSrc = StringEscapeUtils.escapeHtml4(href);
-                    //iframeSrc = "https://www.storefront.be/nl/";
-                    newHtml = "<div class=\"embed-container\"><iframe width=\"100%\" height=\"640\" src=\"" + iframeSrc + "\" frameborder=\"0\"><span /></iframe></div>";
-                    newHtml += "<p><a href=\"" + iframeSrc + "\" target=\"_blank\">Open the diagram in a new window</a></p>";
+                    iframeSrc = href;
 
+                    newHtmlSuffix = "<p><a href=\"" + iframeSrc + "\" target=\"_blank\">Open the diagram in a new window</a></p>";
+
+                }
+
+                if(iframeSrc != null){
+                    // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
+                    iframeSrc = StringEscapeUtils.escapeHtml4(iframeSrc);
+                    newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"" +iframeSrc+ "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
+                    newHtml += newHtmlSuffix;
                 }
 
                 if (newHtml != null) {
