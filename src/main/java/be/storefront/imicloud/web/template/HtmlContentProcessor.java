@@ -17,13 +17,14 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.net.*;
+import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
+import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
 import static org.joox.JOOX.$;
 
 @Service
@@ -85,14 +86,8 @@ public class HtmlContentProcessor {
                 if ("youtube.com".equals(domain)) {
                     // All links to youtube should be embedded in iframes
                     try {
-                        String youtubeUrl = href;
-                        Map<String, String> youtubeParams = splitUrlQuery(youtubeUrl);
+                        iframeSrc = buildYoutubeUrlFromHref(href);
 
-                        if (youtubeParams.containsKey("v")) {
-                            String videoId = youtubeParams.get("v");
-
-                            iframeSrc ="https://www.youtube.com/embed/" + videoId;
-                        }
 
                     } catch (Exception ex) {
                         // Continue like nothing happened
@@ -101,20 +96,7 @@ public class HtmlContentProcessor {
                 } else if ("vimeo.com".equals(domain)) {
                     // All links to vimeo should be embedded in iframes
                     try {
-                        String vimeoUrl = href;
-
-                        String videoId = vimeoUrl;
-                        videoId = videoId.replace("http://", "");
-                        videoId = videoId.replace("https://", "");
-                        videoId = videoId.replace("//", "");
-                        videoId = videoId.replace("vimeo.com/", "");
-
-                        if(videoId.indexOf("/") > 0){
-                            videoId = videoId.substring(0, videoId.indexOf("/") - 1);
-                        }
-
-                        // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
-                        iframeSrc = "https://player.vimeo.com/video/" + videoId;
+                        iframeSrc = buildVimeoUrlFromHref(href);
 
                     } catch (Exception ex) {
                         // Continue like nothing happened
@@ -143,10 +125,10 @@ public class HtmlContentProcessor {
 
                 }
 
-                if(iframeSrc != null){
+                if (iframeSrc != null) {
                     // We add the <span> to prevent the iframe being compacted to <iframe /> which we don't want. We need <iframe></iframe> exactly like this!
                     iframeSrc = StringEscapeUtils.escapeHtml4(iframeSrc);
-                    newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"" +iframeSrc+ "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
+                    newHtml = "<div class=\"embed-container\"><iframe width=\"640\" height=\"360\" src=\"" + iframeSrc + "\" frameborder=\"0\" allowfullscreen=\"true\"><span /></iframe></div>";
                     newHtml += newHtmlSuffix;
                 }
 
@@ -226,6 +208,79 @@ public class HtmlContentProcessor {
 
         String r = DomHelper.domToString(root);
 
+
+        return r;
+    }
+
+    private String buildYoutubeUrlFromHref(String href) {
+
+        String youtubeUrl = href;
+        Map<String, String> youtubeParams;
+        try {
+            youtubeParams = splitUrlQuery(youtubeUrl);
+            if (youtubeParams.containsKey("v")) {
+                String videoId = youtubeParams.get("v");
+
+                return "https://www.youtube.com/embed/" + videoId;
+            }
+
+        } catch (Exception e) {
+        }
+
+        return null;
+
+    }
+
+    private String buildVimeoUrlFromHref(String href) {
+        String r = null;
+
+        String temp = href;
+        temp = temp.replace("http://", "");
+        temp = temp.replace("https://", "");
+        temp = temp.replace("//", "");
+        temp = temp.replace("vimeo.com/", "");
+
+        if (temp.contains("?")) {
+            temp = temp.substring(0, temp.indexOf("?") - 1);
+        }
+
+        Integer videoId = null;
+
+        String[] parts = temp.split("/");
+        for (int i = parts.length - 1; i >= 0; i--) {
+            if (parts[i].length() > 0) {
+                try {
+                    videoId = Integer.parseInt(parts[i]);
+                    if (videoId > 1000) {
+                        r = "https://player.vimeo.com/video/" + videoId;
+                        break;
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        if (r == null) {
+            // No video ID found. The URL could be a redirect, so let's check for that...
+            try {
+                URL vimeoUrl = new URL(href);
+                HttpURLConnection con = (HttpURLConnection) vimeoUrl.openConnection();
+                con.setRequestMethod("GET");
+                con.setInstanceFollowRedirects(false);
+
+                con.setReadTimeout(3 * 1000);
+                con.connect();
+
+                int code = con.getResponseCode();
+                if (code == HTTP_MOVED_PERM || code == HTTP_MOVED_TEMP) {
+                    String newUrl = con.getHeaderField("Location");
+                    r = buildVimeoUrlFromHref(newUrl);
+                }
+
+            } catch (Exception ex) {
+
+            }
+        }
 
         return r;
     }
