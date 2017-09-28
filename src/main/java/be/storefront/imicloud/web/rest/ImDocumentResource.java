@@ -127,6 +127,15 @@ public class ImDocumentResource {
                 list.add(reducedImDocumentDTO);
             }
 
+
+            // Fake a delay for debugging
+//            try {
+//                Thread.sleep((long)(Math.random() * 5000));
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+
             return new ResponseEntity<>(list, headers, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

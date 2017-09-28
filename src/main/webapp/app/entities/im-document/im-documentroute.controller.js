@@ -5,14 +5,15 @@
         .module('imicloudApp')
         .controller('ImDocumentRouteController', ImDocumentRouteController);
 
-    ImDocumentRouteController.$inject = ['$scope', '$state', 'DataUtils', 'ImDocument', 'ImDocumentSearch', 'ParseLinks', 'AlertService', 'paginationConstants','Principal'];
+    ImDocumentRouteController.$inject = ['$scope', '$state', '$cookies', 'DataUtils', 'ImDocument', 'ImDocumentSearch', 'ParseLinks', 'AlertService', 'paginationConstants','Principal'];
 
-    function ImDocumentRouteController ($scope, $state, DataUtils, ImDocument, ImDocumentSearch, ParseLinks, AlertService, paginationConstants, Principal) {
+    function ImDocumentRouteController ($scope, $state, $cookies, DataUtils, ImDocument, ImDocumentSearch, ParseLinks, AlertService, paginationConstants, Principal) {
         var vm = this;
 
         vm.imDocuments = [];
         vm.loadPage = loadPage;
         vm.itemsPerPage = paginationConstants.itemsPerPage;
+        vm.isPageLoading = false;
         vm.page = 0;
         vm.links = {
             last: 0
@@ -34,9 +35,35 @@
             vm.editBrandingUrl = '/#/branding/'+brandingId;
         });
 
+        var sortCookieName = 'imdocument-sorting';
+        var sortingConfig = $cookies.getObject(sortCookieName);
+        if(sortingConfig && sortingConfig.predicate){
+            vm.predicate = sortingConfig.predicate;
+            vm.reverse = true && sortingConfig.reverse;
+        }
+
+        // Watch for sorting changes
+        $scope.$watch('vm.predicate', function(newValue, oldValue) {
+            saveSortingToCookie();
+        });
+        $scope.$watch('vm.reverse', function(newValue, oldValue) {
+            saveSortingToCookie();
+        });
+
+
+        function saveSortingToCookie(){
+            var sortingConfig = {
+                predicate: vm.predicate,
+                reverse: vm.reverse
+            };
+            $cookies.putObject(sortCookieName, sortingConfig);
+        }
+
+
         loadAll();
 
         function loadAll () {
+            vm.isPageLoading = true;
             if (vm.currentSearch) {
                 ImDocumentSearch.query({
                     query: vm.currentSearch,
@@ -62,13 +89,17 @@
             function onSuccess(data, headers) {
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
-                for (var i = 0; i < data.length; i++) {
-                    vm.imDocuments.push(data[i]);
+
+                for( var j = 0; j < data.length; j++){
+                    vm.imDocuments.push(data[j]);
                 }
+
+                vm.isPageLoading = false;
             }
 
             function onError(error) {
                 AlertService.error(error.data.message);
+                vm.isPageLoading = false;
             }
         }
 
@@ -99,8 +130,10 @@
         }
 
         function loadPage(page) {
-            vm.page = page;
-            loadAll();
+            if(!vm.isPageLoading){
+                vm.page = page;
+                loadAll();
+            }
         }
 
         function clear () {
