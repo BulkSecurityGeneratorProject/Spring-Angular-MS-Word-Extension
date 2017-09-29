@@ -33,24 +33,25 @@
         </div>
     </div>
     <br/>
+
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr>
-                    <th><span data-translate="imicloudApp.branding.name">Name</span></th>
-                    <th><span data-translate="imicloudApp.branding.primaryColor">Primary Color</span></th>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
+                    <th jh-sort-by="name"><span data-translate="imicloudApp.branding.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="primaryColor"><span data-translate="imicloudApp.branding.primaryColor">Primary Color</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <!--
-                    <th><span data-translate="imicloudApp.branding.secundaryColor">Secondary Color</span></th>
+                    <th jh-sort-by="secundaryColor"><span data-translate="imicloudApp.branding.secundaryColor">Secondary Color</span> <span class="glyphicon glyphicon-sort"></span></th>
                     -->
-                    <th><span data-translate="imicloudApp.branding.pageBackgroundColor">Page Background Color</span></th>
-                    <th><span data-translate="imicloudApp.branding.textColor">Text Color</span></th>
+                    <th jh-sort-by="pageBackgroundColor"><span data-translate="imicloudApp.branding.pageBackgroundColor">Page Background Color</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="textColor"><span data-translate="imicloudApp.branding.textColor">Text Color</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <!--
-                    <th><span data-translate="imicloudApp.branding.logoImage">Logo Image</span></th>
+                    <th jh-sort-by="logoImage"><span data-translate="imicloudApp.branding.logoImage">Logo Image</span> <span class="glyphicon glyphicon-sort"></span></th>
                     -->
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="branding in vm.brandings track by branding.id">
                     <td><a ui-sref="branding.edit({id:branding.id})">{{branding.name}}</a></td>
                     <td>

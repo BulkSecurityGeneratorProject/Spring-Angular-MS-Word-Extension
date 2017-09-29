@@ -11,9 +11,12 @@ import be.storefront.imicloud.repository.search.BrandingSearchRepository;
 import be.storefront.imicloud.service.UrlHelperService;
 import be.storefront.imicloud.service.UserInfoService;
 import be.storefront.imicloud.service.dto.BrandingDTO;
+import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.mapper.BrandingMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -157,5 +160,14 @@ public class BrandingServiceImpl implements BrandingService{
 
         return r;
     }
+
+    @Override
+    public Page<BrandingDTO> findByOrganizationId(Long id, Pageable pageable) {
+        Page<Branding> result = brandingRepository.findByOrganizationId(id, pageable);
+        return result.map(branding -> brandingMapper.brandingToBrandingDTO(branding));
+    }
+
+
+
 
 }

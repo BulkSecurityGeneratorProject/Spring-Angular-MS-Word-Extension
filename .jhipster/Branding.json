@@ -61,6 +61,6 @@
     "dto": "mapstruct",
     "service": "serviceImpl",
     "entityTableName": "branding",
-    "pagination": "no",
+    "pagination": "infinite-scroll",
     "enableEntityAudit": true
 }

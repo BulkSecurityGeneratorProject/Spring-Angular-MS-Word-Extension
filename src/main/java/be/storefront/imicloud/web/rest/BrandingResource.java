@@ -7,14 +7,20 @@ import be.storefront.imicloud.repository.UserInfoRepository;
 import be.storefront.imicloud.security.MyUserDetails;
 import be.storefront.imicloud.security.SecurityUtils;
 import be.storefront.imicloud.service.OrganizationService;
+import be.storefront.imicloud.service.dto.ImDocumentDTO;
 import be.storefront.imicloud.service.dto.OrganizationDTO;
+import be.storefront.imicloud.service.dto.ReducedImDocumentDTO;
+import be.storefront.imicloud.web.rest.util.PaginationUtil;
 import com.codahale.metrics.annotation.Timed;
 import be.storefront.imicloud.service.BrandingService;
 import be.storefront.imicloud.web.rest.util.HeaderUtil;
 import be.storefront.imicloud.service.dto.BrandingDTO;
 
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +30,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -132,14 +139,24 @@ public class BrandingResource {
      */
     @GetMapping("/brandings")
     @Timed
-    public List<BrandingDTO> getAllBrandings() {
+    public ResponseEntity<List<BrandingDTO>> getAllBrandings(@ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to get all Brandings");
 
         Organization myOrg = organizationService.getCurrentOrganization();
-        if (myOrg == null) {
-            return null;
-        } else {
-            return brandingService.findByOrganizationId(myOrg.getId());
+        if (myOrg != null) {
+
+            Page<BrandingDTO> page =  brandingService.findByOrganizationId(myOrg.getId(), pageable);
+
+            HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/brandings");
+
+            ArrayList<BrandingDTO> list = new ArrayList<>();
+            for(BrandingDTO brandingDTO : page){
+                list.add(brandingDTO);
+            }
+
+            return new ResponseEntity<>(list, headers, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
     }
