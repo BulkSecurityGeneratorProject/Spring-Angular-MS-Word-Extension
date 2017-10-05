@@ -15,10 +15,10 @@
         vm.byteSize = DataUtils.byteSize;
         vm.openFile = DataUtils.openFile;
         vm.save = save;
-        vm.folders = Folder.query();
-        vm.immaps = ImMap.query();
-        vm.users = User.query();
-        vm.brandings = Branding.query();
+        //vm.folders = Folder.query({size: 99999});
+        //vm.immaps = ImMap.query({size: 99999});
+        //vm.users = User.query({size: 99999});
+        vm.brandings = Branding.query({size: 99999});
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

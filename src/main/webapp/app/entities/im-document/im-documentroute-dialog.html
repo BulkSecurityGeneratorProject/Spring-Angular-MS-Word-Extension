@@ -98,7 +98,7 @@
 
         <div class="form-group">
             <label data-translate="imicloudApp.imDocument.branding" for="field_branding">Branding</label>
-            <select class="form-control" id="field_branding" name="branding" ng-model="vm.imDocument.brandingId" ng-options="branding.id as branding.name for branding in vm.brandings"            >
+            <select class="form-control" id="field_branding" name="branding" ng-model="vm.imDocument.brandingId" ng-options="branding.id as branding.name for branding in vm.brandings | orderBy:'name'"            >
                 <option value=""></option>
             </select>
         </div>
