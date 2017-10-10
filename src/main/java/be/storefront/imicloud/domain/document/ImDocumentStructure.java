@@ -444,6 +444,11 @@ public class ImDocumentStructure {
     public static String transformContentToHtml(String contentText) {
         Match root = $(contentText);
 
+        // This is not a real paragraph
+        root.find("paragraph > text").rename("span");
+        // Nested text in internal hyperlink (=reference)
+        root.find("reference > text").rename("span");
+
         root.find("paragraph").rename("p");
         // Nested text in hyperlink
         root.find("hyperlink > text").rename("span");

@@ -709,41 +709,39 @@ nav{
                 border-top:solid 1px @secondary-color;
                 padding-top:25px;
             }
-            .owl-controls{
-                margin:0;
-                padding:0;
-                height:0;
-                .owl-nav{
-                    position:absolute;
-                    top:-50px;
-                    right:0;
-                    .owl-prev, .owl-next{
-                        display:inline-block !important;
-                        .border-radius(0,0,0,0);
-                        .opacity(1);
-                        .box-sizing(border-box);
-                        width:30px;
-                        height:30px;
-                        padding:0;
-                        line-height:28px;
-                        text-align:center;
-                        color:@secondary-color;
-                        border:solid 1px @secondary-color;
-                        background:none;
-                        .transition();
-                        &:hover{
-                            background:@secondary-color;
-                            border-color:@secondary-color;
-                            color:@font-white;
-                        }
-                        &.disabled{
-                            display:none !important;
-                        }
+
+            .owl-nav{
+                position:absolute;
+                top:-50px;
+                right:0;
+                .owl-prev, .owl-next{
+                    display:inline-block !important;
+                    .border-radius(0,0,0,0);
+                    .opacity(1);
+                    .box-sizing(border-box);
+                    width:30px;
+                    height:30px;
+                    padding:0;
+                    line-height:28px;
+                    text-align:center;
+                    color:@secondary-color;
+                    border:solid 1px @secondary-color;
+                    background:none;
+                    margin: 5px;
+                    .transition();
+                    &:hover{
+                        background:@secondary-color;
+                        border-color:@secondary-color;
+                        color:@font-white;
                     }
-                    .owl-prev{
+                    &.disabled{
+                        display:none !important;
                     }
-                    .owl-next{
-                    }
+                }
+                .owl-prev{
+                }
+                .owl-next{
+
                 }
             }
         }
@@ -1586,7 +1584,14 @@ filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><fi
     }
     */
 
-
-
-
 }
+
+@media(max-width: 960px){
+    .hamburger.desktop{ display: none; }
+    .hamburger.mobile{ display: block; }
+}
+@media(min-width: 960px){
+    .hamburger.desktop{ display: block; }
+    .hamburger.mobile{ display: none; }
+}
+

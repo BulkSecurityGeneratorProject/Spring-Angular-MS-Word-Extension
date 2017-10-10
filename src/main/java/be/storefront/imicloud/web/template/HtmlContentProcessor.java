@@ -196,7 +196,7 @@ public class HtmlContentProcessor {
                     reference.rename("span");
                 } else {
                     // Can link
-                    reference.rename("a").attr("data-viewid", guidToLinkTo).attr("href", "#");
+                    reference.rename("a").attr("href", "#"+guidToLinkTo);
                 }
 
             }
@@ -204,6 +204,14 @@ public class HtmlContentProcessor {
             tocTable.find("tr > th p").rename("span");
             tocTable.find("tr > td p").rename("span");
 
+        }
+
+
+        // Fix internal links
+        for (Match reference : root.find("reference").each()) {
+            String linkToId = reference.attr("address");
+            String mapId = "";
+            reference.rename("a").attr("data-viewid", mapId).attr("href", "#"+linkToId);
         }
 
         String r = DomHelper.domToString(root);
