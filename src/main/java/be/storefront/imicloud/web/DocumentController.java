@@ -79,6 +79,12 @@ public class DocumentController {
 
     @Inject private ImageSourcePathRepository imageSourcePathRepository;
 
+    private int staticVersion;
+
+
+    public DocumentController(){
+        this.staticVersion = (int) Math.ceil(Math.random() * 1000000);
+    }
 
     @GetMapping("/document/{documentId}/{secret}")
     public ModelAndView view(@PathVariable(value = "documentId") Long documentId, @PathVariable("secret") String secret) throws IOException, SAXException, ParserConfigurationException, TransformerException {
@@ -150,6 +156,7 @@ public class DocumentController {
                     viewMap.put("cssHelper", new CssHelper());
                     viewMap.put("urlHelperService", urlHelperService);
                     viewMap.put("templateCode", template);
+                    viewMap.put("staticVersion", staticVersion);
 
                     if (accessGranted) {
                         viewMap.put("ImDocumentStructure", new ImDocumentStructure(imDocument,imageSourcePathRepository));
