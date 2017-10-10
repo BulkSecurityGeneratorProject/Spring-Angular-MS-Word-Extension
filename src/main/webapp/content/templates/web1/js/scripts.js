@@ -344,6 +344,13 @@ function switchView(mapNodes, viewID) {
 
     }
 
+
+    // Update "active" class in desktop + mobile menu
+    $('.mobile-nav a').removeClass('active');
+    $('.desktop-nav a').removeClass('active');
+
+    $('.mobile-nav a[href="#'+viewID+'"]').addClass('active');
+    $('.desktop-nav a[href="#'+viewID+'"]').addClass('active');
 }
 
 // function switchAnchorView(views, viewID) {
