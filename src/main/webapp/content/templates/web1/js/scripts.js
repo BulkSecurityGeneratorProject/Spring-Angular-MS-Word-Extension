@@ -30,20 +30,7 @@ $(document).ready(function () {
         }
     });
 
-    function isSlideOnCurrentSlider(oldHash, newHash) {
-        var currentSlide = $('[data-hash="' + oldHash + '"]');
-        if (currentSlide.length > 0) {
-            var slider = currentSlide.closest('.owl-stage');
-            if (slider.length > 0) {
-                var targetSlide = slider.find('[data-hash="' + newHash + '"]');
-                if (targetSlide.length > 0) {
-                    return true;
-                }
-            }
-        }
 
-        return false;
-    }
 
 
 //LEFT SIDE SCROLLBAR ========================================
@@ -110,13 +97,15 @@ $(document).ready(function () {
 
     var navLinkNodes = leftNav.find('a[href^=#]');
 
-    var mobileNav = $('.mobile-nav nav'); //nav wrapper
 
     var viewWrapper = $('#right-side'); //view wrapper
 
     var views = viewWrapper.find('.view'); //alle views
 
     var firstMenuItem;
+
+    // Close all menu branches by default
+    $('.sub-nav').hide();
 
     //start view bepalen en actief zetten
     if (leftNav.find('> ul > li').first().has(".sub-nav").length != 0) {
@@ -145,23 +134,23 @@ $(document).ready(function () {
 
     //switchView(views, firstView);
 
-
+/*
     $('nav a.link').click(function (e) {
         var aNode = $(this);
         var liNode = aNode.parent();
 
         if (liNode.has(".sub-nav").length != 0) {
-            /*heeft sub navigatie*/
+            // heeft sub navigatie
 
             openMenuTree(aNode);
 
         } else {
-            /*heeft geen sub navigatie*/
+            // heeft geen sub navigatie
             leftNav.removeClass('active');
             aNode.addClass('active');
         }
     });
-
+*/
 
     $('nav a.menu-toggle').click(function (e) {
         e.preventDefault();
@@ -203,19 +192,7 @@ $(document).ready(function () {
         });
     */
 
-    function openMenuTree(aNode) {
-        var liNode = aNode.parent();
-        liNode.children(".sub-nav").stop().slideDown(300).addClass('open');
 
-        refreshPlusMinusIcons();
-    }
-
-    function toggleMenuTree(aNode) {
-        var liNode = aNode.parent();
-        liNode.children(".sub-nav").stop().slideToggle(300).toggleClass('open');
-
-        refreshPlusMinusIcons();
-    }
 
 });
 
@@ -231,6 +208,20 @@ $(window).on('load throttledresize', function () {
     }
 });
 
+function openMenuTree(aNode) {
+    var liNode = aNode.closest('li');
+    liNode.children(".sub-nav").stop().slideDown(300).addClass('open');
+
+    refreshPlusMinusIcons();
+}
+
+function toggleMenuTree(aNode) {
+    var liNode = aNode.parent();
+    liNode.children(".sub-nav").stop().slideToggle(300).toggleClass('open');
+
+    refreshPlusMinusIcons();
+}
+
 function refreshPlusMinusIcons() {
     $('.sub-nav').each(function (i, node) {
         node = $(node);
@@ -239,10 +230,10 @@ function refreshPlusMinusIcons() {
         var icon = parentLi.children('a.menu-toggle').find('i');
 
         if (node.hasClass('open')) {
-            // Show minus
+            // Show minus, the menu is open
             icon.removeClass('icon-plus').addClass('icon-minus');
         } else {
-            // Show plus
+            // Show plus, the menu is closed
             icon.removeClass('icon-minus').addClass('icon-plus');
         }
     });
@@ -262,19 +253,10 @@ function switchView(mapNodes, viewID) {
         var guidParts = viewID.split('-');
         var guid = guidParts[0];
 
-        $('nav a').removeClass('active');
-        var activeLink = $('nav a[data-viewid="' + guid + '"]');
-        activeLink.addClass('active');
-
-        // Open all levels above the current
-        activeLink.parents('.sub-nav').addClass('open').attr('style', '');
-
         // Show section
         $('section[data-viewid="' + guid + '"]').show();
     }
 
-    // Fix the plus/minus icons of all parent levels
-    refreshPlusMinusIcons();
 
     mapNodes.hide().removeClass('active');
 
@@ -346,11 +328,35 @@ function switchView(mapNodes, viewID) {
 
 
     // Update "active" class in desktop + mobile menu
-    $('.mobile-nav a').removeClass('active');
-    $('.desktop-nav a').removeClass('active');
+    $('.mobile-nav a, .desktop-nav a').removeClass('active');
 
-    $('.mobile-nav a[href="#'+viewID+'"]').addClass('active');
-    $('.desktop-nav a[href="#'+viewID+'"]').addClass('active');
+    var activeMenuLinks = $('.mobile-nav a[href="#'+viewID+'"], .desktop-nav a[href="#'+viewID+'"]');
+    if(activeMenuLinks.length == 0){
+        // The current items is probably a owlCarousel slide, which is never in the menu.
+        // Lookup the parent of the slide, that will be in the menu!
+        var slide = $('.slider-item[data-hash="'+viewID+'"]');
+        if(slide.length > 0){
+            var parentViewID = slide.closest('[data-viewid]').attr('data-viewid');
+            activeMenuLinks = $('.mobile-nav a[href="#'+parentViewID+'"], .desktop-nav a[href="#'+parentViewID+'"]');
+        }
+
+    }
+    activeMenuLinks.addClass('active');
+
+    // Open all levels above the current
+    activeMenuLinks.parents('.sub-nav').addClass('open').attr('style', '');
+
+
+    // Open the sub-level in the menu, if the current item has sub-items
+    activeMenuLinks.each(function(i, node){
+        node = $(node);
+
+        openMenuTree(node);
+    });
+
+
+    // Fix the plus/minus icons of all parent levels
+    refreshPlusMinusIcons();
 }
 
 // function switchAnchorView(views, viewID) {
@@ -374,6 +380,21 @@ function switchView(mapNodes, viewID) {
 //         }
 //     });
 // }
+
+function isSlideOnCurrentSlider(oldHash, newHash) {
+    var currentSlide = $('[data-hash="' + oldHash + '"]');
+    if (currentSlide.length > 0) {
+        var slider = currentSlide.closest('.owl-stage');
+        if (slider.length > 0) {
+            var targetSlide = slider.find('[data-hash="' + newHash + '"]');
+            if (targetSlide.length > 0) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 function updateLeftNav(views, viewContentID) {
     var leftNav = $('#left-side .left-nav nav'); //nav wrapper

@@ -306,7 +306,7 @@ END INTRO: FULL SCREEN OVERLAY-->
                     <div class="sixteen">
                         <div class="block-title-bar">
                             <div class="breadcrumbs" th:if="${ImDocumentStructure.canShowBreadcrumbs(map)}">
-                                <a href="#" ng-href="${'#'+map.getParent().getContentGuid()}" th:text="${map.getParent().getTitle()}" data-th-attr="data-guid=${map.getParent().getGuid()}" >Parent link</a>
+                                <a th:text="${map.getParent().getTitle()}" data-th-attr="href= ${'#'+map.getParent().getContentGuid()}, data-guid=${map.getParent().getGuid()}" >Parent link</a>
                             </div>
                             <h2 th:text="${map.getTitle()}">About Publishing in FS Pro  2013</h2>
                         </div>
