@@ -31,8 +31,6 @@ $(document).ready(function () {
     });
 
 
-
-
 //LEFT SIDE SCROLLBAR ========================================
     /*De left side is fixed, dus als ze hoger wordt dan het scherm wordt een scrollbar getoond,
      perffectScrollbar zorgt voor visueel mooiere scrollbar ipv standaard scrollbar*/
@@ -95,7 +93,7 @@ $(document).ready(function () {
 //LEFT NAV TOGGLE OR SWITCH BETWEEN VIEWS =====================================================
     var leftNav = $('#left-side .left-nav nav'); //nav wrapper
 
-    var navLinkNodes = leftNav.find('a[href^=#]');
+    var navLinkNodes = leftNav.find("a[href^='#']");
 
 
     var viewWrapper = $('#right-side'); //view wrapper
@@ -134,23 +132,23 @@ $(document).ready(function () {
 
     //switchView(views, firstView);
 
-/*
-    $('nav a.link').click(function (e) {
-        var aNode = $(this);
-        var liNode = aNode.parent();
+    /*
+        $('nav a.link').click(function (e) {
+            var aNode = $(this);
+            var liNode = aNode.parent();
 
-        if (liNode.has(".sub-nav").length != 0) {
-            // heeft sub navigatie
+            if (liNode.has(".sub-nav").length != 0) {
+                // heeft sub navigatie
 
-            openMenuTree(aNode);
+                openMenuTree(aNode);
 
-        } else {
-            // heeft geen sub navigatie
-            leftNav.removeClass('active');
-            aNode.addClass('active');
-        }
-    });
-*/
+            } else {
+                // heeft geen sub navigatie
+                leftNav.removeClass('active');
+                aNode.addClass('active');
+            }
+        });
+    */
 
     $('nav a.menu-toggle').click(function (e) {
         e.preventDefault();
@@ -191,7 +189,6 @@ $(document).ready(function () {
             }
         });
     */
-
 
 
 });
@@ -248,26 +245,31 @@ function switchView(mapNodes, viewID) {
         mobileNavController.close();
     }
 
-    // Update active class on menu
-    if (viewID) {
-        var guidParts = viewID.split('-');
-        var guid = guidParts[0];
+    // Show section
+    //$('section[data-viewid="' + viewID + '"]').show();
 
-        // Show section
-        $('section[data-viewid="' + guid + '"]').show();
+    // Check for bookmarks
+    // When linking to a bookmark, we are in fact linking to the block around the bookmark
+    var bookmarks = $('#right-side [bookmark="' + viewID + '"]');
+    if (bookmarks.length > 0) {
+         var viewIdForBookmark = getViewIdForBookmark(bookmarks);
+         if(viewIdForBookmark){
+            viewID = viewIdForBookmark;
+         }
     }
-
 
     mapNodes.hide().removeClass('active');
 
     mapNodes.each(function () {
         var t = $(this);
-        // Find the right view to show
+        // Find the right stuff to show
 
         var isLinkToMap = t.data('viewid') === viewID;
 
+        // Check for slides in map
         var slideNode = t.find('.view-content-with-slider [data-hash="' + viewID + '"]');
         var isLinkToBlockInsideMap = slideNode.length > 0;
+
 
         if (isLinkToMap || isLinkToBlockInsideMap) {
 
@@ -276,18 +278,17 @@ function switchView(mapNodes, viewID) {
             // Hide al previously visible stuff...
             t.find('.view-content').hide().removeClass('active');
 
-
             if (isLinkToMap && t.has(".view-content").length != 0) {
                 // Show the first view-content if there is such an element...
                 var firstViewContent = t.find('.view-content:first');
                 firstViewContent.show();
                 firstViewContent.addClass('active');
 
-
             } else if (isLinkToBlockInsideMap) {
                 // Show the slider
                 var nodeWithSlider = t.find('.view-content-with-slider');
                 nodeWithSlider.show().addClass('active');
+
             }
 
             return false;
@@ -314,7 +315,7 @@ function switchView(mapNodes, viewID) {
             items: 1,
             nav: showNav,
             navText: ["<i class='icon-left'></i>", "<i class='icon-right'></i>"],
-            dots: false,
+            dots: true,
             loop: false,
             URLhashListener: true,
             startPosition: 'URLHash',
@@ -324,20 +325,26 @@ function switchView(mapNodes, viewID) {
             navRewind: false
         });
 
+        //var owlNumber = $('.owl').find('[subcategory="' + myattr + '"]').index();
+        // setTimeout(function(){
+        //     slider.trigger('owl.jumpTo', viewID);
+        // },1000);
+
+
     }
 
 
     // Update "active" class in desktop + mobile menu
     $('.mobile-nav a, .desktop-nav a').removeClass('active');
 
-    var activeMenuLinks = $('.mobile-nav a[href="#'+viewID+'"], .desktop-nav a[href="#'+viewID+'"]');
-    if(activeMenuLinks.length == 0){
+    var activeMenuLinks = $('.mobile-nav a[href="#' + viewID + '"], .desktop-nav a[href="#' + viewID + '"]');
+    if (activeMenuLinks.length == 0) {
         // The current items is probably a owlCarousel slide, which is never in the menu.
         // Lookup the parent of the slide, that will be in the menu!
-        var slide = $('.slider-item[data-hash="'+viewID+'"]');
-        if(slide.length > 0){
+        var slide = $('.slider-item[data-hash="' + viewID + '"]');
+        if (slide.length > 0) {
             var parentViewID = slide.closest('[data-viewid]').attr('data-viewid');
-            activeMenuLinks = $('.mobile-nav a[href="#'+parentViewID+'"], .desktop-nav a[href="#'+parentViewID+'"]');
+            activeMenuLinks = $('.mobile-nav a[href="#' + parentViewID + '"], .desktop-nav a[href="#' + parentViewID + '"]');
         }
 
     }
@@ -348,7 +355,7 @@ function switchView(mapNodes, viewID) {
 
 
     // Open the sub-level in the menu, if the current item has sub-items
-    activeMenuLinks.each(function(i, node){
+    activeMenuLinks.each(function (i, node) {
         node = $(node);
 
         openMenuTree(node);
@@ -357,6 +364,10 @@ function switchView(mapNodes, viewID) {
 
     // Fix the plus/minus icons of all parent levels
     refreshPlusMinusIcons();
+
+
+    // Flash the targetted bookmarks
+    flash(bookmarks);
 }
 
 // function switchAnchorView(views, viewID) {
@@ -441,4 +452,33 @@ function updateLeftNav(views, viewContentID) {
     refreshPlusMinusIcons();
 
 
+}
+
+function getViewIdForBookmark(bookmarks) {
+    var isLinkToBookmarkInText = bookmarks.length > 0;
+    if (isLinkToBookmarkInText) {
+
+        // The bookmark may be in an owlCarousel slide
+        var parentSlide = bookmarks.first().closest('[data-hash]');
+
+        if (parentSlide.length > 0) {
+            var r = parentSlide.data('hash');
+            return r;
+        }
+
+        // The bookmark may be on a page outside an owlCarousel slide
+        var parentContentNode = bookmarks.first().closest('[data-viewid]');
+        if (parentContentNode.length > 0) {
+            var r = parentContentNode.data('viewid');
+        }
+        return r;
+
+    }
+    return null;
+}
+
+function flash(nodes) {
+    nodes.stop().css("background-color", "#FFFF9C").animate({backgroundColor: "#FFFFFF"}, 1500);
+    nodes.css("background-color", "#FFFF9C");
+    //console.log(nodes);
 }
