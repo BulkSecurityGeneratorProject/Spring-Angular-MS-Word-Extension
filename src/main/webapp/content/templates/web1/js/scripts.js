@@ -2,9 +2,8 @@ var mobileNavController;
 $(document).ready(function () {
 
 
-
     UrlHashMonitor.init();
-    UrlHashMonitor.onHashChange(function(){
+    UrlHashMonitor.onHashChange(function () {
         // console.log('oldHash: ' + UrlHashMonitor.oldHash);
         // console.log('newHash: ' + UrlHashMonitor.newHash);
         // console.log('oldHref: ' + UrlHashMonitor.oldHref);
@@ -37,7 +36,6 @@ $(document).ready(function () {
         }
 
     });
-
 
 
 //LEFT SIDE SCROLLBAR ========================================
@@ -261,10 +259,10 @@ function switchView(mapNodes, viewID) {
     // When linking to a bookmark, we are in fact linking to the block around the bookmark
     var bookmarks = $('#right-side [bookmark="' + viewID + '"]');
     if (bookmarks.length > 0) {
-         var viewIdForBookmark = getViewIdForBookmark(bookmarks);
-         if(viewIdForBookmark){
+        var viewIdForBookmark = getViewIdForBookmark(bookmarks);
+        if (viewIdForBookmark) {
             viewID = viewIdForBookmark;
-         }
+        }
     }
 
     mapNodes.hide().removeClass('active');
@@ -320,24 +318,22 @@ function switchView(mapNodes, viewID) {
 
         var showNav = (slider.find('.slider-item').length > 1);
 
+        var slideNumber = slideToShow.index();
+
+
         slider.owlCarousel({
             items: 1,
             nav: showNav,
             navText: ["<i class='icon-left'></i>", "<i class='icon-right'></i>"],
-            dots: true,
+            dots: false,
             loop: false,
-            URLhashListener: true,
-            startPosition: 'URLHash',
+            URLhashListener: false,
+            startPosition: slideNumber,
             mouseDrag: false,
             pullDrag: false,
             navSpeed: 300,
             navRewind: false
         });
-
-        //var owlNumber = $('.owl').find('[subcategory="' + myattr + '"]').index();
-        // setTimeout(function(){
-        //     slider.trigger('owl.jumpTo', viewID);
-        // },1000);
 
 
     }
@@ -375,8 +371,26 @@ function switchView(mapNodes, viewID) {
     refreshPlusMinusIcons();
 
 
-    // Flash the targetted bookmarks
-    flash(bookmarks);
+    // Flash the targetted bookmark + move bookmark into view
+    if (bookmarks.length > 0) {
+        var bookmark = bookmarks.first();
+
+        // setTimeout(function(){
+
+        // 100px extra breathing room...
+        var scrollToY = bookmark.offset().top - 100;
+
+        $('html, body').stop().animate({
+            scrollTop: scrollToY
+        }, 1000, 'swing', function () {
+
+            // Make the bookmark visually flash
+            flash(bookmark);
+
+        });
+
+    }
+
 }
 
 // function switchAnchorView(views, viewID) {
@@ -486,8 +500,14 @@ function getViewIdForBookmark(bookmarks) {
     return null;
 }
 
-function flash(nodes) {
-    nodes.stop().css("background-color", "#FFFF9C").animate({backgroundColor: "#FFFFFF"}, 1500);
-    nodes.css("background-color", "#FFFF9C");
+function flash(node) {
+
+    node.stop().css("background-color", "#FFFF9C").animate({backgroundColor: "#FFFFFF"}, 1000);
+
+    //node.css("background-color", "#FFFF9C");
     //console.log(nodes);
+
+    // for(i=0;i<3;i++) {
+    //     $(this).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+    // }
 }
