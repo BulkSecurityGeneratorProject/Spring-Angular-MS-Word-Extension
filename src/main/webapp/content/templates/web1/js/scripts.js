@@ -2,12 +2,19 @@ var mobileNavController;
 $(document).ready(function () {
 
 
-    $(window).on('hashchange', function (e) {
-        var oldUrl = e.originalEvent.oldURL;
-        var newUrl = e.originalEvent.newURL;
 
-        var oldHash = oldUrl.substring(oldUrl.indexOf('#'));
-        var newHash = window.location.hash;
+    UrlHashMonitor.init();
+    UrlHashMonitor.onHashChange(function(){
+        // console.log('oldHash: ' + UrlHashMonitor.oldHash);
+        // console.log('newHash: ' + UrlHashMonitor.newHash);
+        // console.log('oldHref: ' + UrlHashMonitor.oldHref);
+        // console.log('newHref: ' + UrlHashMonitor.newHref);
+
+        // var oldUrl = e.originalEvent.oldURL;
+        // var newUrl = e.originalEvent.newURL;
+
+        var oldHash = UrlHashMonitor.oldHash;
+        var newHash = UrlHashMonitor.newHash;
 
         // Remove prefix #
         if (oldHash) {
@@ -28,7 +35,9 @@ $(document).ready(function () {
                 switchView(views, newHash);
             }
         }
+
     });
+
 
 
 //LEFT SIDE SCROLLBAR ========================================
